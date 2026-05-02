@@ -12,6 +12,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -74,8 +75,77 @@
 <body>
   <div id="root"></div>
   <script type="text/babel">
-    const { useState, useEffect, createContext, useContext } = React;
+    const { useState, useEffect, createContext, useContext, useRef } = React;
     const { motion, AnimatePresence } = window.Motion;
+
+    // --- Supabase Cloud Engine ---
+    const SUPABASE_URL = 'https://gfcxiwjxqzvjfskdwdkz.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdmY3hpd2p4cXp2amZza2R3ZGt6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MjE3OTUsImV4cCI6MjA5MzI5Nzc5NX0.aYCgqll1k0HpmdvsvC8jB-fk1PpFR9kH2dF-C3o4FEQ';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const AppStateContext = createContext();
+    const ToastContext = createContext();
+
+    const AppStateProvider = ({ children }) => {
+      const [loading, setLoading] = useState(true);
+      const [appData, setAppData] = useState({
+        tracker: {}, finance: [], meals: {}, todo: [],
+        settings: { aura: true, timeWarp: true, dopamineRain: true, shield: true, geminiKey: '' },
+        profile: { age: 21, weight: 70, height: 175, gender: 'male', activity: '1.55', goal: 'bulk' }
+      });
+
+      useEffect(() => {
+        const fetchCloudData = async () => {
+          try {
+            const { data, error } = await supabase.from('lifeos_data').select('*').eq('id', 'hamas_ist').single();
+            if (data && data.payload) {
+              setAppData(prev => ({ ...prev, ...data.payload }));
+              console.log('[Supabase] Initial Pull Success:', data.payload);
+            }
+          } catch (err) {
+            console.error('[Supabase] Pull Error or Empty (Using Defaults):', err);
+          } finally {
+            setLoading(false);
+          }
+        };
+        fetchCloudData();
+
+        // Realtime Subscription (The Heartbeat)
+        const channel = supabase.channel('room1')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'lifeos_data' }, (payload) => {
+            if (payload.new && payload.new.id === 'hamas_ist' && payload.new.payload) {
+              console.log('[Supabase] Realtime Heartbeat Received:', payload.new.payload);
+              setAppData(prev => ({ ...prev, ...payload.new.payload }));
+            }
+          })
+          .subscribe();
+
+        return () => supabase.removeChannel(channel);
+      }, []);
+
+      const updateAppData = (key, updater) => {
+        setAppData(prev => {
+          const newValue = typeof updater === 'function' ? updater(prev[key]) : updater;
+          const newState = { ...prev, [key]: newValue };
+          
+          clearTimeout(window.syncTimeout);
+          window.syncTimeout = setTimeout(async () => {
+            try {
+              await supabase.from('lifeos_data').upsert({ id: 'hamas_ist', payload: newState });
+              console.log('[Supabase] Sync Push Success', new Date().toLocaleTimeString());
+            } catch(e) { console.error('[Supabase] Sync Push Failed', e); }
+          }, 1500); // 1.5s debounce for Omni-Sync
+          
+          return newState;
+        });
+      };
+
+      if (loading) return <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center"><div className="w-12 h-12 border-4 border-apple-blue border-t-transparent rounded-full animate-spin"></div></div>;
+      return <AppStateContext.Provider value={{ appData, updateAppData }}>{children}</AppStateContext.Provider>;
+    };
+
+    const useAppState = () => useContext(AppStateContext);
+    const useToast = () => useContext(ToastContext);
 
     // --- Audio API ---
     const playVictorySound = () => {
@@ -117,10 +187,6 @@
       'banana': { cal: 105, pro: 1, carb: 27, fat: 0 }, 'apple': { cal: 95, pro: 0.5, carb: 25, fat: 0 }, 'egg': { cal: 70, pro: 6, carb: 0, fat: 5 }, 'roti': { cal: 120, pro: 3, carb: 20, fat: 1 }, 'daal': { cal: 150, pro: 9, carb: 20, fat: 5 }, 'rice': { cal: 200, pro: 4, carb: 45, fat: 0.5 }, 'chicken breast': { cal: 165, pro: 31, carb: 0, fat: 3.6 }, 'chicken tikka': { cal: 200, pro: 30, carb: 2, fat: 8 }, 'milk': { cal: 150, pro: 8, carb: 12, fat: 8 }, 'yogurt': { cal: 100, pro: 10, carb: 4, fat: 0 }, 'beef': { cal: 250, pro: 26, carb: 0, fat: 15 }, 'whey': { cal: 120, pro: 24, carb: 3, fat: 1 }
     };
 
-    // --- Contexts ---
-    const ToastContext = createContext();
-    const SettingsContext = createContext();
-
     const ToastProvider = ({ children }) => {
       const [toasts, setToasts] = useState([]);
       const showToast = (message, title = "Notification") => {
@@ -145,12 +211,13 @@
       );
     };
 
-    const useToast = () => useContext(ToastContext);
-    const useSettings = () => useContext(SettingsContext);
-
     // --- Aggressive Notifier Engine ---
     const RoutineNotifier = () => {
       const { showToast } = useToast();
+      const { appData } = useAppState();
+      const tasksRef = useRef(appData.todo);
+      useEffect(() => { tasksRef.current = appData.todo; }, [appData.todo]);
+      
       const [triggered, setTriggered] = useState({});
 
       useEffect(() => {
@@ -182,7 +249,7 @@
              }
           });
 
-          const tasks = JSON.parse(localStorage.getItem('lifeos-todo')) || [];
+          const tasks = tasksRef.current || [];
           tasks.forEach(t => {
             if (!t.completed && t.dueDate && t.dueTime) {
                const [dueH, dueM] = t.dueTime.split(':').map(Number);
@@ -244,10 +311,11 @@
 
     const Finance = () => {
       const { showToast } = useToast();
-      const [txs, setTxs] = useState(() => JSON.parse(localStorage.getItem('lifeos-finance')) || []);
+      const { appData, updateAppData } = useAppState();
+      const txs = appData.finance;
+      const setTxs = (updater) => updateAppData('finance', updater);
+      
       const [newTx, setNewTx] = useState({ desc: '', amount: '', paidBy: 'hamas', splitType: 'combine' });
-
-      useEffect(() => { localStorage.setItem('lifeos-finance', JSON.stringify(txs)); }, [txs]);
 
       const logTx = (e) => {
         e.preventDefault();
@@ -266,7 +334,7 @@
         }
       };
 
-      let hamasSpent = 0; let misbahSpent = 0; let balance = 0; // Positive = Misbah owes Hamas. Negative = Hamas owes Misbah.
+      let hamasSpent = 0; let misbahSpent = 0; let balance = 0;
 
       txs.forEach(t => {
         if (t.paidBy === 'hamas') {
@@ -377,11 +445,14 @@
 
     const Diet = () => {
       const { showToast } = useToast(); const todayDate = new Date().toDateString();
-      const [profile, setProfile] = useState(() => { try { return JSON.parse(localStorage.getItem('lifeos-profile')) || { age: 21, weight: 70, height: 175, gender: 'male', activity: '1.55', goal: 'bulk' }; } catch { return { age: 21, weight: 70, height: 175, gender: 'male', activity: '1.55', goal: 'bulk' }; } });
-      const [showSetup, setShowSetup] = useState(!localStorage.getItem('lifeos-profile'));
-      const [dailyMeals, setDailyMeals] = useState(() => { try { return JSON.parse(localStorage.getItem('lifeos-daily-meals')) || {}; } catch { return {}; } });
+      const { appData, updateAppData } = useAppState();
+      const profile = appData.profile;
+      const setProfile = (updater) => updateAppData('profile', updater);
+      const dailyMeals = appData.meals;
+      const setDailyMeals = (updater) => updateAppData('meals', updater);
+      
+      const [showSetup, setShowSetup] = useState(false);
       const todayMeals = dailyMeals[todayDate] || [];
-      useEffect(() => { localStorage.setItem('lifeos-profile', JSON.stringify(profile)); }, [profile]); useEffect(() => { localStorage.setItem('lifeos-daily-meals', JSON.stringify(dailyMeals)); }, [dailyMeals]);
 
       let bmr = 10 * profile.weight + 6.25 * profile.height - 5 * profile.age + (profile.gender === 'male' ? 5 : -161);
       let tdee = Math.round(bmr * parseFloat(profile.activity));
@@ -415,7 +486,7 @@
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 mt-6">
             <div className="space-y-2"><label className="text-sm font-bold text-apple-gray">Weight (kg)</label><input type="number" value={profile.weight} onChange={(e)=>setProfile(p=>({...p,weight:Number(e.target.value)}))} className="w-full p-4 bg-[#f5f5f7] rounded-xl font-bold" /></div>
             <div className="space-y-2"><label className="text-sm font-bold text-apple-gray">Goal</label>
-              <div className="flex gap-2">{['cut', 'maintain', 'bulk'].map(g => (<button key={g} onClick={() => setProfile({...profile, goal: g})} className={`flex-1 py-3 rounded-xl font-bold text-sm capitalize ${profile.goal === g ? 'bg-apple-blue text-white' : 'bg-[#f5f5f7] text-apple-gray'}`}>{g}</button>))}</div>
+              <div className="flex gap-2">{['cut', 'maintain', 'bulk'].map(g => (<button key={g} onClick={() => setProfile(p=>({...p, goal: g}))} className={`flex-1 py-3 rounded-xl font-bold text-sm capitalize ${profile.goal === g ? 'bg-apple-blue text-white' : 'bg-[#f5f5f7] text-apple-gray'}`}>{g}</button>))}</div>
             </div>
           </div>
           <button onClick={() => setShowSetup(false)} className="w-full py-5 bg-[#1d1d1f] text-white rounded-2xl font-bold text-lg">Activate</button>
@@ -454,9 +525,11 @@
 
     const ToDo = () => {
       const { showToast } = useToast();
-      const [tasks, setTasks] = useState(() => JSON.parse(localStorage.getItem('lifeos-todo')) || []);
+      const { appData, updateAppData } = useAppState();
+      const tasks = appData.todo;
+      const setTasks = (updater) => updateAppData('todo', updater);
+      
       const [newTask, setNewTask] = useState({ title: '', dueDate: '', dueTime: '' });
-      useEffect(() => { localStorage.setItem('lifeos-todo', JSON.stringify(tasks)); }, [tasks]);
 
       const addTask = (e) => {
         e.preventDefault(); if(!newTask.title) return;
@@ -496,9 +569,11 @@
     };
 
     const Tracker = () => {
-      const { showToast } = useToast(); const { settings } = useSettings();
-      const [data, setData] = useState(() => { try { return JSON.parse(localStorage.getItem('lifeos-tracker')) || {}; } catch { return {}; } });
-      useEffect(() => { localStorage.setItem('lifeos-tracker', JSON.stringify(data)); }, [data]);
+      const { showToast } = useToast(); 
+      const { appData, updateAppData } = useAppState();
+      const settings = appData.settings;
+      const data = appData.tracker;
+      const setData = (updater) => updateAppData('tracker', updater);
 
       const toggle = (day, habit) => {
         const key = `${day}-${habit}`; const isChecked = data[key]; const newData = { ...data, [key]: !isChecked };
@@ -531,8 +606,9 @@
     
     // CEO Briefing Tab (Gemini API Integration)
     const CEOBriefing = () => {
-      const { settings } = useSettings();
       const { showToast } = useToast();
+      const { appData } = useAppState();
+      const settings = appData.settings;
       const [briefing, setBriefing] = useState(null);
       const [displayedBriefing, setDisplayedBriefing] = useState('');
       const [loading, setLoading] = useState(false);
@@ -563,14 +639,12 @@
         setDisplayedBriefing('');
         
         try {
-          // Gather OS Data
-          const tData = localStorage.getItem('lifeos-tracker') || "{}";
-          const fData = localStorage.getItem('lifeos-finance') || "[]";
-          const dData = localStorage.getItem('lifeos-daily-meals') || "{}";
-          const todoData = localStorage.getItem('lifeos-todo') || "[]";
+          const tData = JSON.stringify(appData.tracker);
+          const fData = JSON.stringify(appData.finance);
+          const dData = JSON.stringify(appData.meals);
+          const todoData = JSON.stringify(appData.todo);
 
-          const prompt = `Founder Hamas is operating at the Institute of Space Technology. He is 21 and today is Day 1 of his 5-month transformation. Review his data with the intensity of a seed-stage investor.
-          You are a high-stakes, minimalist billionaire mentor. Your tone is direct, encouraging, and zero-nonsense. Address me as Founder Hamas. Review my habits and finances ruthlessly. 
+          const prompt = `You are a high-stakes billionaire mentor. I am Founder Hamas, 21, at IST Islamabad. Today is Day 1 of my 5-month transformation. Analyze my JSON habits and roast/praise me based on my real-time cloud data.
           Review my raw JSON life data below. Look at the '5-prayer streak' in the tracker and my Finance ledger to see if I am staying within budget.
           - Trackers (Habits & Prayers): ${tData}
           - Finance (Split expenses): ${fData}
@@ -650,12 +724,20 @@
     };
 
     const Analytics = () => {
-      const [score, setScore] = useState(0); useEffect(() => { const tData = JSON.parse(localStorage.getItem('lifeos-tracker')) || {}; let c = 0; DAYS.forEach(d => HABITS.forEach(h => { if (tData[`${d}-${h}`]) c++; })); setScore(Math.round((c / 77) * 100)); }, []);
+      const { appData } = useAppState();
+      const [score, setScore] = useState(0); 
+      useEffect(() => { 
+        const tData = appData.tracker || {}; let c = 0; 
+        DAYS.forEach(d => HABITS.forEach(h => { if (tData[`${d}-${h}`]) c++; })); 
+        setScore(Math.round((c / 77) * 100)); 
+      }, [appData.tracker]);
       return (<div className="apple-card p-12 text-center"><div className="text-9xl font-black text-apple-text mb-4">{score}%</div><p className="text-apple-gray text-2xl font-bold">Weekly Consistency</p></div>);
     };
 
     const SettingsModal = ({ close }) => {
-      const { settings, setSettings } = useSettings();
+      const { appData, updateAppData } = useAppState();
+      const settings = appData.settings;
+      const setSettings = (updater) => updateAppData('settings', updater);
       return (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
           <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="apple-card p-8 w-full max-w-md bg-white">
@@ -667,7 +749,7 @@
             <div className="mb-6 p-4 bg-[#f5f5f7] rounded-xl border border-black/5">
               <label className="block text-sm font-bold text-apple-text mb-2 uppercase tracking-tight">Gemini API Key</label>
               <input type="password" placeholder="Paste key here..." className="w-full p-3 rounded-lg bg-white border border-black/10 font-mono text-sm focus:outline-apple-blue" value={settings.geminiKey || ''} onChange={(e) => setSettings({...settings, geminiKey: e.target.value})} />
-              <p className="text-xs text-apple-gray mt-2 font-medium">Stored securely in your local browser memory.</p>
+              <p className="text-xs text-apple-gray mt-2 font-medium">Stored securely in your cloud engine.</p>
             </div>
 
             <div className="space-y-4">
@@ -684,60 +766,64 @@
     };
 
     const App = () => {
+      const { appData } = useAppState();
+      const settings = appData.settings;
       const [activeTab, setActiveTab] = useState('CEO Briefing');
-      const [settings, setSettings] = useState(() => { try { return JSON.parse(localStorage.getItem('lifeos-godmode')) || { aura: true, timeWarp: true, dopamineRain: true, shield: true, geminiKey: '' }; } catch { return { aura: true, timeWarp: true, dopamineRain: true, shield: true, geminiKey: '' }; } });
       const [showSettings, setShowSettings] = useState(false);
       const [timeMode, setTimeMode] = useState('normal'); const [aura, setAura] = useState('none'); const [shieldLevel, setShieldLevel] = useState('iron');
 
-      useEffect(() => { localStorage.setItem('lifeos-godmode', JSON.stringify(settings)); }, [settings]);
       useEffect(() => {
         const checkContext = () => {
           const now = new Date(); const h = now.getHours(); const m = now.getMinutes();
           if (settings.timeWarp) { if (h >= 8 && h < 16 && !(h===8 && m<30)) setTimeMode('stealth'); else if ((h >= 20 && h <= 22) && !(h===20 && m<45) && !(h===22 && m>=30)) setTimeMode('deepwork'); else setTimeMode('normal'); } else setTimeMode('normal');
-          if (settings.aura) { const tData = JSON.parse(localStorage.getItem('lifeos-tracker')) || {}; let c = 0; Object.values(tData).forEach(v => { if(v) c++; }); if (h >= 18 && c < 3) setAura('red'); else if (c > 20) setAura('gold'); else setAura('none'); } else setAura('none');
-          if (settings.shield) { const tData = JSON.parse(localStorage.getItem('lifeos-tracker')) || {}; let c = 0; Object.values(tData).forEach(v => { if(v) c++; }); if (c > 30) setShieldLevel('gold'); else if (c > 15) setShieldLevel('silver'); else if (c > 5) setShieldLevel('bronze'); else setShieldLevel('iron'); }
+          if (settings.aura) { const tData = appData.tracker; let c = 0; Object.values(tData).forEach(v => { if(v) c++; }); if (h >= 18 && c < 3) setAura('red'); else if (c > 20) setAura('gold'); else setAura('none'); } else setAura('none');
+          if (settings.shield) { const tData = appData.tracker; let c = 0; Object.values(tData).forEach(v => { if(v) c++; }); if (c > 30) setShieldLevel('gold'); else if (c > 15) setShieldLevel('silver'); else if (c > 5) setShieldLevel('bronze'); else setShieldLevel('iron'); }
         };
         const int = setInterval(checkContext, 60000); checkContext(); return () => clearInterval(int);
-      }, [settings]);
+      }, [settings, appData.tracker]);
 
       const getGreeting = () => { const h = new Date().getHours(); if (h < 12) return 'Good Morning'; if (h < 18) return 'Good Afternoon'; if (h >= 21) return 'Get rest'; return 'Good Evening'; };
 
       return (
-        <SettingsContext.Provider value={{ settings, setSettings }}>
-          <ToastProvider>
-            <RoutineNotifier />
-            <div id="app-container" className={`min-h-screen ${timeMode === 'stealth' ? 'stealth-mode' : timeMode === 'deepwork' ? 'deepwork-mode' : ''}`}>
-              {aura === 'red' && <div className="aura-red"></div>} {aura === 'gold' && <div className="aura-gold"></div>} {timeMode === 'deepwork' && <div className="focus-sphere"></div>}
-              <nav className="fixed top-0 left-0 right-0 z-50 apple-nav">
-                <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-                  <div className="flex items-center space-x-2 overflow-x-auto py-4 hide-scrollbar w-full">
-                    <div className="mr-6 flex items-center gap-2"><IconZap c="w-5 h-5 text-apple-text"/><span className="font-black text-apple-text tracking-tight">LifeOS</span></div>
-                    {TABS.map(tab => (<button key={tab} onClick={() => setActiveTab(tab)} className={`relative px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap ${activeTab === tab ? 'text-white' : 'text-apple-gray'}`}>{activeTab === tab && <motion.div layoutId="nav-pill" className="absolute inset-0 bg-[#1d1d1f] rounded-full" transition={{type:'spring'}} />}<span className="relative z-10">{tab}</span></button>))}
-                  </div>
-                  <button onClick={() => setShowSettings(true)} className="ml-4 p-2 rounded-full hover:bg-black/5"><IconSettings c="w-6 h-6 text-apple-text" /></button>
-                </div>
-              </nav>
-              <main className="max-w-7xl mx-auto px-6 py-8 pt-32 pb-32">
-                <div className="mb-16">
-                  <h1 className="text-6xl font-bold text-apple-text mb-4 tracking-tight">{getGreeting()}, Hamas.</h1>
-                  <p className="text-apple-gray text-2xl font-medium tracking-tight">Your intelligent life engine is ready.</p>
-                </div>
-                <AnimatePresence mode="wait">
-                  <motion.div key={activeTab} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-10}} transition={{type:'spring'}}>
-                    {activeTab === 'Daily Routine' && <DailyRoutine />} {activeTab === 'Fitness' && <Fitness />} {activeTab === 'Diet' && <Diet />} {activeTab === 'Finance' && <Finance />} {activeTab === 'Income' && <Income />} {activeTab === 'English' && <English />} {activeTab === 'CEO Briefing' && <CEOBriefing />} {activeTab === 'Tracker' && <Tracker />} {activeTab === 'To-Do' && <ToDo />} {activeTab === 'Analytics' && <Analytics />}
-                  </motion.div>
-                </AnimatePresence>
-              </main>
-              {settings.shield && <div className="shield-container"><div className={`shield shield-${shieldLevel}`}></div></div>}
-              {showSettings && <SettingsModal close={() => setShowSettings(false)} />}
+        <div id="app-container" className={`min-h-screen ${timeMode === 'stealth' ? 'stealth-mode' : timeMode === 'deepwork' ? 'deepwork-mode' : ''}`}>
+          <RoutineNotifier />
+          {aura === 'red' && <div className="aura-red"></div>} {aura === 'gold' && <div className="aura-gold"></div>} {timeMode === 'deepwork' && <div className="focus-sphere"></div>}
+          <nav className="fixed top-0 left-0 right-0 z-50 apple-nav">
+            <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+              <div className="flex items-center space-x-2 overflow-x-auto py-4 hide-scrollbar w-full">
+                <div className="mr-6 flex items-center gap-2"><IconZap c="w-5 h-5 text-apple-text"/><span className="font-black text-apple-text tracking-tight">LifeOS</span></div>
+                {TABS.map(tab => (<button key={tab} onClick={() => setActiveTab(tab)} className={`relative px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap ${activeTab === tab ? 'text-white' : 'text-apple-gray'}`}>{activeTab === tab && <motion.div layoutId="nav-pill" className="absolute inset-0 bg-[#1d1d1f] rounded-full" transition={{type:'spring'}} />}<span className="relative z-10">{tab}</span></button>))}
+              </div>
+              <button onClick={() => setShowSettings(true)} className="ml-4 p-2 rounded-full hover:bg-black/5"><IconSettings c="w-6 h-6 text-apple-text" /></button>
             </div>
-          </ToastProvider>
-        </SettingsContext.Provider>
+          </nav>
+          <main className="max-w-7xl mx-auto px-6 py-8 pt-32 pb-32">
+            <div className="mb-16">
+              <h1 className="text-6xl font-bold text-apple-text mb-4 tracking-tight">{getGreeting()}, Hamas.</h1>
+              <p className="text-apple-gray text-2xl font-medium tracking-tight">Your intelligent cloud engine is ready.</p>
+            </div>
+            <AnimatePresence mode="wait">
+              <motion.div key={activeTab} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-10}} transition={{type:'spring'}}>
+                {activeTab === 'Daily Routine' && <DailyRoutine />} {activeTab === 'Fitness' && <Fitness />} {activeTab === 'Diet' && <Diet />} {activeTab === 'Finance' && <Finance />} {activeTab === 'Income' && <Income />} {activeTab === 'English' && <English />} {activeTab === 'CEO Briefing' && <CEOBriefing />} {activeTab === 'Tracker' && <Tracker />} {activeTab === 'To-Do' && <ToDo />} {activeTab === 'Analytics' && <Analytics />}
+              </motion.div>
+            </AnimatePresence>
+          </main>
+          {settings.shield && <div className="shield-container"><div className={`shield shield-${shieldLevel}`}></div></div>}
+          {showSettings && <SettingsModal close={() => setShowSettings(false)} />}
+        </div>
       );
     };
 
+    const RootApp = () => (
+      <AppStateProvider>
+        <ToastProvider>
+          <App />
+        </ToastProvider>
+      </AppStateProvider>
+    );
+
     const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
+    root.render(<RootApp />);
   </script>
 </body>
 </html>
