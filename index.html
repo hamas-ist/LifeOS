@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LifeOS - Extraordinarily Intelligent</title>
+  
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/framer-motion@11.2.10/dist/framer-motion.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { apple: { bg: '#f5f5f7', card: '#ffffff', text: '#1d1d1f', gray: '#86868b', lightGray: '#e5e5ea', blue: '#0066cc', green: '#34c759', red: '#ff3b30', orange: '#ff9500' } },
+          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f5f5f7; color: #1d1d1f; margin: 0; padding: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; transition: background-color 1s ease; }
+    .apple-card { background: #ffffff; border-radius: 28px; box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.02); transition: all 0.3s ease; }
+    .apple-nav { background: rgba(255, 255, 255, 0.72); backdrop-filter: saturate(180%) blur(20px); border-bottom: 1px solid rgba(0, 0, 0, 0.05); transition: all 0.3s ease; }
+    ::-webkit-scrollbar { display: none; }
+    .wave { position: absolute; left: -50%; width: 200%; height: 200%; background: rgba(255, 255, 255, 0.3); border-radius: 40%; animation: wave 5s linear infinite; }
+    .wave:nth-child(2) { animation: wave 7s linear infinite; background: rgba(255, 255, 255, 0.15); }
+    @keyframes wave { 0% { transform: translateY(0) rotate(0deg); } 100% { transform: translateY(-2%) rotate(360deg); } }
+    input[type=number]::-webkit-inner-spin-button, input[type=time]::-webkit-inner-spin-button, input[type=date]::-webkit-inner-spin-button { -webkit-appearance: none; }
+    
+    @keyframes shakeUI {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      10%, 30%, 50%, 70%, 90% { transform: translate(-3px, -2px) rotate(-1deg); }
+      20%, 40%, 60%, 80% { transform: translate(3px, 2px) rotate(1deg); }
+    }
+    .shake-active { animation: shakeUI 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+
+    .stealth-mode { filter: grayscale(100%) contrast(110%); }
+    .deepwork-mode { background-color: #000000 !important; color: #ffffff !important; }
+    .deepwork-mode .apple-card, .deepwork-mode .apple-nav, .deepwork-mode input, .deepwork-mode select, .deepwork-mode textarea { background-color: #111111 !important; color: #ffffff !important; border-color: #333333 !important; box-shadow: none !important; }
+    .deepwork-mode .text-apple-text, .deepwork-mode .text-apple-gray, .deepwork-mode p, .deepwork-mode span, .deepwork-mode h1, .deepwork-mode h2, .deepwork-mode h3 { color: #dddddd !important; }
+    .deepwork-mode .bg-\[\#f5f5f7\] { background-color: #222222 !important; }
+    
+    .focus-sphere { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1), rgba(0,0,0,1)); box-shadow: 0 0 100px rgba(255,255,255,0.05), inset 0 0 50px rgba(255,255,255,0.05); pointer-events: none; z-index: -1; opacity: 0; transition: opacity 2s; }
+    .deepwork-mode .focus-sphere { opacity: 1; animation: breathe 19s infinite ease-in-out; }
+    @keyframes breathe { 0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 20px rgba(255,255,255,0.02); } 21% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 80px rgba(255,255,255,0.1); } 57% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 80px rgba(255,255,255,0.1); } 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 20px rgba(255,255,255,0.02); } }
+    .aura-red { box-shadow: inset 0 0 150px rgba(255, 59, 48, 0.15); pointer-events: none; position: fixed; inset: 0; z-index: 9999; transition: opacity 2s; }
+    .aura-gold { position: fixed; inset: 0; z-index: -2; background: radial-gradient(circle at 50% 0%, rgba(255, 215, 0, 0.15) 0%, transparent 70%); animation: goldPulse 4s infinite alternate; }
+    @keyframes goldPulse { from { opacity: 0.5; } to { opacity: 1; } }
+    .shield-container { position: fixed; bottom: 30px; right: 30px; z-index: 100; perspective: 1000px; }
+    .shield { width: 60px; height: 70px; position: relative; transform-style: preserve-3d; clip-path: polygon(50% 0%, 100% 20%, 100% 70%, 50% 100%, 0 70%, 0 20%); transition: all 1s; }
+    .shield-iron { background: linear-gradient(135deg, #7f8c8d, #95a5a6); box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+    .shield-bronze { background: linear-gradient(135deg, #cd7f32, #8b4513); box-shadow: inset 0 0 15px rgba(0,0,0,0.6); }
+    .shield-silver { background: linear-gradient(135deg, #bdc3c7, #ecf0f1); box-shadow: 0 0 20px rgba(255,255,255,0.5); }
+    .shield-gold { background: linear-gradient(135deg, #FFD700, #FDB931); box-shadow: 0 0 30px rgba(255,215,0,0.8); animation: shieldFlame 2s infinite alternate; }
+    @keyframes shieldFlame { 0% { filter: drop-shadow(0 0 10px #ff9500); } 100% { filter: drop-shadow(0 0 25px #ff3b30); transform: translateY(-5px); } }
+
+    /* Markdown Styling for AI Briefing */
+    .markdown-content p { margin-bottom: 1em; line-height: 1.6; }
+    .markdown-content h1, .markdown-content h2, .markdown-content h3 { font-weight: 800; margin-bottom: 0.5em; margin-top: 1.5em; }
+    .markdown-content strong { color: #fff; font-weight: 800; }
+    .markdown-content ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1em; }
+    .markdown-content li { margin-bottom: 0.5em; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect, createContext, useContext } = React;
+    const { motion, AnimatePresence } = window.Motion;
+
+    // --- Audio API ---
+    const playVictorySound = () => {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioContext(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain();
+        osc.type = 'sine'; osc.frequency.setValueAtTime(440, ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.1); osc.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.3); 
+        gainNode.gain.setValueAtTime(0, ctx.currentTime); gainNode.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 0.1); gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.5);
+        osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 1.5);
+      } catch(e) { console.error("Audio error", e); }
+    };
+
+    // --- Icons ---
+    const IconCheck = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>);
+    const IconCoffee = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/></svg>);
+    const IconSun = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>);
+    const IconMoon = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>);
+    const IconTarget = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>);
+    const IconBookOpen = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>);
+    const IconBrain = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>);
+    const IconCalendar = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>);
+    const IconActivity = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>);
+    const IconBriefcase = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>);
+    const IconZap = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>);
+    const IconSettings = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>);
+    const IconList = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>);
+
+    // --- Data ---
+    const TABS = ['Daily Routine', 'Fitness', 'Diet', 'Finance', 'Income', 'English', 'CEO Briefing', 'Tracker', 'To-Do', 'Analytics'];
+    const HABITS = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Workout', '2.5L Water', 'Quran', 'English', 'Skill Work', '10:30 PM Sleep'];
+    const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const WEEKDAY_SCHEDULE = [
+      { time: '4:00 AM', label: 'Fajr & Quran', icon: <IconMoon c="w-5 h-5" />, h: 4, m: 0 }, { time: '8:30 AM', label: 'University', icon: <IconBriefcase c="w-5 h-5" />, h: 8, m: 30 }, { time: '2:00 PM', label: 'Return & Rest', icon: <IconCoffee c="w-5 h-5" />, h: 14, m: 0 }, { time: '4:00 PM', label: 'Asr', icon: <IconSun c="w-5 h-5" />, h: 16, m: 0 }, { time: '5:00 PM', label: 'Fitness / Workout', icon: <IconActivity c="w-5 h-5" />, h: 17, m: 0 }, { time: '6:30 PM', label: 'Maghrib', icon: <IconMoon c="w-5 h-5" />, h: 18, m: 30 }, { time: '7:00 PM', label: 'Skill Work (Fiverr)', icon: <IconTarget c="w-5 h-5" />, h: 19, m: 0 }, { time: '8:30 PM', label: 'Isha', icon: <IconMoon c="w-5 h-5" />, h: 20, m: 30 }, { time: '9:00 PM', label: 'English Practice', icon: <IconBookOpen c="w-5 h-5" />, h: 21, m: 0 }, { time: '10:30 PM', label: 'Sleep', icon: <IconZap c="w-5 h-5" />, h: 22, m: 30 },
+    ];
+    const WEEKEND_SCHEDULE = [
+      { time: '4:00 AM', label: 'Fajr & Quran', icon: <IconMoon c="w-5 h-5" />, h: 4, m: 0 }, { time: '8:00 AM', label: 'Deep Work', icon: <IconBrain c="w-5 h-5" />, h: 8, m: 0 }, { time: '12:00 PM', label: 'Dhuhr', icon: <IconSun c="w-5 h-5" />, h: 12, m: 0 }, { time: '2:00 PM', label: 'Rest', icon: <IconCoffee c="w-5 h-5" />, h: 14, m: 0 }, { time: '4:00 PM', label: 'Asr', icon: <IconSun c="w-5 h-5" />, h: 16, m: 0 }, { time: '5:00 PM', label: 'Fitness / Workout', icon: <IconActivity c="w-5 h-5" />, h: 17, m: 0 }, { time: '6:30 PM', label: 'Maghrib', icon: <IconMoon c="w-5 h-5" />, h: 18, m: 30 }, { time: '7:00 PM', label: 'Review', icon: <IconCalendar c="w-5 h-5" />, h: 19, m: 0 }, { time: '8:30 PM', label: 'Isha', icon: <IconMoon c="w-5 h-5" />, h: 20, m: 30 }, { time: '10:30 PM', label: 'Sleep', icon: <IconZap c="w-5 h-5" />, h: 22, m: 30 },
+    ];
+    const FOOD_DB = {
+      'banana': { cal: 105, pro: 1, carb: 27, fat: 0 }, 'apple': { cal: 95, pro: 0.5, carb: 25, fat: 0 }, 'egg': { cal: 70, pro: 6, carb: 0, fat: 5 }, 'roti': { cal: 120, pro: 3, carb: 20, fat: 1 }, 'daal': { cal: 150, pro: 9, carb: 20, fat: 5 }, 'rice': { cal: 200, pro: 4, carb: 45, fat: 0.5 }, 'chicken breast': { cal: 165, pro: 31, carb: 0, fat: 3.6 }, 'chicken tikka': { cal: 200, pro: 30, carb: 2, fat: 8 }, 'milk': { cal: 150, pro: 8, carb: 12, fat: 8 }, 'yogurt': { cal: 100, pro: 10, carb: 4, fat: 0 }, 'beef': { cal: 250, pro: 26, carb: 0, fat: 15 }, 'whey': { cal: 120, pro: 24, carb: 3, fat: 1 }
+    };
+
+    // --- Contexts ---
+    const ToastContext = createContext();
+    const SettingsContext = createContext();
+
+    const ToastProvider = ({ children }) => {
+      const [toasts, setToasts] = useState([]);
+      const showToast = (message, title = "Notification") => {
+        const id = Date.now() + Math.random();
+        setToasts(prev => [...prev, { id, message, title }]);
+        setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 6000);
+      };
+      return (
+        <ToastContext.Provider value={{ showToast }}>
+          {children}
+          <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-4 w-full max-w-md pointer-events-none px-4">
+            <AnimatePresence>
+              {toasts.map(t => (
+                <motion.div key={t.id} initial={{ opacity: 0, y: -40, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} className="bg-white/95 backdrop-blur-2xl border border-black/5 shadow-[0_16px_40px_rgba(0,0,0,0.12)] rounded-3xl p-5 w-full text-center">
+                  <h4 className="font-semibold text-apple-text text-lg tracking-tight">{t.title}</h4>
+                  <p className="text-apple-gray text-base mt-1 font-medium leading-tight">{t.message}</p>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        </ToastContext.Provider>
+      );
+    };
+
+    const useToast = () => useContext(ToastContext);
+    const useSettings = () => useContext(SettingsContext);
+
+    // --- Aggressive Notifier Engine ---
+    const RoutineNotifier = () => {
+      const { showToast } = useToast();
+      const [triggered, setTriggered] = useState({});
+
+      useEffect(() => {
+        const checkTime = () => {
+          const now = new Date(); const h = now.getHours(); const m = now.getMinutes();
+          const isWeekend = now.getDay() === 0 || now.getDay() === 6;
+          
+          const schedule = isWeekend ? WEEKEND_SCHEDULE : WEEKDAY_SCHEDULE;
+          schedule.forEach(item => {
+            if (item.h === h && item.m === m) {
+              const key = `routine-${now.toDateString()}-${item.time}`;
+              if (!triggered[key]) {
+                const isPrayer = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].some(p => item.label.includes(p));
+                showToast(isPrayer ? `It's time for ${item.label}. Leave everything and pray.` : `It is ${item.time}. Next mission: ${item.label}.`, isPrayer ? "Prayer Time" : "Routine Update");
+                if (isPrayer) playVictorySound();
+                setTriggered(p => ({ ...p, [key]: true }));
+              }
+            }
+          });
+
+          const mealTimes = [{ h: 8, m: 0, l: 'Breakfast' }, { h: 14, m: 0, l: 'Lunch' }, { h: 20, m: 0, l: 'Dinner' }];
+          mealTimes.forEach(meal => {
+             if (meal.h === h && meal.m === m) {
+               const key = `meal-${now.toDateString()}-${meal.l}`;
+               if (!triggered[key]) {
+                 showToast(`It's time for ${meal.l}. Fuel your engine. Log your meal.`, "Nutrition Alert");
+                 setTriggered(p => ({ ...p, [key]: true }));
+               }
+             }
+          });
+
+          const tasks = JSON.parse(localStorage.getItem('lifeos-todo')) || [];
+          tasks.forEach(t => {
+            if (!t.completed && t.dueDate && t.dueTime) {
+               const [dueH, dueM] = t.dueTime.split(':').map(Number);
+               const dueTimeObj = new Date(`${t.dueDate}T${t.dueTime}`);
+               if (dueTimeObj.toDateString() === now.toDateString() && dueH === h && dueM === m) {
+                 const key = `todo-${t.id}-${h}:${m}`;
+                 if (!triggered[key]) {
+                   showToast(`URGENT: "${t.title}" is due NOW.`, "Task Due");
+                   playVictorySound();
+                   document.getElementById('app-container').classList.add('shake-active');
+                   setTimeout(() => document.getElementById('app-container').classList.remove('shake-active'), 500);
+                   setTriggered(p => ({ ...p, [key]: true }));
+                 }
+               }
+            }
+          });
+        };
+        const int = setInterval(checkTime, 30000); checkTime(); return () => clearInterval(int);
+      }, [triggered, showToast]);
+      return null;
+    };
+
+    // --- Components ---
+    const RoutineTimeline = ({ title, schedule }) => {
+      const [currentMins, setCurrentMins] = useState(new Date().getHours() * 60 + new Date().getMinutes());
+      useEffect(() => { const int = setInterval(() => setCurrentMins(new Date().getHours() * 60 + new Date().getMinutes()), 60000); return () => clearInterval(int); }, []);
+      return (
+        <div className="apple-card p-8 md:p-12 h-full max-w-3xl mx-auto">
+          <h3 className="text-3xl font-semibold tracking-tight mb-10 flex items-center gap-4 text-apple-text">
+            {title === 'Weekday' ? <IconBriefcase c="w-8 h-8 text-apple-blue" /> : <IconCoffee c="w-8 h-8 text-apple-blue" />} {title}
+          </h3>
+          <div className="relative border-l-2 border-apple-lightGray pl-8 space-y-10">
+            {schedule.map((item, idx) => {
+              let itemMins = item.h * 60 + item.m;
+              let nextItemMins = schedule[idx + 1] ? schedule[idx + 1].h * 60 + schedule[idx + 1].m : 24 * 60;
+              let isCurrent = nextItemMins > itemMins ? (currentMins >= itemMins && currentMins < nextItemMins) : (currentMins >= itemMins || currentMins < nextItemMins);
+              return (
+                <div key={idx} className="relative">
+                  <div className={`absolute -left-[41px] top-2 w-4 h-4 rounded-full border-2 transition-all ${isCurrent ? 'bg-apple-blue border-white shadow-[0_0_0_4px_rgba(0,102,204,0.2)] scale-125' : 'bg-white border-apple-lightGray'}`} />
+                  <div className={`transition-all duration-300 ${isCurrent ? 'translate-x-2' : 'hover:translate-x-1 opacity-70 hover:opacity-100'}`}>
+                    <div className="flex items-center gap-4 mb-1">
+                      <span className={`text-sm font-semibold tracking-tight ${isCurrent ? 'text-apple-blue' : 'text-apple-gray'}`}>{item.time}</span>
+                      <div className={`${isCurrent ? 'text-apple-blue' : 'text-apple-gray'}`}>{item.icon}</div>
+                    </div>
+                    <h4 className={`text-xl font-semibold tracking-tight ${isCurrent ? 'text-apple-text' : 'text-apple-gray'}`}>{item.label}</h4>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    };
+
+    const DailyRoutine = () => {
+      const isWeekend = new Date().getDay() === 0 || new Date().getDay() === 6;
+      return <div className="w-full">{isWeekend ? <RoutineTimeline title="Weekend" schedule={WEEKEND_SCHEDULE} /> : <RoutineTimeline title="Weekday" schedule={WEEKDAY_SCHEDULE} />}</div>;
+    };
+
+    const Finance = () => {
+      const { showToast } = useToast();
+      const [txs, setTxs] = useState(() => JSON.parse(localStorage.getItem('lifeos-finance')) || []);
+      const [newTx, setNewTx] = useState({ desc: '', amount: '', paidBy: 'hamas', splitType: 'combine' });
+
+      useEffect(() => { localStorage.setItem('lifeos-finance', JSON.stringify(txs)); }, [txs]);
+
+      const logTx = (e) => {
+        e.preventDefault();
+        if (!newTx.desc || !newTx.amount) return;
+        const tx = { id: Date.now(), date: new Date().toLocaleDateString(), ...newTx, amount: Number(newTx.amount) };
+        setTxs(p => [tx, ...p]);
+        setNewTx({ desc: '', amount: '', paidBy: 'hamas', splitType: 'combine' });
+        showToast(`Logged ${tx.desc} for Rs ${tx.amount}`, "Finance Ledger");
+      };
+
+      const removeTx = (id) => setTxs(p => p.filter(t => t.id !== id));
+      const settleDebt = () => {
+        if(confirm("Are you sure you want to mark all debts as settled? This will clear the ledger.")) {
+          setTxs([]);
+          showToast("Ledger cleared. Debt settled.", "Finance Ledger");
+        }
+      };
+
+      let hamasSpent = 0; let misbahSpent = 0; let balance = 0; // Positive = Misbah owes Hamas. Negative = Hamas owes Misbah.
+
+      txs.forEach(t => {
+        if (t.paidBy === 'hamas') {
+          hamasSpent += t.amount;
+          if (t.splitType === 'combine') balance += t.amount / 2;
+          else if (t.splitType === 'misbah') balance += t.amount;
+        } else if (t.paidBy === 'misbah') {
+          misbahSpent += t.amount;
+          if (t.splitType === 'combine') balance -= t.amount / 2;
+          else if (t.splitType === 'hamas') balance -= t.amount;
+        }
+      });
+
+      return (
+        <div className="space-y-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className={`apple-card p-8 md:col-span-3 flex items-center justify-between border-l-8 ${balance > 0 ? 'border-apple-green' : balance < 0 ? 'border-apple-red' : 'border-apple-gray'}`}>
+              <div>
+                <h3 className="text-3xl font-bold text-apple-text mb-2">Net Settlement</h3>
+                <p className="text-apple-gray font-medium text-xl">
+                  {balance === 0 ? "You are fully settled." : balance > 0 ? `Misbah owes you:` : `You owe Misbah:`}
+                </p>
+              </div>
+              <div className={`text-6xl font-black ${balance > 0 ? 'text-apple-green' : balance < 0 ? 'text-apple-red' : 'text-apple-gray'}`}>
+                Rs {Math.abs(balance)}
+              </div>
+            </div>
+            
+            <div className="apple-card p-8 text-center"><div className="text-4xl font-bold text-apple-text mb-2">Rs {hamasSpent}</div><p className="text-apple-gray font-bold uppercase text-sm">Hamas Total Spent</p></div>
+            <div className="apple-card p-8 text-center"><div className="text-4xl font-bold text-apple-text mb-2">Rs {misbahSpent}</div><p className="text-apple-gray font-bold uppercase text-sm">Misbah Total Spent</p></div>
+            <div onClick={settleDebt} className="apple-card p-8 text-center bg-[#1d1d1f] text-white shadow-xl flex flex-col justify-center items-center cursor-pointer hover:scale-[1.02] transition-transform"><span className="font-bold text-2xl">Settle Debt</span><span className="text-sm mt-2 font-medium opacity-70">Clear the ledger</span></div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+             <div className="apple-card p-8 lg:col-span-1 h-fit">
+                <h3 className="text-2xl font-bold text-apple-text mb-6">Log Expense</h3>
+                <form onSubmit={logTx} className="space-y-5">
+                  <input type="text" placeholder="What did you buy?" className="w-full p-4 bg-[#f5f5f7] rounded-2xl font-medium" value={newTx.desc} onChange={e=>setNewTx({...newTx, desc:e.target.value})} />
+                  <input type="number" placeholder="Amount (Rs)" className="w-full p-4 bg-[#f5f5f7] rounded-2xl font-bold" value={newTx.amount} onChange={e=>setNewTx({...newTx, amount:e.target.value})} />
+                  <div className="space-y-3">
+                    <label className="text-xs font-bold text-apple-gray uppercase">Who Paid?</label>
+                    <div className="flex gap-2">
+                      <button type="button" onClick={()=>setNewTx({...newTx, paidBy:'hamas'})} className={`flex-1 py-3 rounded-xl font-bold transition-all ${newTx.paidBy==='hamas'?'bg-apple-blue text-white shadow-md':'bg-[#f5f5f7] text-apple-gray'}`}>Hamas</button>
+                      <button type="button" onClick={()=>setNewTx({...newTx, paidBy:'misbah'})} className={`flex-1 py-3 rounded-xl font-bold transition-all ${newTx.paidBy==='misbah'?'bg-apple-blue text-white shadow-md':'bg-[#f5f5f7] text-apple-gray'}`}>Misbah</button>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <label className="text-xs font-bold text-apple-gray uppercase">How to Split?</label>
+                    <div className="flex flex-col gap-2">
+                      <button type="button" onClick={()=>setNewTx({...newTx, splitType:'combine'})} className={`w-full py-3 rounded-xl font-bold transition-all ${newTx.splitType==='combine'?'bg-apple-text text-white':'bg-[#f5f5f7] text-apple-gray'}`}>Combine (50/50)</button>
+                      <button type="button" onClick={()=>setNewTx({...newTx, splitType:'misbah'})} className={`w-full py-3 rounded-xl font-bold transition-all ${newTx.splitType==='misbah'?'bg-apple-text text-white':'bg-[#f5f5f7] text-apple-gray'}`}>100% For Misbah</button>
+                      <button type="button" onClick={()=>setNewTx({...newTx, splitType:'hamas'})} className={`w-full py-3 rounded-xl font-bold transition-all ${newTx.splitType==='hamas'?'bg-apple-text text-white':'bg-[#f5f5f7] text-apple-gray'}`}>100% For Hamas</button>
+                    </div>
+                  </div>
+                  <button type="submit" className="w-full py-4 mt-2 bg-apple-green text-white font-bold rounded-2xl shadow-md hover:scale-[1.02] transition-transform">Log Transaction</button>
+                </form>
+             </div>
+
+             <div className="apple-card p-8 lg:col-span-2">
+                <h3 className="text-2xl font-bold text-apple-text mb-6">Transaction History</h3>
+                <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+                   {txs.length === 0 && <p className="text-apple-gray font-medium text-lg text-center py-10">No expenses logged yet.</p>}
+                   {txs.map(t => (
+                     <div key={t.id} className="flex flex-col md:flex-row items-start md:items-center justify-between p-5 bg-[#f5f5f7] rounded-2xl gap-4">
+                       <div className="flex items-center gap-4">
+                         <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg shrink-0 shadow-sm ${t.paidBy==='hamas'?'bg-apple-blue':'bg-apple-orange'}`}>{t.paidBy==='hamas'?'H':'M'}</div>
+                         <div>
+                           <h5 className="font-bold text-apple-text text-xl leading-tight mb-1">{t.desc}</h5>
+                           <div className="text-sm font-semibold text-apple-gray">
+                             {t.date} • <span className="uppercase text-apple-blue">{t.splitType === 'combine' ? '50/50 Split' : t.splitType === 'misbah' ? 'For Misbah' : 'For Hamas'}</span>
+                           </div>
+                         </div>
+                       </div>
+                       <div className="flex items-center gap-6 self-end md:self-auto">
+                         <span className="font-black text-apple-text text-2xl">Rs {t.amount}</span>
+                         <button onClick={()=>removeTx(t.id)} className="w-10 h-10 flex items-center justify-center bg-white text-apple-red font-bold rounded-full shadow-sm hover:scale-110 transition-transform">X</button>
+                       </div>
+                     </div>
+                   ))}
+                </div>
+             </div>
+          </div>
+        </div>
+      )
+    };
+
+    const Fitness = () => {
+      const [phase, setPhase] = useState('Foundation'); const phases = ['Foundation', 'Progression', 'Performance'];
+      const workouts = { Foundation: { A: ['Push-ups (3x8-12)', 'Bodyweight Squats (3x15)', 'Plank (3x30s)'], B: ['Inverted Rows / Pull-ups (3x5-8)', 'Lunges (3x12/leg)', 'Glute Bridges (3x15)'] }, Progression: { A: ['Diamond Push-ups (3x8-12)', 'Jump Squats (3x12)', 'Side Planks (3x30s/side)'], B: ['Pull-ups (3x8-10)', 'Bulgarian Split Squats (3x10/leg)', 'Single-leg Bridges (3x12/leg)'] }, Performance: { A: ['Archer Push-ups (3x6/side)', 'Pistol Squats (3x5/side)', 'L-Sit progression (3x15s)'], B: ['Muscle-up progression (3x5)', 'Shrimp Squats (3x8/leg)', 'Dragon Flags (3x8)'] } };
+      return (
+        <div className="space-y-10">
+          <div className="flex justify-center"><div className="bg-white/80 backdrop-blur-md shadow-sm flex items-center p-1.5 rounded-full border border-black/5">{phases.map(p => (<button key={p} onClick={() => setPhase(p)} className={`relative px-8 py-3 rounded-full text-sm font-semibold transition-colors ${phase === p ? 'text-white' : 'text-apple-gray hover:text-apple-text'}`}>{phase === p && <motion.div layoutId="fitness-pill" className="absolute inset-0 bg-[#1d1d1f] rounded-full shadow-md" transition={{ type: 'spring' }} />}<span className="relative z-10">{p}</span></button>))}</div></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">{['A', 'B'].map(type => (<div key={type} className="apple-card p-10"><div className="flex items-center gap-5 mb-10"><div className="w-16 h-16 rounded-2xl bg-[#f5f5f7] flex items-center justify-center"><span className="text-3xl font-bold text-apple-text">{type}</span></div><h3 className="text-3xl font-semibold tracking-tight text-apple-text">Workout {type}</h3></div><ul className="space-y-5">{workouts[phase][type].map((ex, i) => (<li key={i} className="flex items-center gap-4 p-5 rounded-2xl bg-[#f5f5f7]/50 border border-black/5"><div className="w-8 h-8 rounded-full bg-apple-blue/10 flex items-center justify-center shrink-0"><IconCheck c="w-5 h-5 text-apple-blue" /></div><span className="text-apple-text font-medium text-lg tracking-tight">{ex}</span></li>))}</ul></div>))}</div>
+        </div>
+      );
+    };
+
+    const AutoDietPlan = ({ targetCal }) => {
+      const bC = Math.round(targetCal * 0.25), lC = Math.round(targetCal * 0.35), dC = Math.round(targetCal * 0.30);
+      return (
+        <div className="space-y-4">
+          <div className="p-5 bg-[#f5f5f7] rounded-[20px]"><div className="flex justify-between items-center mb-2"><h4 className="font-semibold text-apple-text text-lg">Breakfast</h4><span className="text-apple-blue font-bold text-sm">~{bC} kcal</span></div><p className="text-apple-gray font-medium leading-relaxed">3-4 Whole Eggs, 2 slices whole wheat bread, Black Coffee.</p></div>
+          <div className="p-5 bg-[#f5f5f7] rounded-[20px]"><div className="flex justify-between items-center mb-2"><h4 className="font-semibold text-apple-text text-lg">Lunch</h4><span className="text-apple-blue font-bold text-sm">~{lC} kcal</span></div><p className="text-apple-gray font-medium leading-relaxed">2 Roti, 1.5 cups Daal / Chana, Large Salad.</p></div>
+          <div className="p-5 bg-[#f5f5f7] rounded-[20px]"><div className="flex justify-between items-center mb-2"><h4 className="font-semibold text-apple-text text-lg">Dinner</h4><span className="text-apple-blue font-bold text-sm">~{dC} kcal</span></div><p className="text-apple-gray font-medium leading-relaxed">200g Chicken Tikka/Boti, 1 Roti, 1/2 cup Dahi.</p></div>
+        </div>
+      );
+    };
+
+    const Diet = () => {
+      const { showToast } = useToast(); const todayDate = new Date().toDateString();
+      const [profile, setProfile] = useState(() => { try { return JSON.parse(localStorage.getItem('lifeos-profile')) || { age: 21, weight: 70, height: 175, gender: 'male', activity: '1.55', goal: 'bulk' }; } catch { return { age: 21, weight: 70, height: 175, gender: 'male', activity: '1.55', goal: 'bulk' }; } });
+      const [showSetup, setShowSetup] = useState(!localStorage.getItem('lifeos-profile'));
+      const [dailyMeals, setDailyMeals] = useState(() => { try { return JSON.parse(localStorage.getItem('lifeos-daily-meals')) || {}; } catch { return {}; } });
+      const todayMeals = dailyMeals[todayDate] || [];
+      useEffect(() => { localStorage.setItem('lifeos-profile', JSON.stringify(profile)); }, [profile]); useEffect(() => { localStorage.setItem('lifeos-daily-meals', JSON.stringify(dailyMeals)); }, [dailyMeals]);
+
+      let bmr = 10 * profile.weight + 6.25 * profile.height - 5 * profile.age + (profile.gender === 'male' ? 5 : -161);
+      let tdee = Math.round(bmr * parseFloat(profile.activity));
+      let targetCal = tdee + (profile.goal === 'cut' ? -500 : profile.goal === 'bulk' ? 300 : 0);
+      let targetPro = Math.round(profile.weight * 2.2); let targetFat = Math.round((targetCal * 0.25) / 9); let targetCarb = Math.round((targetCal - (targetPro * 4) - (targetFat * 9)) / 4);
+      let bmi = (profile.weight / Math.pow(profile.height / 100, 2)).toFixed(1);
+      let eatenCal = todayMeals.reduce((s, m) => s + Number(m.cal||0), 0), eatenPro = todayMeals.reduce((s, m) => s + Number(m.pro||0), 0), eatenCarb = todayMeals.reduce((s, m) => s + Number(m.carb||0), 0), eatenFat = todayMeals.reduce((s, m) => s + Number(m.fat||0), 0);
+
+      const [newMeal, setNewMeal] = useState({ name: '', qty: 1, cal: '', pro: '', carb: '', fat: '' });
+      useEffect(() => {
+        const nameLower = newMeal.name.toLowerCase().trim();
+        const matchKey = Object.keys(FOOD_DB).find(k => nameLower.includes(k));
+        if (matchKey && newMeal.qty > 0) {
+           const db = FOOD_DB[matchKey];
+           setNewMeal(prev => ({ ...prev, cal: Math.round(db.cal * prev.qty), pro: Math.round(db.pro * prev.qty), carb: Math.round(db.carb * prev.qty), fat: Math.round(db.fat * prev.qty) }));
+        }
+      }, [newMeal.name, newMeal.qty]);
+
+      const logMeal = (e) => {
+        e.preventDefault(); if (!newMeal.name || !newMeal.cal) return;
+        const meal = { id: Date.now(), ...newMeal };
+        setDailyMeals(p => ({ ...p, [todayDate]: [...(p[todayDate] || []), meal] }));
+        setNewMeal({ name: '', qty: 1, cal: '', pro: '', carb: '', fat: '' });
+        if (window.confetti) window.confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+        showToast(`Logged ${meal.name} (${meal.cal} kcal).`, "Meal Logged");
+      };
+
+      if (showSetup) return (
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="apple-card p-8 md:p-12 max-w-2xl mx-auto border-2 border-apple-blue/20">
+          <h3 className="text-3xl font-bold text-apple-text mb-2">Configure Body Engine</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 mt-6">
+            <div className="space-y-2"><label className="text-sm font-bold text-apple-gray">Weight (kg)</label><input type="number" value={profile.weight} onChange={(e)=>setProfile(p=>({...p,weight:Number(e.target.value)}))} className="w-full p-4 bg-[#f5f5f7] rounded-xl font-bold" /></div>
+            <div className="space-y-2"><label className="text-sm font-bold text-apple-gray">Goal</label>
+              <div className="flex gap-2">{['cut', 'maintain', 'bulk'].map(g => (<button key={g} onClick={() => setProfile({...profile, goal: g})} className={`flex-1 py-3 rounded-xl font-bold text-sm capitalize ${profile.goal === g ? 'bg-apple-blue text-white' : 'bg-[#f5f5f7] text-apple-gray'}`}>{g}</button>))}</div>
+            </div>
+          </div>
+          <button onClick={() => setShowSetup(false)} className="w-full py-5 bg-[#1d1d1f] text-white rounded-2xl font-bold text-lg">Activate</button>
+        </motion.div>
+      );
+
+      return (
+        <div className="space-y-8">
+          <div className="flex justify-between items-center"><h2 className="text-4xl font-bold text-apple-text">Nutrition Engine</h2><button onClick={() => setShowSetup(true)} className="px-5 py-2.5 bg-white border border-black/5 rounded-full text-sm font-bold text-apple-gray shadow-sm">Settings</button></div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[{ l: 'Cals', c: eatenCal, t: targetCal, u: 'kcal', col: 'bg-apple-blue' }, { l: 'Pro', c: eatenPro, t: targetPro, u: 'g', col: 'bg-apple-green' }, { l: 'Carbs', c: eatenCarb, t: targetCarb, u: 'g', col: 'bg-apple-orange' }, { l: 'Fats', c: eatenFat, t: targetFat, u: 'g', col: 'bg-apple-red' }].map(m => (
+              <div key={m.l} className="apple-card p-6"><div className="flex justify-between items-end mb-4"><span className="font-bold text-apple-text text-lg">{m.l}</span><span className="text-xs font-bold text-apple-gray">{Math.max(m.t-m.c,0)} left</span></div><div className="w-full bg-[#f5f5f7] rounded-full h-3 mb-4 overflow-hidden"><motion.div initial={{width:0}} animate={{width:`${Math.min((m.c/m.t)*100,100)}%`}} className={`${m.col} h-3 rounded-full`} /></div><div className="font-bold text-apple-gray"><span className="text-apple-text text-xl">{m.c}</span> / {m.t}</div></div>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="apple-card p-8">
+              <h3 className="text-2xl font-bold text-apple-text mb-2">Log Smart Meal</h3>
+              <p className="text-sm font-medium text-apple-gray mb-6">Type "Banana", "Egg", "Roti", "Daal", "Chicken Breast" to auto-calculate.</p>
+              <form onSubmit={logMeal} className="space-y-4">
+                <div className="grid grid-cols-3 gap-4">
+                  <input type="text" placeholder="Meal Name" className="col-span-2 p-4 bg-[#f5f5f7] rounded-[16px] font-medium" value={newMeal.name} onChange={e=>setNewMeal({...newMeal,name:e.target.value})} />
+                  <input type="number" placeholder="Qty" className="p-4 bg-[#f5f5f7] rounded-[16px] font-medium text-center" value={newMeal.qty} onChange={e=>setNewMeal({...newMeal,qty:Number(e.target.value)})} min="1" step="0.5" />
+                </div>
+                <div className="grid grid-cols-4 gap-4"><input type="number" placeholder="Kcal" className="p-4 bg-[#f5f5f7] rounded-[16px] text-center" value={newMeal.cal} onChange={e=>setNewMeal({...newMeal,cal:e.target.value})} /><input type="number" placeholder="Pro" className="p-4 bg-[#f5f5f7] rounded-[16px] text-center" value={newMeal.pro} onChange={e=>setNewMeal({...newMeal,pro:e.target.value})} /><input type="number" placeholder="Carb" className="p-4 bg-[#f5f5f7] rounded-[16px] text-center" value={newMeal.carb} onChange={e=>setNewMeal({...newMeal,carb:e.target.value})} /><input type="number" placeholder="Fat" className="p-4 bg-[#f5f5f7] rounded-[16px] text-center" value={newMeal.fat} onChange={e=>setNewMeal({...newMeal,fat:e.target.value})} /></div>
+                <button type="submit" className="w-full py-4 bg-[#1d1d1f] text-white rounded-[16px] font-bold">Log</button>
+              </form>
+              <div className="mt-8 space-y-3">
+                {todayMeals.map(m => (<div key={m.id} className="flex justify-between items-center p-4 bg-[#f5f5f7] rounded-[16px]"><div><h5 className="font-bold text-apple-text">{m.name} <span className="text-apple-gray text-xs">x{m.qty}</span></h5><div className="text-sm font-semibold text-apple-gray space-x-3 mt-1"><span>{m.cal} kcal</span><span className="text-apple-green">{m.pro}g P</span></div></div><button onClick={() => setDailyMeals(p => ({ ...p, [todayDate]: p[todayDate].filter(x => x.id !== m.id) }))} className="w-8 h-8 rounded-full bg-white text-apple-red font-bold">X</button></div>))}
+              </div>
+            </div>
+            <div className="apple-card p-8"><h3 className="text-2xl font-bold text-apple-text mb-6">Auto Plan</h3><AutoDietPlan targetCal={targetCal} /></div>
+          </div>
+        </div>
+      );
+    };
+
+    const ToDo = () => {
+      const { showToast } = useToast();
+      const [tasks, setTasks] = useState(() => JSON.parse(localStorage.getItem('lifeos-todo')) || []);
+      const [newTask, setNewTask] = useState({ title: '', dueDate: '', dueTime: '' });
+      useEffect(() => { localStorage.setItem('lifeos-todo', JSON.stringify(tasks)); }, [tasks]);
+
+      const addTask = (e) => {
+        e.preventDefault(); if(!newTask.title) return;
+        setTasks(p => [...p, { id: Date.now(), ...newTask, completed: false }]);
+        setNewTask({ title: '', dueDate: '', dueTime: '' });
+        showToast("Task scheduled successfully.", "To-Do");
+      };
+      const toggle = (id) => setTasks(p => p.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
+      const remove = (id) => setTasks(p => p.filter(t => t.id !== id));
+
+      return (
+        <div className="apple-card p-8 md:p-12 max-w-4xl mx-auto">
+          <div className="flex items-center gap-4 mb-10"><IconList c="w-10 h-10 text-apple-blue" /><h2 className="text-4xl font-bold text-apple-text">Mission Control</h2></div>
+          <form onSubmit={addTask} className="flex flex-col md:flex-row gap-4 mb-12">
+            <input type="text" placeholder="E.g. Database Quiz" className="flex-1 p-4 bg-[#f5f5f7] rounded-2xl font-bold" value={newTask.title} onChange={e=>setNewTask({...newTask, title: e.target.value})} />
+            <input type="date" className="p-4 bg-[#f5f5f7] rounded-2xl font-bold font-sans" value={newTask.dueDate} onChange={e=>setNewTask({...newTask, dueDate: e.target.value})} />
+            <input type="time" className="p-4 bg-[#f5f5f7] rounded-2xl font-bold font-sans" value={newTask.dueTime} onChange={e=>setNewTask({...newTask, dueTime: e.target.value})} />
+            <button type="submit" className="px-8 py-4 bg-apple-blue text-white font-bold rounded-2xl">Schedule</button>
+          </form>
+          <div className="space-y-4">
+            {tasks.sort((a,b)=>a.completed-b.completed).map(t => (
+              <motion.div key={t.id} layout className={`flex items-center justify-between p-5 rounded-2xl border ${t.completed ? 'bg-white opacity-50 border-black/5' : 'bg-[#f5f5f7] border-black/5'}`}>
+                <div className="flex items-center gap-4 cursor-pointer" onClick={() => toggle(t.id)}>
+                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${t.completed ? 'bg-apple-blue border-apple-blue' : 'border-apple-gray'}`}>{t.completed && <IconCheck c="w-4 h-4 text-white" />}</div>
+                  <div className={t.completed ? 'line-through text-apple-gray' : 'text-apple-text font-bold text-lg'}>{t.title}</div>
+                </div>
+                <div className="flex items-center gap-4">
+                  {t.dueDate && <span className="text-sm font-bold text-apple-orange bg-apple-orange/10 px-3 py-1 rounded-full">{t.dueDate} {t.dueTime}</span>}
+                  <button onClick={() => remove(t.id)} className="text-apple-red font-bold text-sm px-2">Delete</button>
+                </div>
+              </motion.div>
+            ))}
+            {tasks.length === 0 && <p className="text-apple-gray font-medium text-center py-10">No upcoming missions. You are clear.</p>}
+          </div>
+        </div>
+      );
+    };
+
+    const Tracker = () => {
+      const { showToast } = useToast(); const { settings } = useSettings();
+      const [data, setData] = useState(() => { try { return JSON.parse(localStorage.getItem('lifeos-tracker')) || {}; } catch { return {}; } });
+      useEffect(() => { localStorage.setItem('lifeos-tracker', JSON.stringify(data)); }, [data]);
+
+      const toggle = (day, habit) => {
+        const key = `${day}-${habit}`; const isChecked = data[key]; const newData = { ...data, [key]: !isChecked };
+        setData(newData);
+        if (!isChecked && ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].includes(habit)) {
+          const allPrayersDone = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].every(p => newData[`${day}-${p}`]);
+          if (allPrayersDone && window.confetti) {
+            window.confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 }, colors: ['#50C878', '#FFD700', '#ffffff'] });
+            showToast("You've completed all 5 prayers today. Absolute greatness.", "Alhamdulillah ✨");
+            playVictorySound();
+          }
+        }
+        if (!isChecked && habit.includes('Sleep') && settings.dopamineRain) {
+          document.getElementById('app-container').classList.add('shake-active'); setTimeout(() => document.getElementById('app-container').classList.remove('shake-active'), 500);
+          if (window.confetti) window.confetti({ particleCount: 300, spread: 160, origin: { y: 0.5 }, colors: ['#50C878', '#FFD700'], disableForReducedMotion: true });
+          playVictorySound();
+        }
+      };
+
+      return (
+        <div className="apple-card p-12 overflow-x-auto"><h2 className="text-4xl font-bold text-apple-text mb-8">Weekly Tracker</h2><div className="min-w-[900px]">
+          <div className="grid grid-cols-[220px_repeat(7,1fr)] gap-4 mb-4"><div className="font-bold text-apple-gray">Habit</div>{DAYS.map(d => <div key={d} className="text-center font-bold text-apple-gray">{d}</div>)}</div>
+          <div className="space-y-3">{HABITS.map(h => (<div key={h} className="grid grid-cols-[220px_repeat(7,1fr)] gap-4 items-center group"><div className="font-bold px-4 py-3 rounded-2xl text-lg text-apple-text bg-[#f5f5f7]">{h}</div>{DAYS.map(d => { const c = data[`${d}-${h}`]; return (<div key={`${d}-${h}`} className="flex justify-center"><motion.button whileTap={{ scale: 0.8 }} onClick={() => toggle(d, h)} className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${c ? 'bg-apple-green text-white scale-105' : 'bg-[#f5f5f7]'}`}>{c && <IconCheck c="w-6 h-6" />}</motion.button></div>) })}</div>))}</div>
+        </div></div>
+      );
+    };
+
+    const Income = () => (<div className="apple-card p-16 text-center"><IconTarget c="w-20 h-20 mx-auto text-apple-blue mb-4"/><h2 className="text-4xl font-bold text-apple-text">Fiverr Roadmap</h2></div>);
+    const English = () => (<div className="apple-card p-16 text-center"><IconBookOpen c="w-20 h-20 mx-auto text-apple-blue mb-4"/><h2 className="text-4xl font-bold text-apple-text">English Mastery</h2></div>);
+    
+    // CEO Briefing Tab (Gemini API Integration)
+    const CEOBriefing = () => {
+      const { settings } = useSettings();
+      const { showToast } = useToast();
+      const [briefing, setBriefing] = useState(null);
+      const [displayedBriefing, setDisplayedBriefing] = useState('');
+      const [loading, setLoading] = useState(false);
+
+      useEffect(() => {
+        if (!briefing) return;
+        let i = 0;
+        setDisplayedBriefing('');
+        const interval = setInterval(() => {
+          setDisplayedBriefing(briefing.substring(0, i));
+          i += 2;
+          if (i > briefing.length) {
+            setDisplayedBriefing(briefing);
+            clearInterval(interval);
+          }
+        }, 15);
+        return () => clearInterval(interval);
+      }, [briefing]);
+
+      const generateBriefing = async () => {
+        if (!settings.geminiKey) {
+          showToast("Missing API Key! Please paste your Gemini API Key in the God Mode Settings menu.", "Access Denied");
+          return;
+        }
+
+        setLoading(true);
+        setBriefing(null);
+        setDisplayedBriefing('');
+        
+        try {
+          // Gather OS Data
+          const tData = localStorage.getItem('lifeos-tracker') || "{}";
+          const fData = localStorage.getItem('lifeos-finance') || "[]";
+          const dData = localStorage.getItem('lifeos-daily-meals') || "{}";
+          const todoData = localStorage.getItem('lifeos-todo') || "[]";
+
+          const prompt = `Founder Hamas is operating at the Institute of Space Technology. He is 21 and today is Day 1 of his 5-month transformation. Review his data with the intensity of a seed-stage investor.
+          You are a high-stakes, minimalist billionaire mentor. Your tone is direct, encouraging, and zero-nonsense. Address me as Founder Hamas. Review my habits and finances ruthlessly. 
+          Review my raw JSON life data below. Look at the '5-prayer streak' in the tracker and my Finance ledger to see if I am staying within budget.
+          - Trackers (Habits & Prayers): ${tData}
+          - Finance (Split expenses): ${fData}
+          - Diet Logs: ${dData}
+          - To-Do List: ${todoData}
+          
+          Give a powerful, direct, 3-paragraph CEO briefing. 
+          Paragraph 1: Praise any high consistency.
+          Paragraph 2: Ruthlessly call out missed habits, overdue tasks, or poor financial decisions.
+          Paragraph 3: Give a commanding order to win today.
+          Do NOT use generic intro text like "Here is your briefing". Start immediately with the briefing. Format entirely in elegant markdown.`;
+
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${settings.geminiKey}`, {
+            method: 'POST',
+            mode: 'cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+          });
+          
+          console.log('API Status Code:', res.status);
+
+          if (!res.ok) {
+            const errorData = await res.json();
+            console.log('Exact API Error Message:', errorData);
+            throw new Error(`API Error: ${res.status} - ${errorData.error?.message || 'Unknown Error'}`);
+          }
+          
+          const data = await res.json();
+          const reply = data.candidates[0].content.parts[0].text;
+          setBriefing(reply);
+          
+          if (window.confetti) window.confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+          playVictorySound();
+        } catch (e) {
+          showToast("Connection to Gemini failed. Check F12 Console for details.", "System Error");
+          console.error('Detailed Debugging Error:', e);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      return (
+        <div className="apple-card p-12 md:p-16 text-left bg-gradient-to-br from-[#111] to-[#333] text-white shadow-xl max-w-4xl mx-auto">
+          <div className="flex flex-col items-center mb-10 text-center">
+            <IconBrain c="w-16 h-16 text-apple-blue mb-4" />
+            <h2 className="text-4xl font-bold tracking-tight mb-2">Morning CEO Briefing</h2>
+            <p className="text-gray-400 font-medium">Powered by Gemini AI Engine</p>
+          </div>
+          
+          {!briefing && !loading && (
+            <div className="flex justify-center">
+              <button onClick={generateBriefing} className="px-10 py-5 bg-white text-black font-bold text-xl rounded-full shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:scale-105 transition-all">
+                Request Briefing
+              </button>
+            </div>
+          )}
+
+          {loading && (
+            <div className="text-center py-10 space-y-4">
+              <div className="w-10 h-10 border-4 border-apple-blue border-t-transparent rounded-full animate-spin mx-auto"></div>
+              <p className="text-apple-blue font-bold tracking-widest uppercase animate-pulse">CEO is reviewing your files...</p>
+            </div>
+          )}
+
+          <AnimatePresence>
+            {briefing && !loading && (
+              <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} className="mt-8 bg-black/40 backdrop-blur-md p-8 md:p-10 rounded-3xl border border-white/10">
+                <div className="markdown-content text-lg" dangerouslySetInnerHTML={{ __html: window.marked ? window.marked.parse(displayedBriefing + (displayedBriefing.length < briefing.length ? '...' : '')) : displayedBriefing }}></div>
+                {displayedBriefing.length >= briefing.length && (
+                  <motion.button initial={{opacity:0}} animate={{opacity:1}} onClick={generateBriefing} className="mt-8 text-sm font-bold text-apple-gray hover:text-white uppercase tracking-widest transition-colors">Request Updated Briefing</motion.button>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      );
+    };
+
+    const Analytics = () => {
+      const [score, setScore] = useState(0); useEffect(() => { const tData = JSON.parse(localStorage.getItem('lifeos-tracker')) || {}; let c = 0; DAYS.forEach(d => HABITS.forEach(h => { if (tData[`${d}-${h}`]) c++; })); setScore(Math.round((c / 77) * 100)); }, []);
+      return (<div className="apple-card p-12 text-center"><div className="text-9xl font-black text-apple-text mb-4">{score}%</div><p className="text-apple-gray text-2xl font-bold">Weekly Consistency</p></div>);
+    };
+
+    const SettingsModal = ({ close }) => {
+      const { settings, setSettings } = useSettings();
+      return (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="apple-card p-8 w-full max-w-md bg-white">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-bold">God Mode Settings</h3>
+              <button onClick={close} className="text-apple-red font-bold">Close</button>
+            </div>
+            
+            <div className="mb-6 p-4 bg-[#f5f5f7] rounded-xl border border-black/5">
+              <label className="block text-sm font-bold text-apple-text mb-2 uppercase tracking-tight">Gemini API Key</label>
+              <input type="password" placeholder="Paste key here..." className="w-full p-3 rounded-lg bg-white border border-black/10 font-mono text-sm focus:outline-apple-blue" value={settings.geminiKey || ''} onChange={(e) => setSettings({...settings, geminiKey: e.target.value})} />
+              <p className="text-xs text-apple-gray mt-2 font-medium">Stored securely in your local browser memory.</p>
+            </div>
+
+            <div className="space-y-4">
+              {['aura', 'timeWarp', 'dopamineRain', 'shield'].map(k => (
+                <div key={k} className="flex justify-between items-center p-4 bg-[#f5f5f7] rounded-xl">
+                  <span className="font-bold capitalize">{k.replace(/([A-Z])/g, ' $1').trim()}</span>
+                  <input type="checkbox" checked={settings[k]} onChange={(e)=>setSettings({...settings, [k]: e.target.checked})} className="w-6 h-6 cursor-pointer accent-apple-blue" />
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      );
+    };
+
+    const App = () => {
+      const [activeTab, setActiveTab] = useState('CEO Briefing');
+      const [settings, setSettings] = useState(() => { try { return JSON.parse(localStorage.getItem('lifeos-godmode')) || { aura: true, timeWarp: true, dopamineRain: true, shield: true, geminiKey: '' }; } catch { return { aura: true, timeWarp: true, dopamineRain: true, shield: true, geminiKey: '' }; } });
+      const [showSettings, setShowSettings] = useState(false);
+      const [timeMode, setTimeMode] = useState('normal'); const [aura, setAura] = useState('none'); const [shieldLevel, setShieldLevel] = useState('iron');
+
+      useEffect(() => { localStorage.setItem('lifeos-godmode', JSON.stringify(settings)); }, [settings]);
+      useEffect(() => {
+        const checkContext = () => {
+          const now = new Date(); const h = now.getHours(); const m = now.getMinutes();
+          if (settings.timeWarp) { if (h >= 8 && h < 16 && !(h===8 && m<30)) setTimeMode('stealth'); else if ((h >= 20 && h <= 22) && !(h===20 && m<45) && !(h===22 && m>=30)) setTimeMode('deepwork'); else setTimeMode('normal'); } else setTimeMode('normal');
+          if (settings.aura) { const tData = JSON.parse(localStorage.getItem('lifeos-tracker')) || {}; let c = 0; Object.values(tData).forEach(v => { if(v) c++; }); if (h >= 18 && c < 3) setAura('red'); else if (c > 20) setAura('gold'); else setAura('none'); } else setAura('none');
+          if (settings.shield) { const tData = JSON.parse(localStorage.getItem('lifeos-tracker')) || {}; let c = 0; Object.values(tData).forEach(v => { if(v) c++; }); if (c > 30) setShieldLevel('gold'); else if (c > 15) setShieldLevel('silver'); else if (c > 5) setShieldLevel('bronze'); else setShieldLevel('iron'); }
+        };
+        const int = setInterval(checkContext, 60000); checkContext(); return () => clearInterval(int);
+      }, [settings]);
+
+      const getGreeting = () => { const h = new Date().getHours(); if (h < 12) return 'Good Morning'; if (h < 18) return 'Good Afternoon'; if (h >= 21) return 'Get rest'; return 'Good Evening'; };
+
+      return (
+        <SettingsContext.Provider value={{ settings, setSettings }}>
+          <ToastProvider>
+            <RoutineNotifier />
+            <div id="app-container" className={`min-h-screen ${timeMode === 'stealth' ? 'stealth-mode' : timeMode === 'deepwork' ? 'deepwork-mode' : ''}`}>
+              {aura === 'red' && <div className="aura-red"></div>} {aura === 'gold' && <div className="aura-gold"></div>} {timeMode === 'deepwork' && <div className="focus-sphere"></div>}
+              <nav className="fixed top-0 left-0 right-0 z-50 apple-nav">
+                <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+                  <div className="flex items-center space-x-2 overflow-x-auto py-4 hide-scrollbar w-full">
+                    <div className="mr-6 flex items-center gap-2"><IconZap c="w-5 h-5 text-apple-text"/><span className="font-black text-apple-text tracking-tight">LifeOS</span></div>
+                    {TABS.map(tab => (<button key={tab} onClick={() => setActiveTab(tab)} className={`relative px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap ${activeTab === tab ? 'text-white' : 'text-apple-gray'}`}>{activeTab === tab && <motion.div layoutId="nav-pill" className="absolute inset-0 bg-[#1d1d1f] rounded-full" transition={{type:'spring'}} />}<span className="relative z-10">{tab}</span></button>))}
+                  </div>
+                  <button onClick={() => setShowSettings(true)} className="ml-4 p-2 rounded-full hover:bg-black/5"><IconSettings c="w-6 h-6 text-apple-text" /></button>
+                </div>
+              </nav>
+              <main className="max-w-7xl mx-auto px-6 py-8 pt-32 pb-32">
+                <div className="mb-16">
+                  <h1 className="text-6xl font-bold text-apple-text mb-4 tracking-tight">{getGreeting()}, Hamas.</h1>
+                  <p className="text-apple-gray text-2xl font-medium tracking-tight">Your intelligent life engine is ready.</p>
+                </div>
+                <AnimatePresence mode="wait">
+                  <motion.div key={activeTab} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-10}} transition={{type:'spring'}}>
+                    {activeTab === 'Daily Routine' && <DailyRoutine />} {activeTab === 'Fitness' && <Fitness />} {activeTab === 'Diet' && <Diet />} {activeTab === 'Finance' && <Finance />} {activeTab === 'Income' && <Income />} {activeTab === 'English' && <English />} {activeTab === 'CEO Briefing' && <CEOBriefing />} {activeTab === 'Tracker' && <Tracker />} {activeTab === 'To-Do' && <ToDo />} {activeTab === 'Analytics' && <Analytics />}
+                  </motion.div>
+                </AnimatePresence>
+              </main>
+              {settings.shield && <div className="shield-container"><div className={`shield shield-${shieldLevel}`}></div></div>}
+              {showSettings && <SettingsModal close={() => setShowSettings(false)} />}
+            </div>
+          </ToastProvider>
+        </SettingsContext.Provider>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
