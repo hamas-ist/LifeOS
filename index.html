@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#080705">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><defs><radialGradient id=%22g%22 cx=%2250%25%22 cy=%2250%25%22 r=%2250%25%22><stop offset=%220%25%22 stop-color=%22%23FFD700%22 stop-opacity=%220.8%22/><stop offset=%22100%25%22 stop-color=%22%23FFD700%22 stop-opacity=%220%22/></radialGradient></defs><rect width=%22100%22 height=%22100%22 fill=%22%23000%22/><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22url(%23g)%22/><text x=%2250%22 y=%2250%22 font-family=%22Nunito, sans-serif%22 font-weight=%22900%22 font-size=%2260%22 fill=%22%2350C878%22 text-anchor=%22middle%22 dominant-baseline=%22central%22>L</text></svg>">
-  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22LuxeOS%22%2C%22short_name%22%3A%22LuxeOS%22%2C%22display%22%3A%22standalone%22%2C%22start_url%22%3A%22.%22%2C%22background_color%22%3A%22%23080705%22%2C%22theme_color%22%3A%22%23080705%22%7D">
-  <title>LuxeOS - Extraordinarily Intelligent</title>
-  
+  <meta name="theme-color" content="#161925">
+  <link rel="apple-touch-icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><defs><radialGradient id=%22g%22 cx=%2250%25%22 cy=%2250%25%22 r=%2250%25%22><stop offset=%220%25%22 stop-color=%22%23235789%22 stop-opacity=%220.8%22/><stop offset=%22100%25%22 stop-color=%22%23235789%22 stop-opacity=%220%22/></radialGradient></defs><rect width=%22100%22 height=%22100%22 fill=%22%23000%22/><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22url(%23g)%22/><text x=%2250%22 y=%2250%22 font-family=%22Nunito, sans-serif%22 font-weight=%22900%22 font-size=%2260%22 fill=%22%23f1d302%22 text-anchor=%22middle%22 dominant-baseline=%22central%22>M</text></svg>">
+  <link rel="manifest"
+    href="data:application/manifest+json,%7B%22name%22%3A%22Matrix%22%2C%22short_name%22%3A%22Matrix%22%2C%22display%22%3A%22standalone%22%2C%22start_url%22%3A%22.%22%2C%22background_color%22%3A%22%23161925%22%2C%22theme_color%22%3A%22%23161925%22%7D">
+  <title>Matrix - Extraordinarily Intelligent</title>
+
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/framer-motion@11.2.10/dist/framer-motion.js"></script>
@@ -20,124 +23,316 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  
-  <style>
-    /* CSS Variables for Light & Dark Themes */
-    :root {
-      --color-bg: #e1e5f2ff;
-      --color-card: #ffffffff;
-      --color-text: #022b3aff;
-      --color-gray: #1f7a8cff;
-      --color-light-gray: #bfdbf7ff;
-      --color-primary: #1f7a8cff;
-      --color-success: #1f7a8cff;
-      --color-accent: #022b3aff;
-      --color-warning: #bfdbf7ff;
-      --gradient-from: #e1e5f2ff;
-      --gradient-to: #bfdbf7ff;
-    }
-    .dark {
-      --color-bg: #080705ff;
-      --color-card: #40434eff;
-      --color-text: #fffffaff;
-      --color-gray: #912f40ff;
-      --color-light-gray: #702632ff;
-      --color-primary: #912f40ff;
-      --color-success: #912f40ff;
-      --color-accent: #fffffaff;
-      --color-warning: #702632ff;
-      --gradient-from: #080705ff;
-      --gradient-to: #40434eff;
-    }
-    body { 
-      font-family: 'Nunito', sans-serif; 
-      background-color: var(--color-bg); 
-      color: var(--color-text); 
-      margin: 0; 
-      padding: 0; 
-      overflow-x: hidden; 
-      -webkit-font-smoothing: antialiased; 
-      position: relative; 
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-    /* Flowing waves background */
-    body::before, body::after {
-      content: ""; position: fixed; width: 200vw; height: 200vh; top: -50%; left: -50%; z-index: -3;
-      background: radial-gradient(circle, var(--color-primary) 0%, var(--color-warning) 30%, transparent 70%);
-      animation: waveMove 30s infinite linear; opacity: 0.15; pointer-events: none;
-    }
-    body::after {
-      background: radial-gradient(circle, var(--color-accent) 0%, var(--color-primary) 30%, transparent 70%);
-      animation: waveMove 40s infinite linear reverse; opacity: 0.1; pointer-events: none;
-    }
-    @keyframes waveMove { 0% { transform: rotate(0deg) translate(-2%, 2%); } 50% { transform: rotate(180deg) translate(2%, -2%); } 100% { transform: rotate(360deg) translate(-2%, 2%); } }
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
 
-    /* Luxe Glassmorphic Cards */
-    .apple-card { 
-      background: var(--color-card); 
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border-radius: 28px; 
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); 
-      position: relative; z-index: 1; transition: all 0.3s ease; 
-      border: 1px solid rgba(255,255,255,0.1);
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: { apple: { bg: '#161925', card: '#161925', text: '#fdfffc', gray: '#a1a1a6', lightGray: '#333333', blue: '#235789', green: '#f1d302', red: '#c1292e', orange: '#f1d302', purple: '#235789' } },
+          fontFamily: { sans: ['Nunito', 'sans-serif'] }
+        }
+      }
     }
+  </script>
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: #161925;
+      color: #fdfffc;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      position: relative;
+    }
+
+    /* Flowing waves background */
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      width: 200vw;
+      height: 200vh;
+      top: -50%;
+      left: -50%;
+      z-index: -3;
+      background: radial-gradient(circle, rgba(35, 87, 137, 0.2) 0%, rgba(241, 211, 2, 0.15) 30%, rgba(0, 0, 0, 0) 70%);
+      animation: waveMove 30s infinite linear;
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    body::after {
+      background: radial-gradient(circle, rgba(241, 211, 2, 0.15) 0%, rgba(35, 87, 137, 0.2) 30%, rgba(0, 0, 0, 0) 70%);
+      animation: waveMove 40s infinite linear reverse;
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    @keyframes waveMove {
+      0% {
+        transform: rotate(0deg) translate(-2%, 2%);
+      }
+
+      50% {
+        transform: rotate(180deg) translate(2%, -2%);
+      }
+
+      100% {
+        transform: rotate(360deg) translate(-2%, 2%);
+      }
+    }
+
+    /* Matrix Glassmorphic Cards */
+    .apple-card {
+      background: rgba(22, 25, 37, 0.65);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: 28px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s ease;
+    }
+
     /* Iridescent glowing borders */
     .apple-card::before {
-      content: ""; position: absolute; inset: -1px; border-radius: 29px;
-      background: linear-gradient(45deg, var(--color-primary), var(--color-accent), var(--color-warning), var(--color-primary));
-      background-size: 400% 400%; z-index: -1; animation: gradientSpin 10s ease infinite; opacity: 0.7;
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: 29px;
+      background: linear-gradient(45deg, #235789, #f1d302, #235789, #f1d302, #235789);
+      background-size: 400% 400%;
+      z-index: -1;
+      animation: gradientSpin 10s ease infinite;
+      opacity: 0.85;
       mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask-composite: exclude; -webkit-mask-composite: xor; padding: 1px; pointer-events: none;
+      mask-composite: exclude;
+      -webkit-mask-composite: xor;
+      padding: 1px;
+      pointer-events: none;
     }
-    @keyframes gradientSpin { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-    .apple-nav { background: var(--color-card); backdrop-filter: blur(24px); border-color: rgba(255,255,255,0.1); transition: all 0.3s ease; }
-    ::-webkit-scrollbar { display: none; }
-    @supports (padding-bottom: env(safe-area-inset-bottom)) { .pb-safe { padding-bottom: env(safe-area-inset-bottom); } }
-    
-    input, textarea, select { background-color: rgba(0,0,0,0.2) !important; color: var(--color-text) !important; border: 1px solid rgba(255,255,255,0.15) !important; backdrop-filter: blur(10px); border-radius: 16px; }
-    input::placeholder { color: var(--color-gray) !important; }
-    
-    .bg-\[\#f5f5f7\] { background-color: rgba(0,0,0,0.15) !important; }
-    .text-apple-text { color: var(--color-text) !important; }
-    .text-apple-gray { color: var(--color-gray) !important; }
-    .text-apple-blue { color: var(--color-primary) !important; }
-    .text-apple-green { color: var(--color-success) !important; }
-    .text-apple-red { color: var(--color-warning) !important; }
-    .bg-apple-blue { background-color: var(--color-primary) !important; }
-    .bg-apple-green { background-color: var(--color-success) !important; }
-    .bg-apple-orange { background-color: var(--color-warning) !important; }
-    .border-apple-blue { border-color: var(--color-primary) !important; }
-    .border-apple-green { border-color: var(--color-success) !important; }
+    @keyframes gradientSpin {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    .apple-nav {
+      background: rgba(22, 25, 37, 0.75);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-color: rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    @supports (padding-bottom: env(safe-area-inset-bottom)) {
+      .pb-safe {
+        padding-bottom: env(safe-area-inset-bottom);
+      }
+    }
+
+    input,
+    textarea,
+    select {
+      background-color: rgba(255, 255, 255, 0.05) !important;
+      color: #fdfffc !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      backdrop-filter: blur(10px);
+    }
+
+    input::placeholder {
+      color: #888 !important;
+    }
+
+    .bg-\[\#f5f5f7\] {
+      background-color: rgba(255, 255, 255, 0.05) !important;
+      backdrop-filter: blur(10px);
+    }
+
+    .bg-white {
+      background-color: rgba(255, 255, 255, 0.1) !important;
+      backdrop-filter: blur(10px);
+    }
+
+    .text-apple-text {
+      color: #fdfffc !important;
+    }
+
+    .text-apple-gray {
+      color: #a1a1a6 !important;
+    }
 
     /* Clamp typography for headers */
-    .heading-clamp { font-size: clamp(1.8rem, 6vw, 3.75rem); line-height: 1.1; font-weight: 900; }
-    .subheading-clamp { font-size: clamp(1.2rem, 4vw, 2.25rem); line-height: 1.2; font-weight: 800; }
+    .heading-clamp {
+      font-size: clamp(1.8rem, 6vw, 3.75rem);
+      line-height: 1.1;
+      font-weight: 900;
+    }
 
-    @keyframes shakeUI { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 10%, 30%, 50%, 70%, 90% { transform: translate(-3px, -2px) rotate(-1deg); } 20%, 40%, 60%, 80% { transform: translate(3px, 2px) rotate(1deg); } }
-    .shake-active { animation: shakeUI 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+    .subheading-clamp {
+      font-size: clamp(1.2rem, 4vw, 2.25rem);
+      line-height: 1.2;
+      font-weight: 800;
+    }
 
-    .aura-red { box-shadow: inset 0 0 150px var(--color-warning); pointer-events: none; position: fixed; inset: 0; z-index: 9999; transition: opacity 2s; }
-    .aura-gold { position: fixed; inset: 0; z-index: -2; background: radial-gradient(circle at 50% 0%, var(--color-primary) 0%, transparent 70%); animation: goldPulse 4s infinite alternate; }
-    @keyframes goldPulse { from { opacity: 0.5; } to { opacity: 1; } }
-    .shield-container { position: fixed; bottom: 30px; right: 30px; z-index: 100; perspective: 1000px; }
-    .shield { width: 60px; height: 70px; position: relative; transform-style: preserve-3d; clip-path: polygon(50% 0%, 100% 20%, 100% 70%, 50% 100%, 0 70%, 0 20%); transition: all 1s; }
-    .shield-iron { background: linear-gradient(135deg, var(--color-gray), var(--color-primary)); box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
-    .shield-bronze { background: linear-gradient(135deg, var(--color-warning), var(--color-accent)); box-shadow: inset 0 0 15px rgba(0,0,0,0.3); }
-    .shield-silver { background: linear-gradient(135deg, var(--color-light-gray), var(--color-primary)); box-shadow: 0 0 20px rgba(255,255,255,0.2); }
-    .shield-gold { background: linear-gradient(135deg, var(--color-primary), var(--color-accent)); box-shadow: 0 0 30px var(--color-primary); animation: shieldFlame 2s infinite alternate; }
-    @keyframes shieldFlame { 0% { filter: drop-shadow(0 0 10px var(--color-primary)); } 100% { filter: drop-shadow(0 0 25px var(--color-accent)); transform: translateY(-5px); } }
+    @keyframes shakeUI {
 
-    .markdown-content p { margin-bottom: 1em; line-height: 1.6; font-size: 0.95rem; }
-    @media(min-width: 768px) { .markdown-content p { font-size: 1.125rem; } }
-    .markdown-content h1, .markdown-content h2, .markdown-content h3 { font-weight: 800; margin-bottom: 0.5em; margin-top: 1.5em; }
-    .markdown-content strong { color: var(--color-text); font-weight: 800; }
-    .markdown-content ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1em; }
-    .markdown-content li { margin-bottom: 0.5em; }
+      0%,
+      100% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+
+      10%,
+      30%,
+      50%,
+      70%,
+      90% {
+        transform: translate(-3px, -2px) rotate(-1deg);
+      }
+
+      20%,
+      40%,
+      60%,
+      80% {
+        transform: translate(3px, 2px) rotate(1deg);
+      }
+    }
+
+    .shake-active {
+      animation: shakeUI 0.5s cubic-bezier(.36, .07, .19, .97) both;
+    }
+
+    .aura-red {
+      box-shadow: inset 0 0 150px rgba(193, 41, 46, 0.2);
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      transition: opacity 2s;
+    }
+
+    .aura-gold {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background: radial-gradient(circle at 50% 0%, rgba(241, 211, 2, 0.15) 0%, transparent 70%);
+      animation: goldPulse 4s infinite alternate;
+    }
+
+    @keyframes goldPulse {
+      from {
+        opacity: 0.5;
+      }
+
+      to {
+        opacity: 1;
+      }
+    }
+
+    .shield-container {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 100;
+      perspective: 1000px;
+    }
+
+    .shield {
+      width: 60px;
+      height: 70px;
+      position: relative;
+      transform-style: preserve-3d;
+      clip-path: polygon(50% 0%, 100% 20%, 100% 70%, 50% 100%, 0 70%, 0 20%);
+      transition: all 1s;
+    }
+
+    .shield-iron {
+      background: linear-gradient(135deg, #7f8c8d, #95a5a6);
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+    .shield-bronze {
+      background: linear-gradient(135deg, #cd7f32, #8b4513);
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6);
+    }
+
+    .shield-silver {
+      background: linear-gradient(135deg, #bdc3c7, #ecf0f1);
+      box-shadow: 0 0 20px rgba(253, 255, 252, 0.5);
+    }
+
+    .shield-gold {
+      background: linear-gradient(135deg, #f1d302, #FDB931);
+      box-shadow: 0 0 30px rgba(241, 211, 2, 0.8);
+      animation: shieldFlame 2s infinite alternate;
+    }
+
+    @keyframes shieldFlame {
+      0% {
+        filter: drop-shadow(0 0 10px #ff9500);
+      }
+
+      100% {
+        filter: drop-shadow(0 0 25px #c1292e);
+        transform: translateY(-5px);
+      }
+    }
+
+    .markdown-content p {
+      margin-bottom: 1em;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    @media(min-width: 768px) {
+      .markdown-content p {
+        font-size: 1.125rem;
+      }
+    }
+
+    .markdown-content h1,
+    .markdown-content h2,
+    .markdown-content h3 {
+      font-weight: 800;
+      margin-bottom: 0.5em;
+      margin-top: 1.5em;
+    }
+
+    .markdown-content strong {
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .markdown-content ul {
+      list-style-type: disc;
+      padding-left: 1.5em;
+      margin-bottom: 1em;
+    }
+
+    .markdown-content li {
+      margin-bottom: 0.5em;
+    }
   </style>
 </head>
+
 <body>
   <div id="root"></div>
   <script type="text/babel">
@@ -167,7 +362,7 @@
               setAppData(prev => ({ ...prev, ...data.payload }));
               console.log('[Supabase] Initial Pull Success:', data.payload);
             }
-          } catch (err) { console.error('[Supabase] Pull Error or Empty (Using Defaults):', err); } 
+          } catch (err) { console.error('[Supabase] Pull Error or Empty (Using Defaults):', err); }
           finally { setLoading(false); }
         };
         fetchCloudData();
@@ -190,14 +385,14 @@
           const newState = { ...prev, [key]: newValue };
           clearTimeout(window.syncTimeout);
           window.syncTimeout = setTimeout(async () => {
-            try { await supabase.from('lifeos_data').upsert({ id: dbId, payload: newState }); } 
-            catch(e) { console.error('[Supabase] Sync Push Failed', e); }
-          }, 1500); 
+            try { await supabase.from('lifeos_data').upsert({ id: dbId, payload: newState }); }
+            catch (e) { console.error('[Supabase] Sync Push Failed', e); }
+          }, 1500);
           return newState;
         });
       };
 
-      if (loading) return <div className="min-h-screen bg-transparent flex items-center justify-center"><div className="w-12 h-12 border-4 border-t-transparent rounded-full animate-spin" style={{ borderColor: 'var(--color-primary)' }}></div></div>;
+      if (loading) return <div className="min-h-screen bg-transparent flex items-center justify-center"><div className="w-12 h-12 border-4 border-apple-green border-t-transparent rounded-full animate-spin"></div></div>;
       return <AppStateContext.Provider value={{ appData, updateAppData }}>{children}</AppStateContext.Provider>;
     };
 
@@ -207,32 +402,37 @@
     const playVictorySound = () => {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain();
-        osc.type = 'sine'; osc.frequency.setValueAtTime(440, ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.1); osc.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.3); 
+        osc.type = 'sine'; osc.frequency.setValueAtTime(440, ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.1); osc.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.3);
         gainNode.gain.setValueAtTime(0, ctx.currentTime); gainNode.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 0.1); gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.5);
         osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 1.5);
-      } catch(e) { console.error(e); }
+      } catch (e) { console.error(e); }
     };
 
-    const LuxeIcon = ({c}) => (
+    const MatrixIcon = ({ c }) => (
       <svg className={c} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <defs><radialGradient id="g" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--color-accent)" stop-opacity="0.8"/><stop offset="100%" stop-color="var(--color-accent)" stop-opacity="0"/></radialGradient></defs>
-        <circle cx="50" cy="50" r="40" fill="url(#g)"/>
-        <text x="50" y="50" font-family="Nunito, sans-serif" font-weight="900" font-size="60" fill="var(--color-primary)" text-anchor="middle" dominant-baseline="central">L</text>
+        <defs>
+          <radialGradient id="g" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#235789" stop-opacity="0.8" />
+            <stop offset="100%" stop-color="#235789" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <circle cx="50" cy="50" r="40" fill="url(#g)" />
+        <text x="50" y="50" font-family="Nunito, sans-serif" font-weight="900" font-size="60" fill="#f1d302" text-anchor="middle" dominant-baseline="central">M</text>
       </svg>
     );
 
-    const IconCheck = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>);
-    const IconCoffee = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/></svg>);
-    const IconSun = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>);
-    const IconMoon = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>);
-    const IconTarget = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>);
-    const IconBookOpen = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>);
-    const IconBrain = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>);
-    const IconCalendar = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>);
-    const IconActivity = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>);
-    const IconBriefcase = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>);
-    const IconSettings = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>);
-    const IconList = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>);
+    const IconCheck = ({ c }) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>);
+    const IconCoffee = ({ c }) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1" /><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z" /><line x1="6" x2="6" y1="2" y2="4" /><line x1="10" x2="10" y1="2" y2="4" /><line x1="14" x2="14" y1="2" y2="4" /></svg>);
+    const IconSun = ({ c }) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></svg>);
+    const IconMoon = ({ c }) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></svg>);
+    const IconTarget = ({ c }) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg>);
+    const IconBookOpen = ({ c }) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" /><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" /></svg>);
+    const IconBrain = ({ c }) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z" /><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z" /></svg>);
+    const IconCalendar = ({ c }) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>);
+    const IconActivity = ({ c }) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /></svg>);
+    const IconBriefcase = ({ c }) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></svg>);
+    const IconSettings = ({ c }) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" /><circle cx="12" cy="12" r="3" /></svg>);
+    const IconList = ({ c }) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" /></svg>);
 
     const TABS = ['Daily Routine', 'Fitness', 'Diet', 'Finance', 'Income', 'English', 'CEO Briefing', 'Tracker', 'To-Do', 'Analytics'];
     const HABITS = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Workout', '2.5L Water', 'Quran', 'English', 'Skill Work', '10:30 PM Sleep'];
@@ -249,6 +449,15 @@
       'roti': { cal: 120, pro: 3, carb: 20, fat: 1 }, 'daal': { cal: 150, pro: 9, carb: 20, fat: 5 }, 'rice': { cal: 200, pro: 4, carb: 45, fat: 0.5 }, 'chicken breast': { cal: 165, pro: 31, carb: 0, fat: 3.6 },
       'chicken tikka': { cal: 200, pro: 30, carb: 2, fat: 8 }, 'milk': { cal: 150, pro: 8, carb: 12, fat: 8 }, 'yogurt': { cal: 100, pro: 10, carb: 4, fat: 0 }, 'beef': { cal: 250, pro: 26, carb: 0, fat: 15 },
       'whey protein': { cal: 120, pro: 24, carb: 3, fat: 1 }, 'oats': { cal: 389, pro: 16, carb: 66, fat: 6 }, 'peanut butter': { cal: 588, pro: 25, carb: 20, fat: 50 }, 'almonds': { cal: 579, pro: 21, carb: 21, fat: 49 },
+      'sweet potato': { cal: 86, pro: 1.6, carb: 20, fat: 0.1 }, 'salmon': { cal: 208, pro: 20, carb: 0, fat: 13 }, 'olive oil': { cal: 884, pro: 0, carb: 0, fat: 100 }, 'broccoli': { cal: 34, pro: 2.8, carb: 6.6, fat: 0.4 },
+      'spinach': { cal: 23, pro: 2.9, carb: 3.6, fat: 0.4 }, 'biryani': { cal: 350, pro: 15, carb: 45, fat: 12 }, 'karahi': { cal: 450, pro: 25, carb: 10, fat: 35 }, 'naan': { cal: 260, pro: 8, carb: 45, fat: 4 },
+      'dates': { cal: 282, pro: 2.5, carb: 75, fat: 0.4 }, 'nihari': { cal: 500, pro: 35, carb: 10, fat: 35 }, 'haleem': { cal: 380, pro: 22, carb: 35, fat: 18 }, 'lassi (sweet)': { cal: 250, pro: 8, carb: 30, fat: 10 },
+      'mutton pulao': { cal: 400, pro: 20, carb: 45, fat: 15 }, 'chapli kebab': { cal: 280, pro: 18, carb: 5, fat: 22 }, 'seekh kebab': { cal: 200, pro: 18, carb: 4, fat: 12 }, 'chana chaat': { cal: 220, pro: 10, carb: 35, fat: 5 },
+      'samosa': { cal: 250, pro: 4, carb: 25, fat: 15 }, 'pakora': { cal: 180, pro: 5, carb: 15, fat: 12 }, 'beef boti': { cal: 220, pro: 24, carb: 2, fat: 12 }, 'greek yogurt': { cal: 100, pro: 10, carb: 4, fat: 0 },
+      'creatine': { cal: 0, pro: 0, carb: 0, fat: 0 }, 'paratha': { cal: 300, pro: 6, carb: 40, fat: 14 }, 'chai (with sugar)': { cal: 100, pro: 2, carb: 15, fat: 3 }, 'watermelon': { cal: 30, pro: 0.6, carb: 8, fat: 0.2 },
+      'mango': { cal: 60, pro: 0.8, carb: 15, fat: 0.4 }, 'cottage cheese': { cal: 98, pro: 11, carb: 3, fat: 4 }, 'black coffee': { cal: 2, pro: 0, carb: 0, fat: 0 }, 'green tea': { cal: 2, pro: 0, carb: 0, fat: 0 },
+      'walnuts': { cal: 654, pro: 15, carb: 14, fat: 65 }, 'chia seeds': { cal: 486, pro: 17, carb: 42, fat: 31 }, 'flax seeds': { cal: 534, pro: 18, carb: 29, fat: 42 }, 'lentil soup': { cal: 180, pro: 12, carb: 28, fat: 3 },
+      'paneer': { cal: 265, pro: 18, carb: 3, fat: 20 }, 'soya chunks': { cal: 345, pro: 52, carb: 33, fat: 0.5 }, 'brown rice': { cal: 216, pro: 5, carb: 45, fat: 2 }, 'quinoa': { cal: 120, pro: 4, carb: 21, fat: 2 }
     };
 
     const ToastProvider = ({ children }) => {
@@ -264,9 +473,9 @@
           <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-4 w-full max-w-md pointer-events-none px-4">
             <AnimatePresence>
               {toasts.map(t => (
-                <motion.div key={t.id} initial={{ opacity: 0, y: -40, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} className="apple-card p-5 w-full text-center">
-                  <h4 className="font-bold text-sm md:text-lg tracking-tight" style={{ color: 'var(--color-text)' }}>{t.title}</h4>
-                  <p className="text-sm mt-1 font-semibold leading-tight" style={{ color: 'var(--color-gray)' }}>{t.message}</p>
+                <motion.div key={t.id} initial={{ opacity: 0, y: -40, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} className="bg-black/80 backdrop-blur-3xl border border-white/20 shadow-[0_16px_40px_rgba(0,0,0,0.6)] rounded-3xl p-5 w-full text-center">
+                  <h4 className="font-bold text-white text-sm md:text-lg tracking-tight">{t.title}</h4>
+                  <p className="text-gray-300 text-xs md:text-sm mt-1 font-semibold leading-tight">{t.message}</p>
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -287,7 +496,7 @@
         const checkTime = () => {
           const now = new Date(); const h = now.getHours(); const m = now.getMinutes();
           const isWeekend = now.getDay() === 0 || now.getDay() === 6;
-          
+
           (isWeekend ? WEEKEND_SCHEDULE : WEEKDAY_SCHEDULE).forEach(item => {
             if (item.h === h && item.m === m) {
               const key = `routine-${now.toDateString()}-${item.time}`;
@@ -301,29 +510,29 @@
           });
 
           [{ h: 8, m: 0, l: 'Breakfast' }, { h: 14, m: 0, l: 'Lunch' }, { h: 20, m: 0, l: 'Dinner' }].forEach(meal => {
-             if (meal.h === h && meal.m === m) {
-               const key = `meal-${now.toDateString()}-${meal.l}`;
-               if (!triggered[key]) {
-                 showToast(`It's time for ${meal.l}. Fuel your engine. Log your meal.`, "Nutrition Alert");
-                 setTriggered(p => ({ ...p, [key]: true }));
-               }
-             }
+            if (meal.h === h && meal.m === m) {
+              const key = `meal-${now.toDateString()}-${meal.l}`;
+              if (!triggered[key]) {
+                showToast(`It's time for ${meal.l}. Fuel your engine. Log your meal.`, "Nutrition Alert");
+                setTriggered(p => ({ ...p, [key]: true }));
+              }
+            }
           });
 
           (tasksRef.current || []).forEach(t => {
             if (!t.completed && t.dueDate && t.dueTime) {
-               const [dueH, dueM] = t.dueTime.split(':').map(Number);
-               const dueTimeObj = new Date(`${t.dueDate}T${t.dueTime}`);
-               if (dueTimeObj.toDateString() === now.toDateString() && dueH === h && dueM === m) {
-                 const key = `todo-${t.id}-${h}:${m}`;
-                 if (!triggered[key]) {
-                   showToast(`URGENT: "${t.title}" is due NOW.`, "Task Due");
-                   playVictorySound();
-                   document.getElementById('app-container').classList.add('shake-active');
-                   setTimeout(() => document.getElementById('app-container').classList.remove('shake-active'), 500);
-                   setTriggered(p => ({ ...p, [key]: true }));
-                 }
-               }
+              const [dueH, dueM] = t.dueTime.split(':').map(Number);
+              const dueTimeObj = new Date(`${t.dueDate}T${t.dueTime}`);
+              if (dueTimeObj.toDateString() === now.toDateString() && dueH === h && dueM === m) {
+                const key = `todo-${t.id}-${h}:${m}`;
+                if (!triggered[key]) {
+                  showToast(`URGENT: "${t.title}" is due NOW.`, "Task Due");
+                  playVictorySound();
+                  document.getElementById('app-container').classList.add('shake-active');
+                  setTimeout(() => document.getElementById('app-container').classList.remove('shake-active'), 500);
+                  setTriggered(p => ({ ...p, [key]: true }));
+                }
+              }
             }
           });
         };
@@ -336,14 +545,21 @@
       if (!slot) return null;
       return (
         <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/80 backdrop-blur-xl p-4">
-          <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} className="apple-card p-6 md:p-8 w-full max-w-md relative overflow-hidden" style={{ borderLeft: `3px solid var(--color-primary)` }}>
-            <button onClick={close} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-full transition-colors text-lg font-bold" style={{ color: 'var(--color-text)' }}>X</button>
+          <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} className="apple-card p-6 md:p-8 w-full max-w-md relative overflow-hidden shadow-[0_0_60px_rgba(80,200,120,0.3)] border border-apple-green/50">
+            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-apple-green to-apple-blue"></div>
+            <button onClick={close} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-full text-white font-bold transition-colors">X</button>
             <div className="flex items-center gap-4 mb-6">
-              <div className="p-3 rounded-2xl" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.2 }}>{slot.icon}</div>
-              <div><h3 className="text-xl md:text-2xl font-bold leading-tight" style={{ color: 'var(--color-text)' }}>{slot.label}</h3><p className="text-sm font-bold tracking-widest uppercase" style={{ color: 'var(--color-primary)' }}>{slot.time}</p></div>
+              <div className="p-3 bg-apple-green/20 rounded-2xl">{slot.icon}</div>
+              <div>
+                <h3 className="text-xl md:text-2xl font-bold text-white leading-tight">{slot.label}</h3>
+                <p className="text-apple-green font-bold text-xs md:text-sm tracking-widest uppercase">{slot.time}</p>
+              </div>
             </div>
-            <div className="space-y-4 mb-6"><div className="p-4 rounded-2xl flex items-center gap-3" style={{ backgroundColor: 'rgba(0,0,0,0.2)' }}><IconTarget c="w-5 h-5" style={{ color: 'var(--color-gray)' }}/> <span className="font-bold text-sm" style={{ color: 'var(--color-text)' }}>Focus on the objective.</span></div><div className="p-4 rounded-2xl flex items-center gap-3" style={{ backgroundColor: 'rgba(0,0,0,0.2)' }}><IconBrain c="w-5 h-5" style={{ color: 'var(--color-gray)' }}/> <span className="font-bold text-sm" style={{ color: 'var(--color-text)' }}>Zero distractions.</span></div></div>
-            <button onClick={close} className="w-full py-4 rounded-2xl font-black text-sm md:text-lg hover:scale-[1.02] transition-transform" style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-text)' }}>Engage Mission</button>
+            <div className="space-y-4 mb-6">
+              <div className="p-4 bg-white/5 rounded-2xl flex items-center gap-3"><IconTarget c="w-5 h-5 text-gray-300" /> <span className="font-bold text-sm text-white">Focus on the objective.</span></div>
+              <div className="p-4 bg-white/5 rounded-2xl flex items-center gap-3"><IconBrain c="w-5 h-5 text-gray-300" /> <span className="font-bold text-sm text-white">Zero distractions.</span></div>
+            </div>
+            <button onClick={close} className="w-full py-4 bg-apple-green text-black rounded-2xl font-black text-sm md:text-lg hover:scale-[1.02] transition-transform shadow-[0_0_20px_rgba(80,200,120,0.4)]">Engage Mission</button>
           </motion.div>
         </div>
       );
@@ -353,25 +569,688 @@
       const [currentMins, setCurrentMins] = useState(new Date().getHours() * 60 + new Date().getMinutes());
       const [selectedSlot, setSelectedSlot] = useState(null);
       useEffect(() => { const int = setInterval(() => setCurrentMins(new Date().getHours() * 60 + new Date().getMinutes()), 60000); return () => clearInterval(int); }, []);
-      return (<div className="apple-card p-6 md:p-12 h-full max-w-3xl mx-auto relative"><h3 className="subheading-clamp mb-8 md:mb-10 flex items-center gap-3 md:gap-4" style={{ color: 'var(--color-text)' }}>{title === 'Weekday' ? <IconBriefcase c="w-6 h-6 md:w-8 md:h-8" style={{ color: 'var(--color-primary)' }} /> : <IconCoffee c="w-6 h-6 md:w-8 md:h-8" style={{ color: 'var(--color-primary)' }} />} {title}</h3><div className="relative border-l-2 pl-6 md:pl-8 space-y-8 md:space-y-10" style={{ borderLeftColor: 'var(--color-light-gray)' }}>{schedule.map((item, idx) => { let itemMins = item.h * 60 + item.m; let nextItemMins = schedule[idx + 1] ? schedule[idx + 1].h * 60 + schedule[idx + 1].m : 24 * 60; let isCurrent = nextItemMins > itemMins ? (currentMins >= itemMins && currentMins < nextItemMins) : (currentMins >= itemMins || currentMins < nextItemMins); return (<div key={idx} className="relative cursor-pointer group" onClick={() => setSelectedSlot(item)}><div className={`absolute -left-[33px] md:-left-[41px] top-1.5 md:top-2 w-4 h-4 rounded-full border-2 transition-all group-hover:scale-150 ${isCurrent ? 'shadow-[0_0_15px] scale-125' : ''}`} style={{ backgroundColor: isCurrent ? 'var(--color-primary)' : '#111', borderColor: isCurrent ? 'var(--color-text)' : 'var(--color-gray)' }} /><div className={`transition-all duration-300 ${isCurrent ? 'translate-x-2' : 'group-hover:translate-x-2 opacity-70 group-hover:opacity-100'}`}><div className="flex items-center gap-3 md:gap-4 mb-1"><span className={`text-xs md:text-sm font-bold tracking-tight ${isCurrent ? 'drop-shadow-md' : ''}`} style={{ color: isCurrent ? 'var(--color-primary)' : 'var(--color-gray)' }}>{item.time}</span><div style={{ color: isCurrent ? 'var(--color-primary)' : 'var(--color-gray)' }}>{item.icon}</div></div><h4 className={`text-sm md:text-xl font-bold tracking-tight`} style={{ color: isCurrent ? 'var(--color-text)' : 'var(--color-gray)' }}>{item.label}</h4></div></div>)})}</div><AnimatePresence>{selectedSlot && <RoutineModal slot={selectedSlot} close={() => setSelectedSlot(null)} />}</AnimatePresence></div>);
+      return (
+        <div className="apple-card p-6 md:p-12 h-full max-w-3xl mx-auto relative">
+          <h3 className="subheading-clamp text-apple-text mb-8 md:mb-10 flex items-center gap-3 md:gap-4">
+            {title === 'Weekday' ? <IconBriefcase c="w-6 h-6 md:w-8 md:h-8 text-apple-blue" /> : <IconCoffee c="w-6 h-6 md:w-8 md:h-8 text-apple-blue" />} {title}
+          </h3>
+          <div className="relative border-l-2 border-white/20 pl-6 md:pl-8 space-y-8 md:space-y-10">
+            {schedule.map((item, idx) => {
+              let itemMins = item.h * 60 + item.m;
+              let nextItemMins = schedule[idx + 1] ? schedule[idx + 1].h * 60 + schedule[idx + 1].m : 24 * 60;
+              let isCurrent = nextItemMins > itemMins ? (currentMins >= itemMins && currentMins < nextItemMins) : (currentMins >= itemMins || currentMins < nextItemMins);
+              return (
+                <div key={idx} className="relative cursor-pointer group" onClick={() => setSelectedSlot(item)}>
+                  <div className={`absolute -left-[33px] md:-left-[41px] top-1.5 md:top-2 w-4 h-4 rounded-full border-2 transition-all group-hover:scale-150 ${isCurrent ? 'bg-apple-blue border-white shadow-[0_0_15px_rgba(15,82,186,0.8)] scale-125' : 'bg-[#111] border-gray-500'}`} />
+                  <div className={`transition-all duration-300 ${isCurrent ? 'translate-x-2' : 'group-hover:translate-x-2 opacity-70 group-hover:opacity-100'}`}>
+                    <div className="flex items-center gap-3 md:gap-4 mb-1">
+                      <span className={`text-xs md:text-sm font-bold tracking-tight ${isCurrent ? 'text-apple-blue drop-shadow-md' : 'text-gray-400'}`}>{item.time}</span>
+                      <div className={`${isCurrent ? 'text-apple-blue' : 'text-gray-400'}`}>{item.icon}</div>
+                    </div>
+                    <h4 className={`text-sm md:text-xl font-bold tracking-tight ${isCurrent ? 'text-white' : 'text-gray-300'}`}>{item.label}</h4>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <AnimatePresence>
+            {selectedSlot && <RoutineModal slot={selectedSlot} close={() => setSelectedSlot(null)} />}
+          </AnimatePresence>
+        </div>
+      );
     };
-    const DailyRoutine = () => { const isWeekend = new Date().getDay() === 0 || new Date().getDay() === 6; return <div className="w-full">{isWeekend ? <RoutineTimeline title="Weekend" schedule={WEEKEND_SCHEDULE} /> : <RoutineTimeline title="Weekday" schedule={WEEKDAY_SCHEDULE} />}</div>; };
-    const Finance = ({ role }) => { const { showToast } = useToast(); const { appData, updateAppData } = useAppState(); const txs = appData.finance; const setTxs = (updater) => updateAppData('finance', updater); const loggedUser = role === 'founder' ? 'hamas' : 'misbah'; const [newTx, setNewTx] = useState({ desc: '', amount: '', paidBy: loggedUser, splitType: 'combine' }); const logTx = (e) => { e.preventDefault(); if (!newTx.desc || !newTx.amount) return; const tx = { id: Date.now(), date: new Date().toLocaleDateString(), ...newTx, amount: Number(newTx.amount) }; setTxs(p => [tx, ...p]); setNewTx({ desc: '', amount: '', paidBy: loggedUser, splitType: 'combine' }); showToast(`Logged ${tx.desc} for Rs ${tx.amount}`, "Finance Ledger"); }; const removeTx = (id) => setTxs(p => p.filter(t => t.id !== id)); const settleDebt = () => { if(confirm("Are you sure you want to mark all debts as settled? This will clear the ledger.")) { setTxs([]); showToast("Ledger cleared. Debt settled.", "Finance Ledger"); } }; let hamasSpent = 0; let misbahSpent = 0; let balance = 0; txs.forEach(t => { if (t.paidBy === 'hamas') { hamasSpent += t.amount; if (t.splitType === 'combine') balance += t.amount / 2; else if (t.splitType === 'misbah') balance += t.amount; } else if (t.paidBy === 'misbah') { misbahSpent += t.amount; if (t.splitType === 'combine') balance -= t.amount / 2; else if (t.splitType === 'hamas') balance -= t.amount; } }); return (<div className="space-y-6 md:space-y-8 max-w-6xl mx-auto"><div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6"><div className={`apple-card p-6 md:p-8 md:col-span-3 flex items-center justify-between border-l-8 ${balance > 0 ? 'border-green-500' : balance < 0 ? 'border-red-500' : 'border-gray-500'}`}><div><h3 className="subheading-clamp mb-1 md:mb-2" style={{ color: 'var(--color-text)' }}>Net Settlement</h3><p className="font-bold text-xs md:text-xl" style={{ color: 'var(--color-gray)' }}>{balance === 0 ? "Fully settled." : balance > 0 ? `Misbah owes Hamas:` : `Hamas owes Misbah:`}</p></div><div className={`heading-clamp ${balance > 0 ? 'drop-shadow-[0_0_15px]' : balance < 0 ? 'drop-shadow-[0_0_15px]' : ''}`} style={{ color: balance > 0 ? 'var(--color-success)' : balance < 0 ? 'var(--color-warning)' : 'var(--color-gray)' }}>Rs {Math.abs(balance)}</div></div><div className="apple-card p-6 md:p-8 text-center"><div className="text-2xl md:text-4xl font-black mb-1 md:mb-2" style={{ color: 'var(--color-text)' }}>Rs {hamasSpent}</div><p className="font-bold uppercase text-xs" style={{ color: 'var(--color-gray)' }}>Hamas Total Spent</p></div><div className="apple-card p-6 md:p-8 text-center"><div className="text-2xl md:text-4xl font-black mb-1 md:mb-2" style={{ color: 'var(--color-text)' }}>Rs {misbahSpent}</div><p className="font-bold uppercase text-xs" style={{ color: 'var(--color-gray)' }}>Misbah Total Spent</p></div>{role === 'founder' && (<div onClick={settleDebt} className="apple-card p-6 md:p-8 text-center flex flex-col justify-center items-center cursor-pointer hover:scale-[1.02] transition-transform" style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-text)' }}><span className="font-bold text-lg md:text-2xl">Settle Debt</span><span className="text-xs mt-1 font-bold opacity-70">Clear the ledger</span></div>)}</div><div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8"><div className="apple-card p-6 md:p-8 lg:col-span-1 h-fit"><h3 className="text-xl md:text-2xl font-bold mb-4 md:mb-6" style={{ color: 'var(--color-text)' }}>Log Expense</h3><form onSubmit={logTx} className="space-y-4 md:space-y-5"><input type="text" placeholder="What did you buy?" className="w-full p-3 md:p-4 rounded-xl font-bold text-sm md:text-base" value={newTx.desc} onChange={e=>setNewTx({...newTx, desc:e.target.value})} /><input type="number" placeholder="Amount (Rs)" className="w-full p-3 md:p-4 rounded-xl font-bold text-sm md:text-base" value={newTx.amount} onChange={e=>setNewTx({...newTx, amount:e.target.value})} /><div className="space-y-2 md:space-y-3"><label className="text-[10px] md:text-xs font-bold uppercase" style={{ color: 'var(--color-gray)' }}>Who Paid?</label><div className="flex gap-2"><button type="button" onClick={()=>setNewTx({...newTx, paidBy:'hamas'})} className={`flex-1 py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.paidBy==='hamas'?'text-black shadow-[0_0_15px]' : 'opacity-70 hover:opacity-100'}`} style={{ backgroundColor: newTx.paidBy === 'hamas' ? 'var(--color-primary)' : 'rgba(0,0,0,0.2)', color: newTx.paidBy === 'hamas' ? 'var(--color-text)' : 'var(--color-gray)' }}>Hamas</button><button type="button" onClick={()=>setNewTx({...newTx, paidBy:'misbah'})} className={`flex-1 py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.paidBy==='misbah'?'text-black shadow-[0_0_15px]' : 'opacity-70 hover:opacity-100'}`} style={{ backgroundColor: newTx.paidBy === 'misbah' ? 'var(--color-primary)' : 'rgba(0,0,0,0.2)', color: newTx.paidBy === 'misbah' ? 'var(--color-text)' : 'var(--color-gray)' }}>Misbah</button></div></div><div className="space-y-2 md:space-y-3"><label className="text-[10px] md:text-xs font-bold uppercase" style={{ color: 'var(--color-gray)' }}>How to Split?</label><div className="flex flex-col gap-2"><button type="button" onClick={()=>setNewTx({...newTx, splitType:'combine'})} className={`w-full py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.splitType==='combine' ? 'shadow-[0_0_15px]' : 'opacity-70 hover:opacity-100'}`} style={{ backgroundColor: newTx.splitType === 'combine' ? 'var(--color-accent)' : 'rgba(0,0,0,0.2)', color: newTx.splitType === 'combine' ? 'var(--color-text)' : 'var(--color-gray)' }}>Combine (50/50)</button><button type="button" onClick={()=>setNewTx({...newTx, splitType:'misbah'})} className={`w-full py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.splitType==='misbah' ? 'shadow-[0_0_15px]' : 'opacity-70 hover:opacity-100'}`} style={{ backgroundColor: newTx.splitType === 'misbah' ? 'var(--color-accent)' : 'rgba(0,0,0,0.2)', color: newTx.splitType === 'misbah' ? 'var(--color-text)' : 'var(--color-gray)' }}>100% For Misbah</button><button type="button" onClick={()=>setNewTx({...newTx, splitType:'hamas'})} className={`w-full py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.splitType==='hamas' ? 'shadow-[0_0_15px]' : 'opacity-70 hover:opacity-100'}`} style={{ backgroundColor: newTx.splitType === 'hamas' ? 'var(--color-accent)' : 'rgba(0,0,0,0.2)', color: newTx.splitType === 'hamas' ? 'var(--color-text)' : 'var(--color-gray)' }}>100% For Hamas</button></div></div><button type="submit" className="w-full py-3 md:py-4 mt-2 rounded-xl font-black text-sm md:text-base hover:scale-[1.02] transition-transform" style={{ backgroundColor: 'var(--color-success)', color: 'var(--color-text)' }}>Log Transaction</button></form></div><div className="apple-card p-6 md:p-8 lg:col-span-2"><h3 className="text-xl md:text-2xl font-bold mb-4 md:mb-6" style={{ color: 'var(--color-text)' }}>Transaction History</h3><div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">{txs.length === 0 && <p className="font-bold text-sm text-center py-10" style={{ color: 'var(--color-gray)' }}>No expenses logged yet.</p>}{txs.map(t => (<div key={t.id} className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 rounded-xl gap-3 border transition-colors" style={{ backgroundColor: 'rgba(0,0,0,0.1)', borderColor: 'rgba(255,255,255,0.05)' }}><div className="flex items-center gap-3"><div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-black text-sm shrink-0 shadow-lg`} style={{ backgroundColor: t.paidBy === 'hamas' ? 'var(--color-primary)' : 'var(--color-warning)' }}>{t.paidBy==='hamas'?'H':'M'}</div><div><h5 className="font-bold text-sm md:text-lg leading-tight mb-0.5" style={{ color: 'var(--color-text)' }}>{t.desc}</h5><div className="text-xs font-bold" style={{ color: 'var(--color-gray)' }}>{t.date} • <span className="uppercase" style={{ color: 'var(--color-primary)' }}>{t.splitType === 'combine' ? '50/50 Split' : t.splitType === 'misbah' ? 'For Misbah' : 'For Hamas'}</span></div></div></div><div className="flex items-center gap-4 self-end md:self-auto"><span className="font-black text-lg md:text-xl" style={{ color: 'var(--color-text)' }}>Rs {t.amount}</span><button onClick={()=>removeTx(t.id)} className="w-8 h-8 flex items-center justify-center bg-white/10 hover:bg-red-500 hover:text-white rounded-full transition-all text-xs font-bold" style={{ color: 'var(--color-warning)' }}>X</button></div></div>))}</div></div></div></div>); };
-    const Fitness = () => { const [phase, setPhase] = useState('Foundation'); const phases = ['Foundation', 'Progression', 'Performance']; const workouts = { Foundation: { A: ['Push-ups (3x8-12)', 'Bodyweight Squats (3x15)', 'Plank (3x30s)'], B: ['Inverted Rows / Pull-ups (3x5-8)', 'Lunges (3x12/leg)', 'Glute Bridges (3x15)'] }, Progression: { A: ['Diamond Push-ups (3x8-12)', 'Jump Squats (3x12)', 'Side Planks (3x30s/side)'], B: ['Pull-ups (3x8-10)', 'Bulgarian Split Squats (3x10/leg)', 'Single-leg Bridges (3x12/leg)'] }, Performance: { A: ['Archer Push-ups (3x6/side)', 'Pistol Squats (3x5/side)', 'L-Sit progression (3x15s)'], B: ['Muscle-up progression (3x5)', 'Shrimp Squats (3x8/leg)', 'Dragon Flags (3x8)'] } }; return (<div className="space-y-6 md:space-y-10"><div className="flex justify-center"><div className="bg-black/50 backdrop-blur-md shadow-lg flex items-center p-1.5 rounded-full border border-white/10 overflow-x-auto hide-scrollbar max-w-full">{phases.map(p => (<button key={p} onClick={() => setPhase(p)} className={`relative px-4 py-2 md:px-8 md:py-3 rounded-full text-xs md:text-sm font-bold transition-colors whitespace-nowrap ${phase === p ? 'text-black' : 'opacity-70 hover:opacity-100'}`} style={{ color: phase === p ? 'var(--color-text)' : 'var(--color-gray)' }}>{phase === p && <motion.div layoutId="fitness-pill" className="absolute inset-0 rounded-full" style={{ backgroundColor: 'var(--color-primary)' }} transition={{ type: 'spring' }} />}<span className="relative z-10">{p}</span></button>))}</div></div><div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">{['A', 'B'].map(type => (<div key={type} className="apple-card p-6 md:p-10"><div className="flex items-center gap-4 mb-6 md:mb-10"><div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl flex items-center justify-center" style={{ backgroundColor: 'rgba(0,0,0,0.2)' }}><span className="text-2xl md:text-3xl font-black" style={{ color: 'var(--color-text)' }}>{type}</span></div><h3 className="subheading-clamp" style={{ color: 'var(--color-text)' }}>Workout {type}</h3></div><ul className="space-y-4">{workouts[phase][type].map((ex, i) => (<li key={i} className="flex items-center gap-3 md:gap-4 p-4 rounded-xl border" style={{ backgroundColor: 'rgba(0,0,0,0.1)', borderColor: 'rgba(255,255,255,0.05)' }}><div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: 'var(--color-primary)', opacity: 0.2 }}><IconCheck c="w-4 h-4" style={{ color: 'var(--color-primary)' }} /></div><span className="font-bold text-sm md:text-lg tracking-tight" style={{ color: 'var(--color-text)' }}>{ex}</span></li>))}</ul></div>))}</div></div>); };
-    const AutoDietPlan = ({ targetCal }) => { const bC = Math.round(targetCal * 0.25), lC = Math.round(targetCal * 0.35), dC = Math.round(targetCal * 0.30); return (<div className="space-y-3 md:space-y-4"><div className="p-4 border rounded-xl" style={{ backgroundColor: 'rgba(0,0,0,0.1)', borderColor: 'rgba(255,255,255,0.05)' }}><div className="flex justify-between items-center mb-1"><h4 className="font-bold text-sm md:text-lg" style={{ color: 'var(--color-text)' }}>Breakfast</h4><span className="font-bold text-xs" style={{ color: 'var(--color-primary)' }}>~{bC} kcal</span></div><p className="font-semibold text-xs md:text-sm" style={{ color: 'var(--color-gray)' }}>3-4 Whole Eggs, 2 slices whole wheat bread, Black Coffee.</p></div><div className="p-4 border rounded-xl" style={{ backgroundColor: 'rgba(0,0,0,0.1)', borderColor: 'rgba(255,255,255,0.05)' }}><div className="flex justify-between items-center mb-1"><h4 className="font-bold text-sm md:text-lg" style={{ color: 'var(--color-text)' }}>Lunch</h4><span className="font-bold text-xs" style={{ color: 'var(--color-primary)' }}>~{lC} kcal</span></div><p className="font-semibold text-xs md:text-sm" style={{ color: 'var(--color-gray)' }}>2 Roti, 1.5 cups Daal / Chana, Large Salad.</p></div><div className="p-4 border rounded-xl" style={{ backgroundColor: 'rgba(0,0,0,0.1)', borderColor: 'rgba(255,255,255,0.05)' }}><div className="flex justify-between items-center mb-1"><h4 className="font-bold text-sm md:text-lg" style={{ color: 'var(--color-text)' }}>Dinner</h4><span className="font-bold text-xs" style={{ color: 'var(--color-primary)' }}>~{dC} kcal</span></div><p className="font-semibold text-xs md:text-sm" style={{ color: 'var(--color-gray)' }}>200g Chicken Tikka/Boti, 1 Roti, 1/2 cup Dahi.</p></div></div>); };
-    const Diet = () => { const { showToast } = useToast(); const todayDate = new Date().toDateString(); const { appData, updateAppData } = useAppState(); const profile = appData.profile; const setProfile = (updater) => updateAppData('profile', updater); const dailyMeals = appData.meals; const setDailyMeals = (updater) => updateAppData('meals', updater); const [showSetup, setShowSetup] = useState(false); const todayMeals = dailyMeals[todayDate] || []; let bmr = 10 * profile.weight + 6.25 * profile.height - 5 * profile.age + (profile.gender === 'male' ? 5 : -161); let tdee = Math.round(bmr * parseFloat(profile.activity)); let targetCal = tdee + (profile.goal === 'cut' ? -500 : profile.goal === 'bulk' ? 300 : 0); let targetPro = Math.round(profile.weight * 2.2); let targetFat = Math.round((targetCal * 0.25) / 9); let targetCarb = Math.round((targetCal - (targetPro * 4) - (targetFat * 9)) / 4); let eatenCal = todayMeals.reduce((s, m) => s + Number(m.cal||0), 0), eatenPro = todayMeals.reduce((s, m) => s + Number(m.pro||0), 0), eatenCarb = todayMeals.reduce((s, m) => s + Number(m.carb||0), 0), eatenFat = todayMeals.reduce((s, m) => s + Number(m.fat||0), 0); const [newMeal, setNewMeal] = useState({ name: '', qty: 1, cal: '', pro: '', carb: '', fat: '' }); const [suggestions, setSuggestions] = useState([]); const [showSuggestions, setShowSuggestions] = useState(false); useEffect(() => { const nameLower = newMeal.name.toLowerCase().trim(); if (nameLower.length > 0) { const matches = Object.keys(FOOD_DB).filter(k => k.includes(nameLower) && k !== nameLower); setSuggestions(matches); } else { setSuggestions([]); } }, [newMeal.name]); const selectFood = (foodKey) => { const db = FOOD_DB[foodKey]; setNewMeal(prev => ({ name: foodKey.split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' '), qty: 1, cal: Math.round(db.cal), pro: Math.round(db.pro), carb: Math.round(db.carb), fat: Math.round(db.fat) })); setShowSuggestions(false); }; const handleQtyChange = (e) => { const newQty = Number(e.target.value); setNewMeal(prev => { const nameLower = prev.name.toLowerCase().trim(); if (FOOD_DB[nameLower]) { const db = FOOD_DB[nameLower]; return { ...prev, qty: newQty, cal: Math.round(db.cal * newQty), pro: Math.round(db.pro * newQty), carb: Math.round(db.carb * newQty), fat: Math.round(db.fat * newQty) }; } return { ...prev, qty: newQty }; }); }; const logMeal = (e) => { e.preventDefault(); if (!newMeal.name || !newMeal.cal) return; const meal = { id: Date.now(), ...newMeal }; setDailyMeals(p => ({ ...p, [todayDate]: [...(p[todayDate] || []), meal] })); setNewMeal({ name: '', qty: 1, cal: '', pro: '', carb: '', fat: '' }); if (window.confetti) window.confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } }); showToast(`Logged ${meal.name} (${meal.cal} kcal).`, "Meal Logged"); }; if (showSetup) return (<motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="apple-card p-6 md:p-12 max-w-2xl mx-auto border-2" style={{ borderColor: 'var(--color-primary)' }}><h3 className="subheading-clamp mb-2" style={{ color: 'var(--color-text)' }}>Configure Body Engine</h3><div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8 mt-4 md:mt-6"><div className="space-y-1 md:space-y-2"><label className="text-xs md:text-sm font-bold" style={{ color: 'var(--color-gray)' }}>Weight (kg)</label><input type="number" value={profile.weight} onChange={(e)=>setProfile(p=>({...p,weight:Number(e.target.value)}))} className="w-full p-3 md:p-4 rounded-xl font-bold text-sm" /></div><div className="space-y-1 md:space-y-2"><label className="text-xs md:text-sm font-bold" style={{ color: 'var(--color-gray)' }}>Goal</label><div className="flex gap-2">{['cut', 'maintain', 'bulk'].map(g => (<button key={g} onClick={() => setProfile(p=>({...p, goal: g}))} className={`flex-1 py-2 md:py-3 rounded-xl font-bold text-xs capitalize transition-colors ${profile.goal === g ? 'shadow-[0_0_15px]' : 'opacity-70'}`} style={{ backgroundColor: profile.goal === g ? 'var(--color-primary)' : 'rgba(0,0,0,0.2)', color: profile.goal === g ? 'var(--color-text)' : 'var(--color-gray)' }}>{g}</button>))}</div></div></div><button onClick={() => setShowSetup(false)} className="w-full py-4 rounded-xl font-black text-sm md:text-lg hover:scale-[1.02] transition-transform" style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-text)' }}>Activate Engine</button></motion.div>); return (<div className="space-y-6 md:space-y-8"><div className="flex justify-between items-center"><h2 className="heading-clamp" style={{ color: 'var(--color-text)' }}>Nutrition Engine</h2><button onClick={() => setShowSetup(true)} className="px-4 py-2 border rounded-full text-xs md:text-sm font-bold shadow-sm transition-colors" style={{ backgroundColor: 'rgba(0,0,0,0.2)', borderColor: 'rgba(255,255,255,0.1)', color: 'var(--color-text)' }}>Settings</button></div><div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">{[{ l: 'Cals', c: eatenCal, t: targetCal, u: 'kcal', col: 'bg-blue-500' }, { l: 'Pro', c: eatenPro, t: targetPro, u: 'g', col: 'bg-green-500' }, { l: 'Carbs', c: eatenCarb, t: targetCarb, u: 'g', col: 'bg-yellow-500' }, { l: 'Fats', c: eatenFat, t: targetFat, u: 'g', col: 'bg-purple-500' }].map(m => (<div key={m.l} className="apple-card p-4 md:p-6"><div className="flex justify-between items-end mb-2 md:mb-4"><span className="font-bold text-sm md:text-lg" style={{ color: 'var(--color-text)' }}>{m.l}</span><span className="text-[10px] md:text-xs font-bold" style={{ color: 'var(--color-gray)' }}>{Math.max(m.t-m.c,0)} left</span></div><div className="w-full rounded-full h-2 md:h-3 mb-2 md:mb-4 overflow-hidden" style={{ backgroundColor: 'rgba(255,255,255,0.1)' }}><motion.div initial={{width:0}} animate={{width:`${Math.min((m.c/m.t)*100,100)}%`}} className={`${m.col} h-full rounded-full`} style={{ backgroundColor: 'var(--color-primary)' }} /></div><div className="font-bold text-xs md:text-sm" style={{ color: 'var(--color-gray)' }}><span className="text-sm md:text-xl font-black" style={{ color: 'var(--color-text)' }}>{m.c}</span> / {m.t}</div></div>))}</div><div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8"><div className="apple-card p-6 md:p-8"><h3 className="subheading-clamp mb-1 md:mb-2" style={{ color: 'var(--color-text)' }}>Log Smart Meal</h3><p className="text-xs md:text-sm font-bold mb-4 md:mb-6" style={{ color: 'var(--color-gray)' }}>Search global food database...</p><form onSubmit={logMeal} className="space-y-3 md:space-y-4"><div className="grid grid-cols-3 gap-3 md:gap-4 relative"><div className="col-span-2 relative"><input type="text" placeholder="Meal Name" className="w-full p-3 md:p-4 rounded-xl font-bold text-sm" value={newMeal.name} onChange={e=>{setNewMeal({...newMeal,name:e.target.value}); setShowSuggestions(true);}} onFocus={()=>setShowSuggestions(true)} onBlur={()=>setTimeout(()=>setShowSuggestions(false), 200)} /><AnimatePresence>{showSuggestions && suggestions.length > 0 && (<motion.ul initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} className="absolute top-full left-0 right-0 mt-2 backdrop-blur-xl border rounded-xl shadow-2xl z-50 max-h-48 overflow-y-auto" style={{ backgroundColor: 'var(--color-card)', borderColor: 'rgba(255,255,255,0.1)' }}>{suggestions.map(s => (<li key={s} onClick={() => selectFood(s)} className="p-3 hover:bg-opacity-20 cursor-pointer font-bold capitalize text-sm transition-colors" style={{ color: 'var(--color-text)', backgroundColor: 'transparent', hover: { backgroundColor: 'var(--color-primary)' } }}>{s} <span className="text-[10px] opacity-70 ml-1">({FOOD_DB[s].cal} kcal)</span></li>))}</motion.ul>)}</AnimatePresence></div><input type="number" placeholder="Qty" className="p-3 md:p-4 rounded-xl font-bold text-center text-sm" value={newMeal.qty} onChange={handleQtyChange} min="1" step="0.5" /></div><div className="grid grid-cols-4 gap-3 md:gap-4"><input type="number" placeholder="Kcal" className="p-3 md:p-4 rounded-xl text-center text-sm font-bold" value={newMeal.cal} onChange={e=>setNewMeal({...newMeal,cal:e.target.value})} /><input type="number" placeholder="Pro" className="p-3 md:p-4 rounded-xl text-center text-sm font-bold" value={newMeal.pro} onChange={e=>setNewMeal({...newMeal,pro:e.target.value})} /><input type="number" placeholder="Carb" className="p-3 md:p-4 rounded-xl text-center text-sm font-bold" value={newMeal.carb} onChange={e=>setNewMeal({...newMeal,carb:e.target.value})} /><input type="number" placeholder="Fat" className="p-3 md:p-4 rounded-xl text-center text-sm font-bold" value={newMeal.fat} onChange={e=>setNewMeal({...newMeal,fat:e.target.value})} /></div><button type="submit" className="w-full py-3 md:py-4 rounded-xl font-black text-sm md:text-base hover:scale-[1.02] transition-transform" style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-text)' }}>Log Item</button></form><div className="mt-6 md:mt-8 space-y-2 md:space-y-3">{todayMeals.map(m => (<div key={m.id} className="flex justify-between items-center p-3 md:p-4 border rounded-xl" style={{ backgroundColor: 'rgba(0,0,0,0.1)', borderColor: 'rgba(255,255,255,0.05)' }}><div><h5 className="font-bold text-sm" style={{ color: 'var(--color-text)' }}>{m.name} <span className="text-[10px]" style={{ color: 'var(--color-gray)' }}>x{m.qty}</span></h5><div className="text-xs font-bold space-x-2 mt-0.5" style={{ color: 'var(--color-gray)' }}><span>{m.cal} kcal</span><span style={{ color: 'var(--color-primary)' }}>{m.pro}g P</span></div></div><button onClick={() => setDailyMeals(p => ({ ...p, [todayDate]: p[todayDate].filter(x => x.id !== m.id) }))} className="w-6 h-6 md:w-8 md:h-8 rounded-full transition-colors text-xs font-bold" style={{ backgroundColor: 'rgba(0,0,0,0.2)', color: 'var(--color-warning)' }}>X</button></div>))}</div></div><div className="apple-card p-6 md:p-8"><h3 className="subheading-clamp mb-4 md:mb-6" style={{ color: 'var(--color-text)' }}>Auto Plan</h3><AutoDietPlan targetCal={targetCal} /></div></div></div>); };
-    const ToDo = () => { const { showToast } = useToast(); const { appData, updateAppData } = useAppState(); const tasks = appData.todo; const setTasks = (updater) => updateAppData('todo', updater); const [newTask, setNewTask] = useState({ title: '', dueDate: '', dueTime: '' }); const addTask = (e) => { e.preventDefault(); if(!newTask.title) return; setTasks(p => [...p, { id: Date.now(), ...newTask, completed: false }]); setNewTask({ title: '', dueDate: '', dueTime: '' }); showToast("Task scheduled successfully.", "To-Do"); }; const toggle = (id) => setTasks(p => p.map(t => t.id === id ? { ...t, completed: !t.completed } : t)); const remove = (id) => setTasks(p => p.filter(t => t.id !== id)); return (<div className="apple-card p-6 md:p-12 max-w-4xl mx-auto"><div className="flex items-center gap-3 md:gap-4 mb-8 md:mb-10"><IconList c="w-8 h-8 md:w-10 md:h-10" style={{ color: 'var(--color-primary)' }} /><h2 className="heading-clamp" style={{ color: 'var(--color-text)' }}>Mission Control</h2></div><form onSubmit={addTask} className="flex flex-col md:flex-row gap-3 md:gap-4 mb-8 md:mb-12"><input type="text" placeholder="E.g. Database Quiz" className="flex-1 p-3 md:p-4 rounded-xl font-bold text-sm md:text-base" value={newTask.title} onChange={e=>setNewTask({...newTask, title: e.target.value})} /><input type="date" className="p-3 md:p-4 rounded-xl font-bold font-sans text-sm md:text-base" value={newTask.dueDate} onChange={e=>setNewTask({...newTask, dueDate: e.target.value})} /><input type="time" className="p-3 md:p-4 rounded-xl font-bold font-sans text-sm md:text-base" value={newTask.dueTime} onChange={e=>setNewTask({...newTask, dueTime: e.target.value})} /><button type="submit" className="px-6 py-3 md:px-8 md:py-4 rounded-xl font-black text-sm md:text-base hover:scale-105 transition-transform" style={{ backgroundColor: 'var(--color-primary)', color: 'var(--color-text)' }}>Schedule</button></form><div className="space-y-3 md:space-y-4">{tasks.sort((a,b)=>a.completed-b.completed).map(t => (<motion.div key={t.id} layout className={`flex items-center justify-between p-4 md:p-5 rounded-xl border transition-all ${t.completed ? 'opacity-50 border-transparent' : ''}`} style={{ backgroundColor: t.completed ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.15)', borderColor: 'rgba(255,255,255,0.05)' }}><div className="flex items-center gap-3 md:gap-4 cursor-pointer" onClick={() => toggle(t.id)}><div className={`w-5 h-5 md:w-6 md:h-6 rounded-full border-2 flex items-center justify-center transition-colors ${t.completed ? 'border-green-500' : ''}`} style={{ backgroundColor: t.completed ? 'var(--color-success)' : 'transparent', borderColor: t.completed ? 'var(--color-success)' : 'var(--color-gray)' }}>{t.completed && <IconCheck c="w-3 h-3 md:w-4 md:h-4" style={{ color: 'var(--color-text)' }} />}</div><div className={t.completed ? 'line-through text-sm md:text-lg font-bold' : 'font-bold text-sm md:text-lg'} style={{ color: t.completed ? 'var(--color-gray)' : 'var(--color-text)' }}>{t.title}</div></div><div className="flex items-center gap-2 md:gap-4">{t.dueDate && <span className="text-[10px] md:text-sm font-bold px-2 py-1 md:px-3 rounded-full border" style={{ backgroundColor: 'var(--color-warning)', color: 'var(--color-text)', borderColor: 'rgba(255,255,255,0.2)' }}>{t.dueDate} {t.dueTime}</span>}<button onClick={() => remove(t.id)} className="font-bold text-xs md:text-sm px-2 hover:drop-shadow-[0_0_5px] transition-all" style={{ color: 'var(--color-warning)' }}>Delete</button></div></motion.div>))}{tasks.length === 0 && <p className="font-bold text-sm md:text-base text-center py-10" style={{ color: 'var(--color-gray)' }}>No upcoming missions. You are clear.</p>}</div></div>); };
-    const Tracker = () => { const { showToast } = useToast(); const { appData, updateAppData } = useAppState(); const settings = appData.settings; const data = appData.tracker; const setData = (updater) => updateAppData('tracker', updater); const toggle = (day, habit) => { const key = `${day}-${habit}`; const isChecked = data[key]; const newData = { ...data, [key]: !isChecked }; setData(newData); if (!isChecked && ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].includes(habit)) { const allPrayersDone = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].every(p => newData[`${day}-${p}`]); if (allPrayersDone && window.confetti) { window.confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 }, colors: ['#50C878', '#FFD700', '#ffffff'] }); showToast("You've completed all 5 prayers today. Absolute greatness.", "Alhamdulillah ✨"); playVictorySound(); } } if (!isChecked && habit.includes('Sleep') && settings.dopamineRain) { document.getElementById('app-container').classList.add('shake-active'); setTimeout(() => document.getElementById('app-container').classList.remove('shake-active'), 500); if (window.confetti) window.confetti({ particleCount: 300, spread: 160, origin: { y: 0.5 }, colors: ['#50C878', '#FFD700'], disableForReducedMotion: true }); playVictorySound(); } }; return (<div className="apple-card p-6 md:p-12 overflow-x-auto"><h2 className="heading-clamp mb-6 md:mb-8" style={{ color: 'var(--color-text)' }}>Weekly Tracker</h2><div className="min-w-[800px] md:min-w-[900px]"><div className="grid grid-cols-[180px_repeat(7,1fr)] md:grid-cols-[220px_repeat(7,1fr)] gap-2 md:gap-4 mb-4"><div className="font-bold text-sm md:text-base" style={{ color: 'var(--color-gray)' }}>Habit</div>{DAYS.map(d => <div key={d} className="text-center font-bold text-sm md:text-base" style={{ color: 'var(--color-gray)' }}>{d}</div>)}</div><div className="space-y-2 md:space-y-3">{HABITS.map(h => (<div key={h} className="grid grid-cols-[180px_repeat(7,1fr)] md:grid-cols-[220px_repeat(7,1fr)] gap-2 md:gap-4 items-center group"><div className="font-bold px-3 py-2 md:px-4 md:py-3 rounded-xl text-sm md:text-lg border" style={{ color: 'var(--color-text)', backgroundColor: 'rgba(0,0,0,0.15)', borderColor: 'rgba(255,255,255,0.05)' }}>{h}</div>{DAYS.map(d => { const c = data[`${d}-${h}`]; return (<div key={`${d}-${h}`} className="flex justify-center"><motion.button whileTap={{ scale: 0.8 }} onClick={() => toggle(d, h)} className={`w-8 h-8 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all ${c ? 'scale-105 shadow-[0_0_15px]' : 'border hover:opacity-80'}`} style={{ backgroundColor: c ? 'var(--color-success)' : 'rgba(0,0,0,0.2)', borderColor: c ? 'transparent' : 'rgba(255,255,255,0.1)', color: c ? 'var(--color-text)' : 'transparent' }}>{c && <IconCheck c="w-4 h-4 md:w-6 md:h-6" />}</motion.button></div>) })}</div>))}</div></div></div>); };
-    const Income = () => (<div className="apple-card p-12 md:p-16 text-center"><IconTarget c="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 drop-shadow-[0_0_15px]" style={{ color: 'var(--color-primary)' }} /><h2 className="heading-clamp" style={{ color: 'var(--color-text)' }}>Fiverr Roadmap</h2></div>);
-    const English = () => (<div className="apple-card p-12 md:p-16 text-center"><IconBookOpen c="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 drop-shadow-[0_0_15px]" style={{ color: 'var(--color-primary)' }} /><h2 className="heading-clamp" style={{ color: 'var(--color-text)' }}>English Mastery</h2></div>);
-    const CEOBriefing = () => { const { showToast } = useToast(); const { appData } = useAppState(); const settings = appData.settings; const [briefing, setBriefing] = useState(null); const [displayedBriefing, setDisplayedBriefing] = useState(''); const [loading, setLoading] = useState(false); useEffect(() => { if (!briefing) return; let i = 0; setDisplayedBriefing(''); const interval = setInterval(() => { setDisplayedBriefing(briefing.substring(0, i)); i += 2; if (i > briefing.length) { setDisplayedBriefing(briefing); clearInterval(interval); } }, 15); return () => clearInterval(interval); }, [briefing]); const generateBriefing = async () => { if (!settings.geminiKey) { showToast("Missing API Key! Please paste your Gemini API Key in the God Mode Settings menu.", "Access Denied"); return; } setLoading(true); setBriefing(null); setDisplayedBriefing(''); try { const tData = JSON.stringify(appData.tracker); const fData = JSON.stringify(appData.finance); const dData = JSON.stringify(appData.meals); const todoData = JSON.stringify(appData.todo); const prompt = `You are a high-stakes billionaire mentor. I am Founder Hamas, 21, at IST Islamabad. Today is Day 2 of my 5-month transformation. Analyze my JSON habits and roast/praise me based on my real-time cloud data. Review my data below. Give a powerful, direct, 3-paragraph CEO briefing. Paragraph 1: Praise any high consistency. Paragraph 2: Ruthlessly call out missed habits, overdue tasks, or poor financial decisions. Paragraph 3: Give a commanding order to win today. Do NOT use generic intro text. Start immediately with the briefing. Format entirely in elegant markdown. Data - Trackers: ${tData}, Finance: ${fData}, Diet: ${dData}, To-Do: ${todoData}`; const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${settings.geminiKey}`, { method: 'POST', mode: 'cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) }); if (!res.ok) throw new Error(`API Error: ${res.status}`); const data = await res.json(); const reply = data.candidates[0].content.parts[0].text; setBriefing(reply); if (window.confetti) window.confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } }); playVictorySound(); } catch (e) { showToast("Connection to Gemini failed. Check Console.", "System Error"); console.error(e); } finally { setLoading(false); } }; return (<div className="apple-card p-8 md:p-16 text-left border shadow-[0_0_50px_rgba(0,0,0,0.8)] max-w-4xl mx-auto" style={{ borderColor: 'rgba(255,255,255,0.1)' }}><div className="flex flex-col items-center mb-8 md:mb-10 text-center"><IconBrain c="w-12 h-12 md:w-16 md:h-16 mb-3 md:mb-4 drop-shadow-[0_0_15px]" style={{ color: 'var(--color-primary)' }} /><h2 className="heading-clamp mb-2" style={{ color: 'var(--color-text)' }}>Morning CEO Briefing</h2><p className="font-bold text-xs md:text-sm tracking-widest uppercase" style={{ color: 'var(--color-primary)' }}>Powered by Gemini AI Engine</p></div>{!briefing && !loading && (<div className="flex justify-center"><button onClick={generateBriefing} className="px-8 py-4 md:px-10 md:py-5 rounded-full font-black text-sm md:text-xl hover:scale-105 transition-all" style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-text)' }}>Request Briefing</button></div>)}{loading && (<div className="text-center py-10 space-y-4"><div className="w-8 h-8 md:w-10 md:h-10 border-4 border-t-transparent rounded-full animate-spin mx-auto" style={{ borderColor: 'var(--color-primary)' }}></div><p className="font-bold tracking-widest text-xs md:text-sm uppercase animate-pulse" style={{ color: 'var(--color-primary)' }}>CEO is reviewing your files...</p></div>)}<AnimatePresence>{briefing && !loading && (<motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} className="mt-6 md:mt-8 backdrop-blur-md p-6 md:p-10 rounded-3xl border shadow-inner" style={{ backgroundColor: 'rgba(0,0,0,0.4)', borderColor: 'rgba(255,255,255,0.1)' }}><div className="markdown-content text-sm md:text-lg" dangerouslySetInnerHTML={{ __html: window.marked ? window.marked.parse(displayedBriefing + (displayedBriefing.length < briefing.length ? '...' : '')) : displayedBriefing }}></div>{displayedBriefing.length >= briefing.length && (<motion.button initial={{opacity:0}} animate={{opacity:1}} onClick={generateBriefing} className="mt-6 md:mt-8 text-xs md:text-sm font-bold uppercase tracking-widest transition-colors" style={{ color: 'var(--color-gray)' }}>Request Updated Briefing</motion.button>)}</motion.div>)}</AnimatePresence></div>); };
-    const Analytics = () => { const { appData } = useAppState(); const [score, setScore] = useState(0); useEffect(() => { const tData = appData.tracker || {}; let c = 0; DAYS.forEach(d => HABITS.forEach(h => { if (tData[`${d}-${h}`]) c++; })); setScore(Math.round((c / 77) * 100)); }, [appData.tracker]); return (<div className="apple-card p-12 text-center"><div className="text-6xl md:text-9xl font-black mb-2 md:mb-4 drop-shadow-[0_0_30px]" style={{ color: 'var(--color-text)' }}>{score}%</div><p className="text-lg md:text-2xl font-black uppercase tracking-widest" style={{ color: 'var(--color-primary)' }}>Weekly Consistency</p></div>); };
-    const SettingsModal = ({ close }) => { const { appData, updateAppData } = useAppState(); const settings = appData.settings; const setSettings = (updater) => updateAppData('settings', updater); return (<div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"><motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="apple-card p-6 md:p-8 w-full max-w-md border" style={{ borderColor: 'rgba(255,255,255,0.1)' }}><div className="flex justify-between items-center mb-6"><h3 className="subheading-clamp" style={{ color: 'var(--color-text)' }}>God Mode Settings</h3><button onClick={close} className="text-sm bg-white/10 px-3 py-1 rounded-full hover:bg-red-500 hover:text-white transition-colors" style={{ color: 'var(--color-warning)' }}>Close</button></div><div className="mb-6 p-4 rounded-xl border" style={{ backgroundColor: 'rgba(0,0,0,0.2)', borderColor: 'rgba(255,255,255,0.05)' }}><label className="block text-xs md:text-sm font-bold mb-2 uppercase tracking-tight" style={{ color: 'var(--color-gray)' }}>Gemini API Key</label><input type="password" placeholder="Paste key here..." className="w-full p-3 rounded-lg font-mono text-xs md:text-sm" value={settings.geminiKey || ''} onChange={(e) => setSettings({...settings, geminiKey: e.target.value})} /><p className="text-[10px] md:text-xs mt-2 font-bold" style={{ color: 'var(--color-gray)' }}>Stored securely in your cloud engine.</p></div><div className="space-y-3 md:space-y-4">{['aura', 'dopamineRain', 'shield'].map(k => (<div key={k} className="flex justify-between items-center p-3 md:p-4 rounded-xl border" style={{ backgroundColor: 'rgba(0,0,0,0.1)', borderColor: 'rgba(255,255,255,0.05)' }}><span className="font-bold capitalize text-sm" style={{ color: 'var(--color-text)' }}>{k.replace(/([A-Z])/g, ' $1').trim()}</span><input type="checkbox" checked={settings[k]} onChange={(e)=>setSettings({...settings, [k]: e.target.checked})} className="w-5 h-5 md:w-6 md:h-6 cursor-pointer accent-blue-500" /></div>))}</div></motion.div></div>); };
-    const LoginScreen = ({ onLogin }) => { const [passcode, setPasscode] = useState(''); const handleSubmit = (e) => { e.preventDefault(); const code = passcode.toLowerCase().trim(); if (code === 'hamas') onLogin('founder', 'hamas_ist'); else if (code === 'misbah') onLogin('associate', 'misbah_ist'); else alert('Access Denied'); }; return (<div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden"><motion.div initial={{opacity:0, scale:0.95}} animate={{opacity:1, scale:1}} className="apple-card p-8 md:p-12 max-w-sm w-full text-center shadow-[0_0_60px_rgba(0,0,0,0.8)] border" style={{ borderColor: 'rgba(255,255,255,0.1)' }}><LuxeIcon c="w-16 h-16 md:w-24 md:h-24 mx-auto mb-6 drop-shadow-[0_0_20px]" style={{ color: 'var(--color-primary)' }} /><h1 className="heading-clamp mb-2 tracking-tight" style={{ color: 'var(--color-text)' }}>LuxeOS</h1><p className="text-xs md:text-sm font-bold tracking-widest uppercase mb-8" style={{ color: 'var(--color-primary)' }}>Authenticate Identity</p><form onSubmit={handleSubmit} className="space-y-4"><input type="password" placeholder="Enter ID" className="w-full p-4 rounded-xl font-mono text-center font-black tracking-[0.3em] text-sm md:text-base transition-all" style={{ backgroundColor: 'rgba(0,0,0,0.3)', color: 'var(--color-text)' }} value={passcode} onChange={e=>setPasscode(e.target.value)} /><button type="submit" className="w-full py-4 rounded-xl font-black shadow-[0_0_20px] hover:scale-[1.02] transition-transform text-sm md:text-base tracking-widest uppercase" style={{ backgroundColor: 'var(--color-accent)', color: 'var(--color-text)' }}>Initialize</button></form></motion.div></div>); };
-    const App = ({ role }) => { const { appData } = useAppState(); const settings = appData.settings; const [activeTab, setActiveTab] = useState(role === 'associate' ? 'Finance' : 'Daily Routine'); const [showSettings, setShowSettings] = useState(false); const [aura, setAura] = useState('none'); const [shieldLevel, setShieldLevel] = useState('iron'); useEffect(() => { const checkContext = () => { const h = new Date().getHours(); if (settings.aura) { const tData = appData.tracker; let c = 0; Object.values(tData).forEach(v => { if(v) c++; }); if (h >= 18 && c < 3) setAura('red'); else if (c > 20) setAura('gold'); else setAura('none'); } else setAura('none'); if (settings.shield) { const tData = appData.tracker; let c = 0; Object.values(tData).forEach(v => { if(v) c++; }); if (c > 30) setShieldLevel('gold'); else if (c > 15) setShieldLevel('silver'); else if (c > 5) setShieldLevel('bronze'); else setShieldLevel('iron'); } }; const int = setInterval(checkContext, 60000); checkContext(); return () => clearInterval(int); }, [settings, appData.tracker]); const getGreeting = () => { const h = new Date().getHours(); if (h < 12) return 'Good Morning'; if (h < 18) return 'Good Afternoon'; if (h >= 21) return 'Get rest'; return 'Good Evening'; }; const getTabIcon = (tab, active) => { const c = `w-5 h-5 md:w-6 md:h-6 transition-colors ${active ? 'opacity-100' : 'opacity-60'}`; switch(tab) { case 'Daily Routine': return <IconCalendar c={c}/>; case 'Fitness': return <IconActivity c={c}/>; case 'Diet': return <IconCoffee c={c}/>; case 'Finance': return <IconBriefcase c={c}/>; case 'Income': return <IconTarget c={c}/>; case 'English': return <IconBookOpen c={c}/>; case 'CEO Briefing': return <IconBrain c={c}/>; case 'Tracker': return <IconCheck c={c}/>; case 'To-Do': return <IconList c={c}/>; case 'Analytics': return <IconSun c={c}/>; default: return <IconZap c={c}/>; } }; const handleLogout = () => { localStorage.removeItem('lifeos_session'); window.location.reload(); }; return (<div id="app-container" className="min-h-screen"><RoutineNotifier role={role} />{aura === 'red' && role === 'founder' && <div className="aura-red"></div>}{aura === 'gold' && role === 'founder' && <div className="aura-gold"></div>}{role === 'founder' && (<button onClick={() => setShowSettings(true)} className="md:hidden fixed top-4 right-4 z-50 p-3 bg-black/60 backdrop-blur-md border border-white/20 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.5)]"><IconSettings c="w-5 h-5" style={{ color: 'var(--color-text)' }} /></button>)}{role === 'founder' && (<nav className="fixed bottom-0 md:top-0 md:bottom-auto left-0 right-0 z-50 apple-nav pb-safe border-t md:border-b md:border-t-0 border-white/10 md:pb-0 shadow-2xl"><div className="max-w-7xl mx-auto px-2 md:px-6 flex md:justify-between items-center h-[64px] md:h-auto"><div className="hidden md:flex items-center gap-3 mr-6 py-4 shrink-0"><LuxeIcon c="w-8 h-8" /><span className="font-black tracking-widest uppercase text-xl" style={{ color: 'var(--color-text)' }}>LuxeOS</span></div><div className="flex items-center justify-between md:justify-start space-x-1 md:space-x-2 overflow-x-auto hide-scrollbar w-full h-full md:py-4 px-2 md:px-0">{TABS.map(tab => (<button key={tab} onClick={() => setActiveTab(tab)} className={`relative flex flex-col md:flex-row items-center justify-center px-1 py-1 md:px-4 md:py-2 min-w-[60px] md:min-w-0 h-full md:h-auto rounded-none md:rounded-full whitespace-nowrap transition-colors ${activeTab === tab ? 'opacity-100' : 'opacity-70 hover:opacity-100'}`} style={{ color: activeTab === tab ? 'var(--color-text)' : 'var(--color-gray)' }}><div className="md:hidden mb-1 flex items-center justify-center transition-transform hover:scale-110">{getTabIcon(tab, activeTab === tab)}</div>{activeTab === tab && <motion.div layoutId="nav-pill" className="hidden md:block absolute inset-0 rounded-full border shadow-[0_0_10px]" style={{ backgroundColor: 'rgba(255,255,255,0.1)', borderColor: 'rgba(255,255,255,0.2)' }} transition={{type:'spring'}} />}<span className={`relative z-10 text-[9px] md:text-sm font-bold tracking-tight`}>{tab}</span></button>))}</div><button onClick={() => setShowSettings(true)} className="hidden md:flex ml-4 p-2 rounded-full hover:bg-white/10 shrink-0 transition-colors"><IconSettings c="w-6 h-6" style={{ color: 'var(--color-text)' }} /></button></div></nav>)}<main className={`max-w-7xl mx-auto px-4 md:px-6 py-6 ${role === 'founder' ? 'pt-6 md:pt-32 pb-24 md:pb-16' : 'pt-8 md:pt-12 pb-12'}`}><div className="flex justify-between items-start mb-10 md:mb-16 mt-2 md:mt-0"><div><h1 className="heading-clamp mb-1 md:mb-4 tracking-tight drop-shadow-md" style={{ color: 'var(--color-text)' }}>{getGreeting()}, {role === 'founder' ? 'Hamas' : 'Misbah'}.</h1><p className="text-sm md:text-2xl font-bold tracking-tight" style={{ color: 'var(--color-gray)' }}>{role === 'founder' ? 'Your premium cloud engine is active.' : 'Associate Ledger Access Active.'}</p></div><button onClick={handleLogout} className="px-4 py-2 border rounded-full text-[10px] md:text-xs font-bold shadow-sm hover:scale-105 transition-all" style={{ backgroundColor: 'rgba(0,0,0,0.2)', borderColor: 'rgba(255,255,255,0.1)', color: 'var(--color-text)' }}>Logout</button></div><AnimatePresence mode="wait"><motion.div key={activeTab} initial={{opacity:0,y:20, scale:0.98}} animate={{opacity:1,y:0, scale:1}} exit={{opacity:0,y:-20, scale:0.98}} transition={{type:'spring', stiffness:300, damping:25}}>{activeTab === 'Daily Routine' && <DailyRoutine />}{activeTab === 'Fitness' && <Fitness />}{activeTab === 'Diet' && <Diet />}{activeTab === 'Finance' && <Finance role={role} />}{activeTab === 'Income' && <Income />}{activeTab === 'English' && <English />}{activeTab === 'CEO Briefing' && <CEOBriefing />}{activeTab === 'Tracker' && <Tracker />}{activeTab === 'To-Do' && <ToDo />}{activeTab === 'Analytics' && <Analytics />}</motion.div></AnimatePresence></main>{settings.shield && role === 'founder' && <div className="shield-container"><div className={`shield shield-${shieldLevel}`}></div></div>}{showSettings && <SettingsModal close={() => setShowSettings(false)} />}</div>); };
-    const RootApp = () => { const [session, setSession] = useState(() => { const saved = localStorage.getItem('lifeos_session'); return saved ? JSON.parse(saved) : null; }); const handleLogin = (role, dbId) => { const newSession = { role, dbId }; localStorage.setItem('lifeos_session', JSON.stringify(newSession)); setSession(newSession); }; if (!session) { return <LoginScreen onLogin={handleLogin} />; } return (<AppStateProvider dbId={session.dbId}><ToastProvider><App role={session.role} /></ToastProvider></AppStateProvider>); };
+
+    const DailyRoutine = () => {
+      const isWeekend = new Date().getDay() === 0 || new Date().getDay() === 6;
+      return <div className="w-full">{isWeekend ? <RoutineTimeline title="Weekend" schedule={WEEKEND_SCHEDULE} /> : <RoutineTimeline title="Weekday" schedule={WEEKDAY_SCHEDULE} />}</div>;
+    };
+
+    const Finance = ({ role }) => {
+      const { showToast } = useToast();
+      const { appData, updateAppData } = useAppState();
+      const txs = appData.finance;
+      const setTxs = (updater) => updateAppData('finance', updater);
+
+      const loggedUser = role === 'founder' ? 'hamas' : 'misbah';
+      const [newTx, setNewTx] = useState({ desc: '', amount: '', paidBy: loggedUser, splitType: 'combine' });
+
+      const logTx = (e) => {
+        e.preventDefault();
+        if (!newTx.desc || !newTx.amount) return;
+        const tx = { id: Date.now(), date: new Date().toLocaleDateString(), ...newTx, amount: Number(newTx.amount) };
+        setTxs(p => [tx, ...p]);
+        setNewTx({ desc: '', amount: '', paidBy: loggedUser, splitType: 'combine' });
+        showToast(`Logged ${tx.desc} for Rs ${tx.amount}`, "Finance Ledger");
+      };
+
+      const removeTx = (id) => setTxs(p => p.filter(t => t.id !== id));
+      const settleDebt = () => {
+        if (confirm("Are you sure you want to mark all debts as settled? This will clear the ledger.")) {
+          setTxs([]);
+          showToast("Ledger cleared. Debt settled.", "Finance Ledger");
+        }
+      };
+
+      let hamasSpent = 0; let misbahSpent = 0; let balance = 0;
+
+      txs.forEach(t => {
+        if (t.paidBy === 'hamas') {
+          hamasSpent += t.amount;
+          if (t.splitType === 'combine') balance += t.amount / 2;
+          else if (t.splitType === 'misbah') balance += t.amount;
+        } else if (t.paidBy === 'misbah') {
+          misbahSpent += t.amount;
+          if (t.splitType === 'combine') balance -= t.amount / 2;
+          else if (t.splitType === 'hamas') balance -= t.amount;
+        }
+      });
+
+      return (
+        <div className="space-y-6 md:space-y-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+            <div className={`apple-card p-6 md:p-8 md:col-span-3 flex items-center justify-between border-l-8 ${balance > 0 ? 'border-apple-green' : balance < 0 ? 'border-apple-red' : 'border-gray-500'}`}>
+              <div>
+                <h3 className="subheading-clamp text-white mb-1 md:mb-2">Net Settlement</h3>
+                <p className="text-gray-300 font-bold text-xs md:text-xl">
+                  {balance === 0 ? "Fully settled." : balance > 0 ? `Misbah owes Hamas:` : `Hamas owes Misbah:`}
+                </p>
+              </div>
+              <div className={`heading-clamp ${balance > 0 ? 'text-apple-green drop-shadow-[0_0_15px_rgba(80,200,120,0.5)]' : balance < 0 ? 'text-apple-red drop-shadow-[0_0_15px_rgba(255,59,48,0.5)]' : 'text-gray-400'}`}>
+                Rs {Math.abs(balance)}
+              </div>
+            </div>
+
+            <div className="apple-card p-6 md:p-8 text-center"><div className="text-2xl md:text-4xl font-black text-white mb-1 md:mb-2">Rs {hamasSpent}</div><p className="text-gray-400 font-bold uppercase text-xs">Hamas Total Spent</p></div>
+            <div className="apple-card p-6 md:p-8 text-center"><div className="text-2xl md:text-4xl font-black text-white mb-1 md:mb-2">Rs {misbahSpent}</div><p className="text-gray-400 font-bold uppercase text-xs">Misbah Total Spent</p></div>
+            {role === 'founder' && (
+              <div onClick={settleDebt} className="apple-card p-6 md:p-8 text-center bg-white/10 hover:bg-white/20 text-white shadow-xl flex flex-col justify-center items-center cursor-pointer hover:scale-[1.02] transition-transform"><span className="font-bold text-lg md:text-2xl">Settle Debt</span><span className="text-xs mt-1 font-bold opacity-70">Clear the ledger</span></div>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+            <div className="apple-card p-6 md:p-8 lg:col-span-1 h-fit">
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">Log Expense</h3>
+              <form onSubmit={logTx} className="space-y-4 md:space-y-5">
+                <input type="text" placeholder="What did you buy?" className="w-full p-3 md:p-4 rounded-xl font-bold text-sm md:text-base" value={newTx.desc} onChange={e => setNewTx({ ...newTx, desc: e.target.value })} />
+                <input type="number" placeholder="Amount (Rs)" className="w-full p-3 md:p-4 rounded-xl font-bold text-sm md:text-base" value={newTx.amount} onChange={e => setNewTx({ ...newTx, amount: e.target.value })} />
+
+                <div className="space-y-2 md:space-y-3">
+                  <label className="text-[10px] md:text-xs font-bold text-gray-400 uppercase">Who Paid?</label>
+                  <div className="flex gap-2">
+                    <button type="button" onClick={() => setNewTx({ ...newTx, paidBy: 'hamas' })} className={`flex-1 py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.paidBy === 'hamas' ? 'bg-apple-blue text-white shadow-[0_0_15px_rgba(15,82,186,0.5)]' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>Hamas</button>
+                    <button type="button" onClick={() => setNewTx({ ...newTx, paidBy: 'misbah' })} className={`flex-1 py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.paidBy === 'misbah' ? 'bg-apple-blue text-white shadow-[0_0_15px_rgba(15,82,186,0.5)]' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>Misbah</button>
+                  </div>
+                </div>
+
+                <div className="space-y-2 md:space-y-3">
+                  <label className="text-[10px] md:text-xs font-bold text-gray-400 uppercase">How to Split?</label>
+                  <div className="flex flex-col gap-2">
+                    <button type="button" onClick={() => setNewTx({ ...newTx, splitType: 'combine' })} className={`w-full py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.splitType === 'combine' ? 'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.4)]' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>Combine (50/50)</button>
+                    <button type="button" onClick={() => setNewTx({ ...newTx, splitType: 'misbah' })} className={`w-full py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.splitType === 'misbah' ? 'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.4)]' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>100% For Misbah</button>
+                    <button type="button" onClick={() => setNewTx({ ...newTx, splitType: 'hamas' })} className={`w-full py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.splitType === 'hamas' ? 'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.4)]' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>100% For Hamas</button>
+                  </div>
+                </div>
+                <button type="submit" className="w-full py-3 md:py-4 mt-2 bg-apple-green text-black font-black rounded-xl shadow-[0_0_20px_rgba(80,200,120,0.4)] hover:scale-[1.02] transition-transform text-sm md:text-base">Log Transaction</button>
+              </form>
+            </div>
+
+            <div className="apple-card p-6 md:p-8 lg:col-span-2">
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">Transaction History</h3>
+              <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
+                {txs.length === 0 && <p className="text-gray-400 font-bold text-sm text-center py-10">No expenses logged yet.</p>}
+                {txs.map(t => (
+                  <div key={t.id} className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 bg-white/5 rounded-xl gap-3 border border-white/5 hover:bg-white/10 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-black text-sm shrink-0 shadow-lg ${t.paidBy === 'hamas' ? 'bg-apple-blue' : 'bg-apple-orange'}`}>{t.paidBy === 'hamas' ? 'H' : 'M'}</div>
+                      <div>
+                        <h5 className="font-bold text-white text-sm md:text-lg leading-tight mb-0.5">{t.desc}</h5>
+                        <div className="text-xs font-bold text-gray-400">
+                          {t.date} • <span className="uppercase text-apple-blue">{t.splitType === 'combine' ? '50/50 Split' : t.splitType === 'misbah' ? 'For Misbah' : 'For Hamas'}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 self-end md:self-auto">
+                      <span className="font-black text-white text-lg md:text-xl">Rs {t.amount}</span>
+                      <button onClick={() => removeTx(t.id)} className="w-8 h-8 flex items-center justify-center bg-white/10 hover:bg-apple-red hover:text-white text-apple-red font-bold rounded-full transition-all text-xs">X</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    };
+
+    const Fitness = () => {
+      const [phase, setPhase] = useState('Foundation'); const phases = ['Foundation', 'Progression', 'Performance'];
+      const workouts = { Foundation: { A: ['Push-ups (3x8-12)', 'Bodyweight Squats (3x15)', 'Plank (3x30s)'], B: ['Inverted Rows / Pull-ups (3x5-8)', 'Lunges (3x12/leg)', 'Glute Bridges (3x15)'] }, Progression: { A: ['Diamond Push-ups (3x8-12)', 'Jump Squats (3x12)', 'Side Planks (3x30s/side)'], B: ['Pull-ups (3x8-10)', 'Bulgarian Split Squats (3x10/leg)', 'Single-leg Bridges (3x12/leg)'] }, Performance: { A: ['Archer Push-ups (3x6/side)', 'Pistol Squats (3x5/side)', 'L-Sit progression (3x15s)'], B: ['Muscle-up progression (3x5)', 'Shrimp Squats (3x8/leg)', 'Dragon Flags (3x8)'] } };
+      return (
+        <div className="space-y-6 md:space-y-10">
+          <div className="flex justify-center"><div className="bg-black/50 backdrop-blur-md shadow-lg flex items-center p-1.5 rounded-full border border-white/10 overflow-x-auto hide-scrollbar max-w-full">{phases.map(p => (<button key={p} onClick={() => setPhase(p)} className={`relative px-4 py-2 md:px-8 md:py-3 rounded-full text-xs md:text-sm font-bold transition-colors whitespace-nowrap ${phase === p ? 'text-black' : 'text-gray-400 hover:text-white'}`}>{phase === p && <motion.div layoutId="fitness-pill" className="absolute inset-0 bg-white rounded-full shadow-[0_0_15px_rgba(255,255,255,0.5)]" transition={{ type: 'spring' }} />}<span className="relative z-10">{p}</span></button>))}</div></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">{['A', 'B'].map(type => (<div key={type} className="apple-card p-6 md:p-10"><div className="flex items-center gap-4 mb-6 md:mb-10"><div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-white/10 flex items-center justify-center"><span className="text-2xl md:text-3xl font-black text-white">{type}</span></div><h3 className="subheading-clamp text-white">Workout {type}</h3></div><ul className="space-y-4">{workouts[phase][type].map((ex, i) => (<li key={i} className="flex items-center gap-3 md:gap-4 p-4 rounded-xl bg-white/5 border border-white/5"><div className="w-8 h-8 rounded-full bg-apple-blue/20 flex items-center justify-center shrink-0"><IconCheck c="w-4 h-4 text-apple-blue" /></div><span className="text-white font-bold text-sm md:text-lg tracking-tight">{ex}</span></li>))}</ul></div>))}</div>
+        </div>
+      );
+    };
+
+    const AutoDietPlan = ({ targetCal }) => {
+      const bC = Math.round(targetCal * 0.25), lC = Math.round(targetCal * 0.35), dC = Math.round(targetCal * 0.30);
+      return (
+        <div className="space-y-3 md:space-y-4">
+          <div className="p-4 bg-white/5 border border-white/5 rounded-xl"><div className="flex justify-between items-center mb-1"><h4 className="font-bold text-white text-sm md:text-lg">Breakfast</h4><span className="text-apple-blue font-bold text-xs">~{bC} kcal</span></div><p className="text-gray-400 font-semibold text-xs md:text-sm">3-4 Whole Eggs, 2 slices whole wheat bread, Black Coffee.</p></div>
+          <div className="p-4 bg-white/5 border border-white/5 rounded-xl"><div className="flex justify-between items-center mb-1"><h4 className="font-bold text-white text-sm md:text-lg">Lunch</h4><span className="text-apple-blue font-bold text-xs">~{lC} kcal</span></div><p className="text-gray-400 font-semibold text-xs md:text-sm">2 Roti, 1.5 cups Daal / Chana, Large Salad.</p></div>
+          <div className="p-4 bg-white/5 border border-white/5 rounded-xl"><div className="flex justify-between items-center mb-1"><h4 className="font-bold text-white text-sm md:text-lg">Dinner</h4><span className="text-apple-blue font-bold text-xs">~{dC} kcal</span></div><p className="text-gray-400 font-semibold text-xs md:text-sm">200g Chicken Tikka/Boti, 1 Roti, 1/2 cup Dahi.</p></div>
+        </div>
+      );
+    };
+
+    const Diet = () => {
+      const { showToast } = useToast(); const todayDate = new Date().toDateString();
+      const { appData, updateAppData } = useAppState();
+      const profile = appData.profile;
+      const setProfile = (updater) => updateAppData('profile', updater);
+      const dailyMeals = appData.meals;
+      const setDailyMeals = (updater) => updateAppData('meals', updater);
+
+      const [showSetup, setShowSetup] = useState(false);
+      const todayMeals = dailyMeals[todayDate] || [];
+
+      let bmr = 10 * profile.weight + 6.25 * profile.height - 5 * profile.age + (profile.gender === 'male' ? 5 : -161);
+      let tdee = Math.round(bmr * parseFloat(profile.activity));
+      let targetCal = tdee + (profile.goal === 'cut' ? -500 : profile.goal === 'bulk' ? 300 : 0);
+      let targetPro = Math.round(profile.weight * 2.2); let targetFat = Math.round((targetCal * 0.25) / 9); let targetCarb = Math.round((targetCal - (targetPro * 4) - (targetFat * 9)) / 4);
+      let eatenCal = todayMeals.reduce((s, m) => s + Number(m.cal || 0), 0), eatenPro = todayMeals.reduce((s, m) => s + Number(m.pro || 0), 0), eatenCarb = todayMeals.reduce((s, m) => s + Number(m.carb || 0), 0), eatenFat = todayMeals.reduce((s, m) => s + Number(m.fat || 0), 0);
+
+      const [newMeal, setNewMeal] = useState({ name: '', qty: 1, cal: '', pro: '', carb: '', fat: '' });
+      const [suggestions, setSuggestions] = useState([]);
+      const [showSuggestions, setShowSuggestions] = useState(false);
+
+      useEffect(() => {
+        const nameLower = newMeal.name.toLowerCase().trim();
+        if (nameLower.length > 0) {
+          const matches = Object.keys(FOOD_DB).filter(k => k.includes(nameLower) && k !== nameLower);
+          setSuggestions(matches);
+        } else {
+          setSuggestions([]);
+        }
+      }, [newMeal.name]);
+
+      const selectFood = (foodKey) => {
+        const db = FOOD_DB[foodKey];
+        setNewMeal(prev => ({ name: foodKey.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '), qty: 1, cal: Math.round(db.cal), pro: Math.round(db.pro), carb: Math.round(db.carb), fat: Math.round(db.fat) }));
+        setShowSuggestions(false);
+      };
+
+      const handleQtyChange = (e) => {
+        const newQty = Number(e.target.value);
+        setNewMeal(prev => {
+          const nameLower = prev.name.toLowerCase().trim();
+          if (FOOD_DB[nameLower]) {
+            const db = FOOD_DB[nameLower];
+            return { ...prev, qty: newQty, cal: Math.round(db.cal * newQty), pro: Math.round(db.pro * newQty), carb: Math.round(db.carb * newQty), fat: Math.round(db.fat * newQty) };
+          }
+          return { ...prev, qty: newQty };
+        });
+      };
+
+      const logMeal = (e) => {
+        e.preventDefault(); if (!newMeal.name || !newMeal.cal) return;
+        const meal = { id: Date.now(), ...newMeal };
+        setDailyMeals(p => ({ ...p, [todayDate]: [...(p[todayDate] || []), meal] }));
+        setNewMeal({ name: '', qty: 1, cal: '', pro: '', carb: '', fat: '' });
+        if (window.confetti) window.confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+        showToast(`Logged ${meal.name} (${meal.cal} kcal).`, "Meal Logged");
+      };
+
+      if (showSetup) return (
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="apple-card p-6 md:p-12 max-w-2xl mx-auto border-2 border-apple-blue/50">
+          <h3 className="subheading-clamp text-white mb-2">Configure Body Engine</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8 mt-4 md:mt-6">
+            <div className="space-y-1 md:space-y-2"><label className="text-xs md:text-sm font-bold text-gray-400">Weight (kg)</label><input type="number" value={profile.weight} onChange={(e) => setProfile(p => ({ ...p, weight: Number(e.target.value) }))} className="w-full p-3 md:p-4 rounded-xl font-bold text-sm" /></div>
+            <div className="space-y-1 md:space-y-2"><label className="text-xs md:text-sm font-bold text-gray-400">Goal</label>
+              <div className="flex gap-2">{['cut', 'maintain', 'bulk'].map(g => (<button key={g} onClick={() => setProfile(p => ({ ...p, goal: g }))} className={`flex-1 py-2 md:py-3 rounded-xl font-bold text-xs capitalize transition-colors ${profile.goal === g ? 'bg-apple-blue text-white shadow-[0_0_15px_rgba(15,82,186,0.6)]' : 'bg-white/5 text-gray-400'}`}>{g}</button>))}</div>
+            </div>
+          </div>
+          <button onClick={() => setShowSetup(false)} className="w-full py-4 bg-white text-black rounded-xl font-black text-sm md:text-lg shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-[1.02] transition-transform">Activate Engine</button>
+        </motion.div>
+      );
+
+      return (
+        <div className="space-y-6 md:space-y-8">
+          <div className="flex justify-between items-center"><h2 className="heading-clamp text-white">Nutrition Engine</h2><button onClick={() => setShowSetup(true)} className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/10 rounded-full text-xs md:text-sm font-bold text-white shadow-sm transition-colors">Settings</button></div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            {[{ l: 'Cals', c: eatenCal, t: targetCal, u: 'kcal', col: 'bg-apple-blue shadow-[0_0_15px_rgba(15,82,186,0.8)]' }, { l: 'Pro', c: eatenPro, t: targetPro, u: 'g', col: 'bg-apple-green shadow-[0_0_15px_rgba(80,200,120,0.8)]' }, { l: 'Carbs', c: eatenCarb, t: targetCarb, u: 'g', col: 'bg-apple-orange shadow-[0_0_15px_rgba(255,215,0,0.8)]' }, { l: 'Fats', c: eatenFat, t: targetFat, u: 'g', col: 'bg-apple-purple shadow-[0_0_15px_rgba(153,102,204,0.8)]' }].map(m => (
+              <div key={m.l} className="apple-card p-4 md:p-6"><div className="flex justify-between items-end mb-2 md:mb-4"><span className="font-bold text-white text-sm md:text-lg">{m.l}</span><span className="text-[10px] md:text-xs font-bold text-gray-400">{Math.max(m.t - m.c, 0)} left</span></div><div className="w-full bg-white/10 rounded-full h-2 md:h-3 mb-2 md:mb-4 overflow-hidden"><motion.div initial={{ width: 0 }} animate={{ width: `${Math.min((m.c / m.t) * 100, 100)}%` }} className={`${m.col} h-full rounded-full`} /></div><div className="font-bold text-gray-400 text-xs md:text-sm"><span className="text-white text-sm md:text-xl font-black">{m.c}</span> / {m.t}</div></div>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+            <div className="apple-card p-6 md:p-8">
+              <h3 className="subheading-clamp text-white mb-1 md:mb-2">Log Smart Meal</h3>
+              <p className="text-xs md:text-sm font-bold text-gray-400 mb-4 md:mb-6">Search global food database...</p>
+              <form onSubmit={logMeal} className="space-y-3 md:space-y-4">
+                <div className="grid grid-cols-3 gap-3 md:gap-4 relative">
+                  <div className="col-span-2 relative">
+                    <input type="text" placeholder="Meal Name" className="w-full p-3 md:p-4 rounded-xl font-bold text-sm" value={newMeal.name} onChange={e => { setNewMeal({ ...newMeal, name: e.target.value }); setShowSuggestions(true); }} onFocus={() => setShowSuggestions(true)} onBlur={() => setTimeout(() => setShowSuggestions(false), 200)} />
+                    <AnimatePresence>
+                      {showSuggestions && suggestions.length > 0 && (
+                        <motion.ul initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} className="absolute top-full left-0 right-0 mt-2 bg-[#111]/90 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl z-50 max-h-48 overflow-y-auto">
+                          {suggestions.map(s => (
+                            <li key={s} onClick={() => selectFood(s)} className="p-3 hover:bg-apple-blue hover:text-white cursor-pointer font-bold capitalize text-sm text-gray-200 transition-colors">{s} <span className="text-[10px] opacity-70 ml-1">({FOOD_DB[s].cal} kcal)</span></li>
+                          ))}
+                        </motion.ul>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                  <input type="number" placeholder="Qty" className="p-3 md:p-4 rounded-xl font-bold text-center text-sm" value={newMeal.qty} onChange={handleQtyChange} min="1" step="0.5" />
+                </div>
+                <div className="grid grid-cols-4 gap-3 md:gap-4"><input type="number" placeholder="Kcal" className="p-3 md:p-4 rounded-xl text-center text-sm font-bold" value={newMeal.cal} onChange={e => setNewMeal({ ...newMeal, cal: e.target.value })} /><input type="number" placeholder="Pro" className="p-3 md:p-4 rounded-xl text-center text-sm font-bold" value={newMeal.pro} onChange={e => setNewMeal({ ...newMeal, pro: e.target.value })} /><input type="number" placeholder="Carb" className="p-3 md:p-4 rounded-xl text-center text-sm font-bold" value={newMeal.carb} onChange={e => setNewMeal({ ...newMeal, carb: e.target.value })} /><input type="number" placeholder="Fat" className="p-3 md:p-4 rounded-xl text-center text-sm font-bold" value={newMeal.fat} onChange={e => setNewMeal({ ...newMeal, fat: e.target.value })} /></div>
+                <button type="submit" className="w-full py-3 md:py-4 bg-apple-blue text-white rounded-xl font-black shadow-[0_0_15px_rgba(15,82,186,0.5)] hover:scale-[1.02] transition-transform text-sm md:text-base">Log Item</button>
+              </form>
+              <div className="mt-6 md:mt-8 space-y-2 md:space-y-3">
+                {todayMeals.map(m => (<div key={m.id} className="flex justify-between items-center p-3 md:p-4 bg-white/5 border border-white/5 rounded-xl"><div><h5 className="font-bold text-white text-sm">{m.name} <span className="text-gray-400 text-[10px]">x{m.qty}</span></h5><div className="text-xs font-bold text-gray-400 space-x-2 mt-0.5"><span>{m.cal} kcal</span><span className="text-apple-green">{m.pro}g P</span></div></div><button onClick={() => setDailyMeals(p => ({ ...p, [todayDate]: p[todayDate].filter(x => x.id !== m.id) }))} className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-white/10 hover:bg-apple-red hover:text-white transition-colors text-apple-red font-bold text-xs">X</button></div>))}
+              </div>
+            </div>
+            <div className="apple-card p-6 md:p-8"><h3 className="subheading-clamp text-white mb-4 md:mb-6">Auto Plan</h3><AutoDietPlan targetCal={targetCal} /></div>
+          </div>
+        </div>
+      );
+    };
+
+    const ToDo = () => {
+      const { showToast } = useToast();
+      const { appData, updateAppData } = useAppState();
+      const tasks = appData.todo;
+      const setTasks = (updater) => updateAppData('todo', updater);
+
+      const [newTask, setNewTask] = useState({ title: '', dueDate: '', dueTime: '' });
+
+      const addTask = (e) => {
+        e.preventDefault(); if (!newTask.title) return;
+        setTasks(p => [...p, { id: Date.now(), ...newTask, completed: false }]);
+        setNewTask({ title: '', dueDate: '', dueTime: '' });
+        showToast("Task scheduled successfully.", "To-Do");
+      };
+      const toggle = (id) => setTasks(p => p.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
+      const remove = (id) => setTasks(p => p.filter(t => t.id !== id));
+
+      return (
+        <div className="apple-card p-6 md:p-12 max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 md:gap-4 mb-8 md:mb-10"><IconList c="w-8 h-8 md:w-10 md:h-10 text-apple-blue drop-shadow-[0_0_10px_rgba(15,82,186,0.8)]" /><h2 className="heading-clamp text-white">Mission Control</h2></div>
+          <form onSubmit={addTask} className="flex flex-col md:flex-row gap-3 md:gap-4 mb-8 md:mb-12">
+            <input type="text" placeholder="E.g. Database Quiz" className="flex-1 p-3 md:p-4 rounded-xl font-bold text-sm md:text-base" value={newTask.title} onChange={e => setNewTask({ ...newTask, title: e.target.value })} />
+            <input type="date" className="p-3 md:p-4 rounded-xl font-bold font-sans text-sm md:text-base" value={newTask.dueDate} onChange={e => setNewTask({ ...newTask, dueDate: e.target.value })} />
+            <input type="time" className="p-3 md:p-4 rounded-xl font-bold font-sans text-sm md:text-base" value={newTask.dueTime} onChange={e => setNewTask({ ...newTask, dueTime: e.target.value })} />
+            <button type="submit" className="px-6 py-3 md:px-8 md:py-4 bg-apple-blue text-white font-black rounded-xl text-sm md:text-base shadow-[0_0_15px_rgba(15,82,186,0.5)] hover:scale-105 transition-transform">Schedule</button>
+          </form>
+          <div className="space-y-3 md:space-y-4">
+            {tasks.sort((a, b) => a.completed - b.completed).map(t => (
+              <motion.div key={t.id} layout className={`flex items-center justify-between p-4 md:p-5 rounded-xl border transition-all ${t.completed ? 'bg-white/5 opacity-50 border-transparent' : 'bg-white/10 border-white/10 hover:border-white/30'}`}>
+                <div className="flex items-center gap-3 md:gap-4 cursor-pointer" onClick={() => toggle(t.id)}>
+                  <div className={`w-5 h-5 md:w-6 md:h-6 rounded-full border-2 flex items-center justify-center transition-colors ${t.completed ? 'bg-apple-green border-apple-green' : 'border-gray-400'}`}>{t.completed && <IconCheck c="w-3 h-3 md:w-4 md:h-4 text-black" />}</div>
+                  <div className={t.completed ? 'line-through text-gray-500 text-sm md:text-lg font-bold' : 'text-white font-bold text-sm md:text-lg'}>{t.title}</div>
+                </div>
+                <div className="flex items-center gap-2 md:gap-4">
+                  {t.dueDate && <span className="text-[10px] md:text-sm font-bold text-apple-orange bg-apple-orange/20 px-2 py-1 md:px-3 rounded-full border border-apple-orange/30">{t.dueDate} {t.dueTime}</span>}
+                  <button onClick={() => remove(t.id)} className="text-apple-red font-bold text-xs md:text-sm px-2 hover:drop-shadow-[0_0_5px_rgba(255,59,48,0.8)] transition-all">Delete</button>
+                </div>
+              </motion.div>
+            ))}
+            {tasks.length === 0 && <p className="text-gray-500 font-bold text-sm md:text-base text-center py-10">No upcoming missions. You are clear.</p>}
+          </div>
+        </div>
+      );
+    };
+
+    const Tracker = () => {
+      const { showToast } = useToast();
+      const { appData, updateAppData } = useAppState();
+      const settings = appData.settings;
+      const data = appData.tracker;
+      const setData = (updater) => updateAppData('tracker', updater);
+
+      const toggle = (day, habit) => {
+        const key = `${day}-${habit}`; const isChecked = data[key]; const newData = { ...data, [key]: !isChecked };
+        setData(newData);
+        if (!isChecked && ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].includes(habit)) {
+          const allPrayersDone = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].every(p => newData[`${day}-${p}`]);
+          if (allPrayersDone && window.confetti) {
+            window.confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 }, colors: ['#f1d302', '#235789', '#ffffff'] });
+            showToast("You've completed all 5 prayers today. Absolute greatness.", "Alhamdulillah ✨");
+            playVictorySound();
+          }
+        }
+        if (!isChecked && habit.includes('Sleep') && settings.dopamineRain) {
+          document.getElementById('app-container').classList.add('shake-active'); setTimeout(() => document.getElementById('app-container').classList.remove('shake-active'), 500);
+          if (window.confetti) window.confetti({ particleCount: 300, spread: 160, origin: { y: 0.5 }, colors: ['#f1d302', '#235789'], disableForReducedMotion: true });
+          playVictorySound();
+        }
+      };
+
+      return (
+        <div className="apple-card p-6 md:p-12 overflow-x-auto"><h2 className="heading-clamp text-white mb-6 md:mb-8">Weekly Tracker</h2><div className="min-w-[800px] md:min-w-[900px]">
+          <div className="grid grid-cols-[180px_repeat(7,1fr)] md:grid-cols-[220px_repeat(7,1fr)] gap-2 md:gap-4 mb-4"><div className="font-bold text-gray-400 text-sm md:text-base">Habit</div>{DAYS.map(d => <div key={d} className="text-center font-bold text-gray-400 text-sm md:text-base">{d}</div>)}</div>
+          <div className="space-y-2 md:space-y-3">{HABITS.map(h => (<div key={h} className="grid grid-cols-[180px_repeat(7,1fr)] md:grid-cols-[220px_repeat(7,1fr)] gap-2 md:gap-4 items-center group"><div className="font-bold px-3 py-2 md:px-4 md:py-3 rounded-xl text-sm md:text-lg text-white bg-white/10 border border-white/5">{h}</div>{DAYS.map(d => { const c = data[`${d}-${h}`]; return (<div key={`${d}-${h}`} className="flex justify-center"><motion.button whileTap={{ scale: 0.8 }} onClick={() => toggle(d, h)} className={`w-8 h-8 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all ${c ? 'bg-apple-green text-black scale-105 shadow-[0_0_15px_rgba(80,200,120,0.6)]' : 'bg-white/5 border border-white/10 hover:bg-white/10'}`}>{c && <IconCheck c="w-4 h-4 md:w-6 md:h-6" />}</motion.button></div>) })}</div>))}</div>
+        </div></div>
+      );
+    };
+
+    const Income = () => (<div className="apple-card p-12 md:p-16 text-center"><IconTarget c="w-16 h-16 md:w-20 md:h-20 mx-auto text-apple-blue mb-4 drop-shadow-[0_0_15px_rgba(15,82,186,0.8)]" /><h2 className="heading-clamp text-white">Fiverr Roadmap</h2></div>);
+    const English = () => (<div className="apple-card p-12 md:p-16 text-center"><IconBookOpen c="w-16 h-16 md:w-20 md:h-20 mx-auto text-apple-purple mb-4 drop-shadow-[0_0_15px_rgba(153,102,204,0.8)]" /><h2 className="heading-clamp text-white">English Mastery</h2></div>);
+
+    const CEOBriefing = () => {
+      const { showToast } = useToast();
+      const { appData } = useAppState();
+      const settings = appData.settings;
+      const [briefing, setBriefing] = useState(null);
+      const [displayedBriefing, setDisplayedBriefing] = useState('');
+      const [loading, setLoading] = useState(false);
+
+      useEffect(() => {
+        if (!briefing) return;
+        let i = 0;
+        setDisplayedBriefing('');
+        const interval = setInterval(() => {
+          setDisplayedBriefing(briefing.substring(0, i));
+          i += 2;
+          if (i > briefing.length) {
+            setDisplayedBriefing(briefing);
+            clearInterval(interval);
+          }
+        }, 15);
+        return () => clearInterval(interval);
+      }, [briefing]);
+
+      const generateBriefing = async () => {
+        if (!settings.geminiKey) {
+          showToast("Missing API Key! Please paste your Gemini API Key in the God Mode Settings menu.", "Access Denied");
+          return;
+        }
+
+        setLoading(true);
+        setBriefing(null);
+        setDisplayedBriefing('');
+
+        try {
+          const tData = JSON.stringify(appData.tracker);
+          const fData = JSON.stringify(appData.finance);
+          const dData = JSON.stringify(appData.meals);
+          const todoData = JSON.stringify(appData.todo);
+
+          const prompt = `You are a high-stakes billionaire mentor. I am Founder Hamas, 21, at IST Islamabad. Today is Day 2 (May 3rd) of my 5-month transformation. Analyze my JSON habits and roast/praise me based on my real-time cloud data.
+          Review my raw JSON life data below. Look at the '5-prayer streak' in the tracker and my Finance ledger to see if I am staying within budget.
+          - Trackers (Habits & Prayers): ${tData}
+          - Finance (Split expenses): ${fData}
+          - Diet Logs: ${dData}
+          - To-Do List: ${todoData}
+          
+          Give a powerful, direct, 3-paragraph CEO briefing. 
+          Paragraph 1: Praise any high consistency.
+          Paragraph 2: Ruthlessly call out missed habits, overdue tasks, or poor financial decisions. Make sure to format any negative alerts clearly.
+          Paragraph 3: Give a commanding order to win today.
+          Do NOT use generic intro text like "Here is your briefing". Start immediately with the briefing. Format entirely in elegant markdown. Use flag red for critical alerts.`;
+
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${settings.geminiKey}`, {
+            method: 'POST',
+            mode: 'cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+          });
+
+          if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(`API Error: ${res.status} - ${errorData.error?.message || 'Unknown Error'}`);
+          }
+
+          const data = await res.json();
+          const reply = data.candidates[0].content.parts[0].text;
+          setBriefing(reply);
+
+          if (window.confetti) window.confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+          playVictorySound();
+        } catch (e) {
+          showToast("Connection to Gemini failed. Check F12 Console for details.", "System Error");
+          console.error('Detailed Debugging Error:', e);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      return (
+        <div className="apple-card p-8 md:p-16 text-left border border-white/20 shadow-[0_0_50px_rgba(0,0,0,0.8)] max-w-4xl mx-auto">
+          <div className="flex flex-col items-center mb-8 md:mb-10 text-center">
+            <IconBrain c="w-12 h-12 md:w-16 md:h-16 text-apple-blue mb-3 md:mb-4 drop-shadow-[0_0_15px_rgba(15,82,186,0.8)]" />
+            <h2 className="heading-clamp text-white mb-2">Morning CEO Briefing</h2>
+            <p className="text-apple-blue font-bold text-xs md:text-sm tracking-widest uppercase">Powered by Gemini AI Engine</p>
+          </div>
+
+          {!briefing && !loading && (
+            <div className="flex justify-center">
+              <button onClick={generateBriefing} className="px-8 py-4 md:px-10 md:py-5 bg-white text-black font-black text-sm md:text-xl rounded-full shadow-[0_0_40px_rgba(255,255,255,0.4)] hover:scale-105 transition-all">
+                Request Briefing
+              </button>
+            </div>
+          )}
+
+          {loading && (
+            <div className="text-center py-10 space-y-4">
+              <div className="w-8 h-8 md:w-10 md:h-10 border-4 border-apple-blue border-t-transparent rounded-full animate-spin mx-auto"></div>
+              <p className="text-apple-blue font-bold tracking-widest text-xs md:text-sm uppercase animate-pulse">CEO is reviewing your files...</p>
+            </div>
+          )}
+
+          <AnimatePresence>
+            {briefing && !loading && (
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-6 md:mt-8 bg-black/60 backdrop-blur-md p-6 md:p-10 rounded-3xl border border-white/10 shadow-inner">
+                <div className="markdown-content text-sm md:text-lg" dangerouslySetInnerHTML={{ __html: window.marked ? window.marked.parse(displayedBriefing + (displayedBriefing.length < briefing.length ? '...' : '')) : displayedBriefing }}></div>
+                {displayedBriefing.length >= briefing.length && (
+                  <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }} onClick={generateBriefing} className="mt-6 md:mt-8 text-xs md:text-sm font-bold text-gray-500 hover:text-white uppercase tracking-widest transition-colors">Request Updated Briefing</motion.button>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      );
+    };
+
+    const Analytics = () => {
+      const { appData } = useAppState();
+      const [score, setScore] = useState(0);
+      useEffect(() => {
+        const tData = appData.tracker || {}; let c = 0;
+        DAYS.forEach(d => HABITS.forEach(h => { if (tData[`${d}-${h}`]) c++; }));
+        setScore(Math.round((c / 77) * 100));
+      }, [appData.tracker]);
+      return (<div className="apple-card p-12 text-center"><div className="text-6xl md:text-9xl font-black text-white mb-2 md:mb-4 drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">{score}%</div><p className="text-apple-green text-lg md:text-2xl font-black uppercase tracking-widest">Weekly Consistency</p></div>);
+    };
+
+    const SettingsModal = ({ close }) => {
+      const { appData, updateAppData } = useAppState();
+      const settings = appData.settings;
+      const setSettings = (updater) => updateAppData('settings', updater);
+      return (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="apple-card p-6 md:p-8 w-full max-w-md border border-white/20">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="subheading-clamp text-white">God Mode Settings</h3>
+              <button onClick={close} className="text-apple-red font-bold text-sm bg-white/10 px-3 py-1 rounded-full hover:bg-apple-red hover:text-white transition-colors">Close</button>
+            </div>
+
+            <div className="mb-6 p-4 bg-white/5 rounded-xl border border-white/10">
+              <label className="block text-xs md:text-sm font-bold text-gray-300 mb-2 uppercase tracking-tight">Gemini API Key</label>
+              <input type="password" placeholder="Paste key here..." className="w-full p-3 rounded-lg font-mono text-xs md:text-sm focus:border-apple-blue" value={settings.geminiKey || ''} onChange={(e) => setSettings({ ...settings, geminiKey: e.target.value })} />
+              <p className="text-[10px] md:text-xs text-gray-500 mt-2 font-bold">Stored securely in your cloud engine.</p>
+            </div>
+
+            <div className="space-y-3 md:space-y-4">
+              {['aura', 'dopamineRain', 'shield'].map(k => (
+                <div key={k} className="flex justify-between items-center p-3 md:p-4 bg-white/5 rounded-xl border border-white/5">
+                  <span className="font-bold capitalize text-white text-sm">{k.replace(/([A-Z])/g, ' $1').trim()}</span>
+                  <input type="checkbox" checked={settings[k]} onChange={(e) => setSettings({ ...settings, [k]: e.target.checked })} className="w-5 h-5 md:w-6 md:h-6 cursor-pointer accent-apple-blue" />
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      );
+    };
+
+    const LoginScreen = ({ onLogin }) => {
+      const [passcode, setPasscode] = useState('');
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        const code = passcode.toLowerCase().trim();
+        if (code === 'hamas') onLogin('founder', 'hamas_ist');
+        else if (code === 'misbah') onLogin('associate', 'misbah_ist');
+        else alert('Access Denied');
+      };
+
+      return (
+        <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="apple-card p-8 md:p-12 max-w-sm w-full text-center shadow-[0_0_60px_rgba(0,0,0,0.8)] border border-white/10">
+            <MatrixIcon c="w-16 h-16 md:w-24 md:h-24 mx-auto mb-6 drop-shadow-[0_0_20px_rgba(241,211,2,0.5)]" />
+            <h1 className="heading-clamp text-white mb-2 tracking-tight">Matrix</h1>
+            <p className="text-apple-green text-xs md:text-sm font-bold tracking-widest uppercase mb-8">Authenticate Identity</p>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input type="password" placeholder="Enter ID" className="w-full p-4 rounded-xl font-mono text-center text-white focus:border-apple-blue focus:shadow-[0_0_15px_rgba(35,87,137,0.5)] font-black tracking-[0.3em] text-sm md:text-base transition-all bg-black/50" value={passcode} onChange={e => setPasscode(e.target.value)} />
+              <button type="submit" className="w-full py-4 bg-white text-black rounded-xl font-black shadow-[0_0_20px_rgba(255,255,255,0.4)] hover:scale-[1.02] transition-transform text-sm md:text-base tracking-widest uppercase">Initialize</button>
+            </form>
+          </motion.div>
+        </div>
+      );
+    };
+
+    const App = ({ role }) => {
+      const { appData } = useAppState();
+      const settings = appData.settings;
+      const [activeTab, setActiveTab] = useState(role === 'associate' ? 'Finance' : 'Daily Routine');
+      const [showSettings, setShowSettings] = useState(false);
+      const [aura, setAura] = useState('none'); const [shieldLevel, setShieldLevel] = useState('iron');
+
+      useEffect(() => {
+        const checkContext = () => {
+          const h = new Date().getHours();
+          if (settings.aura) { const tData = appData.tracker; let c = 0; Object.values(tData).forEach(v => { if (v) c++; }); if (h >= 18 && c < 3) setAura('red'); else if (c > 20) setAura('gold'); else setAura('none'); } else setAura('none');
+          if (settings.shield) { const tData = appData.tracker; let c = 0; Object.values(tData).forEach(v => { if (v) c++; }); if (c > 30) setShieldLevel('gold'); else if (c > 15) setShieldLevel('silver'); else if (c > 5) setShieldLevel('bronze'); else setShieldLevel('iron'); }
+        };
+        const int = setInterval(checkContext, 60000); checkContext(); return () => clearInterval(int);
+      }, [settings, appData.tracker]);
+
+      const getGreeting = () => { const h = new Date().getHours(); if (h < 12) return 'Good Morning'; if (h < 18) return 'Good Afternoon'; if (h >= 21) return 'Get rest'; return 'Good Evening'; };
+
+      const getTabIcon = (tab, active) => {
+        const c = `w-5 h-5 md:w-6 md:h-6 transition-colors ${active ? 'text-apple-green' : 'text-gray-400'}`;
+        switch (tab) {
+          case 'Daily Routine': return <IconCalendar c={c} />;
+          case 'Fitness': return <IconActivity c={c} />;
+          case 'Diet': return <IconCoffee c={c} />;
+          case 'Finance': return <IconBriefcase c={c} />;
+          case 'Income': return <IconTarget c={c} />;
+          case 'English': return <IconBookOpen c={c} />;
+          case 'CEO Briefing': return <IconBrain c={c} />;
+          case 'Tracker': return <IconCheck c={c} />;
+          case 'To-Do': return <IconList c={c} />;
+          case 'Analytics': return <IconSun c={c} />;
+          default: return <IconZap c={c} />;
+        }
+      };
+
+      const handleLogout = () => {
+        localStorage.removeItem('lifeos_session');
+        window.location.reload();
+      };
+
+      return (
+        <div id="app-container" className="min-h-screen">
+          <RoutineNotifier role={role} />
+          {aura === 'red' && role === 'founder' && <div className="aura-red"></div>}
+          {aura === 'gold' && role === 'founder' && <div className="aura-gold"></div>}
+
+          {role === 'founder' && (
+            <button onClick={() => setShowSettings(true)} className="md:hidden fixed top-4 right-4 z-50 p-3 bg-black/60 backdrop-blur-md border border-white/20 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.5)]"><IconSettings c="w-5 h-5 text-white" /></button>
+          )}
+
+          {role === 'founder' && (
+            <nav className="fixed bottom-0 md:top-0 md:bottom-auto left-0 right-0 z-50 apple-nav pb-safe border-t md:border-b md:border-t-0 border-white/10 md:pb-0 shadow-2xl">
+              <div className="max-w-7xl mx-auto px-2 md:px-6 flex md:justify-between items-center h-[64px] md:h-auto">
+                <div className="hidden md:flex items-center gap-3 mr-6 py-4 shrink-0">
+                  <MatrixIcon c="w-8 h-8" />
+                  <span className="font-black text-white tracking-widest uppercase text-xl">Matrix</span>
+                </div>
+                <div className="flex items-center justify-between md:justify-start space-x-1 md:space-x-2 overflow-x-auto hide-scrollbar w-full h-full md:py-4 px-2 md:px-0">
+                  {TABS.map(tab => (
+                    <button key={tab} onClick={() => setActiveTab(tab)} className={`relative flex flex-col md:flex-row items-center justify-center px-1 py-1 md:px-4 md:py-2 min-w-[60px] md:min-w-0 h-full md:h-auto rounded-none md:rounded-full whitespace-nowrap transition-colors ${activeTab === tab ? 'text-apple-green' : 'text-gray-400 hover:text-white'}`}>
+                      <div className="md:hidden mb-1 flex items-center justify-center transition-transform hover:scale-110">{getTabIcon(tab, activeTab === tab)}</div>
+                      {activeTab === tab && <motion.div layoutId="nav-pill" className="hidden md:block absolute inset-0 bg-apple-green/20 rounded-full border border-apple-green/20 shadow-[0_0_10px_rgba(241,211,2,0.2)]" transition={{ type: 'spring' }} />}
+                      <span className={`relative z-10 text-[9px] md:text-sm font-bold tracking-tight`}>{tab}</span>
+                    </button>
+                  ))}
+                </div>
+                <button onClick={() => setShowSettings(true)} className="hidden md:flex ml-4 p-2 rounded-full hover:bg-white/10 shrink-0 transition-colors"><IconSettings c="w-6 h-6 text-white" /></button>
+              </div>
+            </nav>
+          )}
+
+          <main className={`max-w-7xl mx-auto px-4 md:px-6 py-6 ${role === 'founder' ? 'pt-6 md:pt-32 pb-24 md:pb-16' : 'pt-8 md:pt-12 pb-12'}`}>
+            <div className="flex justify-between items-start mb-10 md:mb-16 mt-2 md:mt-0">
+              <div>
+                <h1 className="heading-clamp text-white mb-1 md:mb-4 tracking-tight drop-shadow-md">{getGreeting()}, {role === 'founder' ? 'Hamas' : 'Misbah'}.</h1>
+                <p className="text-gray-300 text-sm md:text-2xl font-bold tracking-tight">{role === 'founder' ? 'Your premium cloud engine is active.' : 'Associate Ledger Access Active.'}</p>
+              </div>
+              <button onClick={handleLogout} className="px-4 py-2 bg-white/10 border border-white/20 rounded-full text-[10px] md:text-xs font-bold text-white shadow-sm hover:scale-105 hover:bg-apple-red transition-all">Logout</button>
+            </div>
+            <AnimatePresence mode="wait">
+              <motion.div key={activeTab} initial={{ opacity: 0, y: 20, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.98 }} transition={{ type: 'spring', stiffness: 300, damping: 25 }}>
+                {activeTab === 'Daily Routine' && <DailyRoutine />}
+                {activeTab === 'Fitness' && <Fitness />}
+                {activeTab === 'Diet' && <Diet />}
+                {activeTab === 'Finance' && <Finance role={role} />}
+                {activeTab === 'Income' && <Income />}
+                {activeTab === 'English' && <English />}
+                {activeTab === 'CEO Briefing' && <CEOBriefing />}
+                {activeTab === 'Tracker' && <Tracker />}
+                {activeTab === 'To-Do' && <ToDo />}
+                {activeTab === 'Analytics' && <Analytics />}
+              </motion.div>
+            </AnimatePresence>
+
+            <div className="mt-16 text-center border-t border-white/10 pt-8 pb-10">
+              <p className="text-[#f1d302] font-black text-xs md:text-sm tracking-[0.2em] uppercase">Matrix by HAMAS KHAN</p>
+            </div>
+          </main>
+          {settings.shield && role === 'founder' && <div className="shield-container"><div className={`shield shield-${shieldLevel}`}></div></div>}
+          {showSettings && <SettingsModal close={() => setShowSettings(false)} />}
+        </div>
+      );
+    };
+
+    const RootApp = () => {
+      const [session, setSession] = useState(() => {
+        const saved = localStorage.getItem('lifeos_session');
+        return saved ? JSON.parse(saved) : null;
+      });
+
+      const handleLogin = (role, dbId) => {
+        const newSession = { role, dbId };
+        localStorage.setItem('lifeos_session', JSON.stringify(newSession));
+        setSession(newSession);
+      };
+
+      if (!session) {
+        return <LoginScreen onLogin={handleLogin} />;
+      }
+
+      return (
+        <AppStateProvider dbId={session.dbId}>
+          <ToastProvider>
+            <App role={session.role} />
+          </ToastProvider>
+        </AppStateProvider>
+      );
+    };
+
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<RootApp />);
   </script>
 </body>
+
 </html>
