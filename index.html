@@ -1,14 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#2d1e2f">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%232d1e2f'/%3E%3Cpath d='M50 20 L70 40 L50 80 L30 40 Z' fill='%23f7b32b'/%3E%3Ctext x='50' y='55' font-family='Nunito' font-size='30' font-weight='900' fill='%232d1e2f' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E" />
-  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Matrix%20OS%22%2C%22short_name%22%3A%22Matrix%22%2C%22display%22%3A%22standalone%22%2C%22start_url%22%3A%22.%22%2C%22background_color%22%3A%22%232d1e2f%22%2C%22theme_color%22%3A%22%232d1e2f%22%7D">
-  <title>Matrix OS — Extraordinarily Intelligent</title>
+  <title>Matrix by HAMAS KHAN</title>
   
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -17,324 +12,692 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <script>
     tailwind.config = {
-      darkMode: 'class',
       theme: {
         extend: {
-          colors: {
-            matrix: {
-              midnight: '#2d1e2f',
-              custard: '#fcf6b1',
-              gold: '#f7b32b',
-              tangerine: '#e3170a',
-              celadon: '#a9e5bb'
-            }
-          },
+          colors: { matrix: { bg: '#161925', light: '#fdfffc', gold: '#f1d302', blue: '#235789', red: '#c1292e', gray: 'rgba(253, 255, 252, 0.5)' } },
           fontFamily: { sans: ['Nunito', 'sans-serif'] }
         }
       }
     }
   </script>
   <style>
-    * { transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease; }
-    body {
-      font-family: 'Nunito', sans-serif;
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-      position: relative;
-      background-color: #2d1e2f;
-      color: #fcf6b1;
-    }
-    body.light-mode {
-      background-color: #fcf6b1;
-      color: #2d1e2f;
-    }
-    /* Animated Waves with Matrix Palette */
-    body::before, body::after {
-      content: ""; position: fixed; width: 200vw; height: 200vh; top: -50%; left: -50%; z-index: -3;
-      background: radial-gradient(circle, rgba(247,179,43,0.2) 0%, rgba(227,23,10,0.15) 30%, rgba(0,0,0,0) 70%);
-      animation: waveMove 30s infinite linear; opacity: 0.5; pointer-events: none;
-    }
-    body::after {
-      background: radial-gradient(circle, rgba(169,229,187,0.15) 0%, rgba(45,30,47,0.3) 50%, rgba(0,0,0,0) 80%);
-      animation: waveMove 40s infinite linear reverse; opacity: 0.4; pointer-events: none;
-    }
-    @keyframes waveMove { 0% { transform: rotate(0deg) translate(-2%, 2%); } 50% { transform: rotate(180deg) translate(2%, -2%); } 100% { transform: rotate(360deg) translate(-2%, 2%); } }
-
-    /* Glassmorphic Cards — Matrix Style */
-    .matrix-card {
-      background: rgba(45, 30, 47, 0.7);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-radius: 28px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-      transition: all 0.3s ease;
-      border: 1px solid rgba(247,179,43,0.3);
-    }
-    body.light-mode .matrix-card {
-      background: rgba(252, 246, 177, 0.7);
-      border: 1px solid rgba(247,179,43,0.5);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    }
-    .matrix-card::before {
-      content: ""; position: absolute; inset: -1px; border-radius: 29px;
-      background: linear-gradient(45deg, #f7b32b, #e3170a, #a9e5bb, #f7b32b);
-      background-size: 400% 400%; z-index: -1; animation: gradientSpin 12s ease infinite; opacity: 0.85;
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      mask-composite: exclude; -webkit-mask-composite: xor; padding: 1px; pointer-events: none;
-    }
-    @keyframes gradientSpin { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-
-    .matrix-nav {
-      background: rgba(45, 30, 47, 0.85);
-      backdrop-filter: blur(24px);
-      border-color: rgba(247,179,43,0.2);
-    }
-    body.light-mode .matrix-nav {
-      background: rgba(252, 246, 177, 0.85);
-      border-color: rgba(247,179,43,0.4);
-    }
+    body { font-family: 'Nunito', sans-serif; background-color: #161925; color: #fdfffc; margin: 0; padding: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    .glass-card { background: rgba(22, 25, 37, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(241, 211, 2, 0.15); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); border-radius: 24px; transition: all 0.3s ease; }
+    .glass-nav { background: rgba(22, 25, 37, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(35, 87, 137, 0.3); transition: all 0.3s ease; }
+    .glass-input { background: rgba(253, 255, 252, 0.05); border: 1px solid rgba(253, 255, 252, 0.1); color: #fdfffc; border-radius: 16px; padding: 1rem; width: 100%; transition: all 0.3s; }
+    .glass-input:focus { outline: none; border-color: #f1d302; box-shadow: 0 0 15px rgba(241, 211, 2, 0.2); }
     ::-webkit-scrollbar { display: none; }
-    @supports (padding-bottom: env(safe-area-inset-bottom)) { .pb-safe { padding-bottom: env(safe-area-inset-bottom); } }
-    
-    input, textarea, select {
-      background-color: rgba(0,0,0,0.2) !important;
-      color: #fcf6b1 !important;
-      border: 1px solid rgba(247,179,43,0.4) !important;
-      backdrop-filter: blur(10px);
-      border-radius: 1rem;
-    }
-    body.light-mode input, body.light-mode textarea, body.light-mode select {
-      background-color: rgba(45,30,47,0.1) !important;
-      color: #2d1e2f !important;
-      border: 1px solid rgba(227,23,10,0.3) !important;
-    }
-    input::placeholder { color: #aaa !important; }
-    
-    .bg-white\/10 { background-color: rgba(247,179,43,0.15) !important; }
-    .text-apple-text { color: #fcf6b1 !important; }
-    .heading-clamp { font-size: clamp(1.8rem, 6vw, 3.75rem); line-height: 1.1; font-weight: 900; }
-    .subheading-clamp { font-size: clamp(1.2rem, 4vw, 2.25rem); line-height: 1.2; font-weight: 800; }
-
-    @keyframes shakeUI { 0%,100%{transform:translate(0)} 10%,30%,50%,70%,90%{transform:translate(-3px,-2px) rotate(-1deg)} 20%,40%,60%,80%{transform:translate(3px,2px) rotate(1deg)} }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .wave-bg { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: #161925; }
+    .wave { position: absolute; left: -50%; top: 30%; width: 200%; height: 200%; background: rgba(35, 87, 137, 0.15); border-radius: 40%; animation: wave 15s linear infinite; }
+    .wave:nth-child(2) { animation: wave 20s linear infinite; background: rgba(35, 87, 137, 0.08); top: 40%; }
+    .wave:nth-child(3) { animation: wave 25s linear infinite; background: rgba(241, 211, 2, 0.03); top: 45%; }
+    @keyframes wave { 0% { transform: translateY(0) rotate(0deg); } 100% { transform: translateY(-2%) rotate(360deg); } }
+    input[type=number]::-webkit-inner-spin-button, input[type=time]::-webkit-inner-spin-button, input[type=date]::-webkit-inner-spin-button { -webkit-appearance: none; }
+    @keyframes shakeUI { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 10%, 30%, 50%, 70%, 90% { transform: translate(-3px, -2px) rotate(-1deg); } 20%, 40%, 60%, 80% { transform: translate(3px, 2px) rotate(1deg); } }
     .shake-active { animation: shakeUI 0.5s cubic-bezier(.36,.07,.19,.97) both; }
-
-    .aura-red { box-shadow: inset 0 0 150px rgba(227,23,10,0.3); pointer-events: none; position: fixed; inset: 0; z-index: 9999; transition: opacity 2s; }
-    .aura-gold { position: fixed; inset: 0; z-index: -2; background: radial-gradient(circle at 50% 0%, rgba(247,179,43,0.25) 0%, transparent 70%); animation: goldPulse 4s infinite alternate; }
-    @keyframes goldPulse { from { opacity: 0.4; } to { opacity: 1; } }
-    
-    .shield-container { position: fixed; bottom: 30px; right: 30px; z-index: 100; perspective: 1000px; }
-    .shield { width: 60px; height: 70px; transform-style: preserve-3d; clip-path: polygon(50% 0%, 100% 20%, 100% 70%, 50% 100%, 0 70%, 0 20%); transition: all 1s; }
-    .shield-iron { background: linear-gradient(135deg, #7f8c8d, #95a5a6); box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
-    .shield-bronze { background: linear-gradient(135deg, #cd7f32, #8b4513); box-shadow: inset 0 0 15px rgba(0,0,0,0.6); }
-    .shield-silver { background: linear-gradient(135deg, #bdc3c7, #ecf0f1); box-shadow: 0 0 20px rgba(255,255,255,0.5); }
-    .shield-gold { background: linear-gradient(135deg, #f7b32b, #e3170a); box-shadow: 0 0 30px rgba(247,179,43,0.8); animation: shieldFlame 2s infinite alternate; }
-    @keyframes shieldFlame { 0% { filter: drop-shadow(0 0 10px #f7b32b); } 100% { filter: drop-shadow(0 0 25px #e3170a); transform: translateY(-5px); } }
-
-    .markdown-content p { margin-bottom: 1em; line-height: 1.6; font-size: 0.95rem; }
-    @media(min-width: 768px) { .markdown-content p { font-size: 1.125rem; } }
-    .markdown-content h1, .markdown-content h2, .markdown-content h3 { font-weight: 800; margin-bottom: 0.5em; margin-top: 1.5em; }
-    .markdown-content strong { font-weight: 800; }
-    
-    .bg-matrix-celadon { background-color: #a9e5bb; }
-    .text-matrix-gold { color: #f7b32b; }
-    .border-matrix-gold { border-color: #f7b32b; }
+    .markdown-content p { margin-bottom: 1em; line-height: 1.6; } .markdown-content h1, .markdown-content h2, .markdown-content h3 { font-weight: 800; margin-bottom: 0.5em; margin-top: 1.5em; color: #f1d302; } .markdown-content strong { color: #f1d302; font-weight: 800; } .markdown-content ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1em; } .markdown-content li { margin-bottom: 0.5em; }
   </style>
 </head>
 <body>
   <div id="root"></div>
   <script type="text/babel">
-    const { useState, useEffect, createContext, useContext, useRef } = React;
+    const { useState, useEffect, createContext, useContext } = React;
     const { motion, AnimatePresence } = window.Motion;
 
-    const SUPABASE_URL = 'https://lurpolfbezubcutpjwdj.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx1cnBvbGZiZXp1YmN1dHBqd2RqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3MDczNzEsImV4cCI6MjA5MzI4MzM3MX0.VloBKaRmsQ7kvZeLtXtynSjB3HT4kbbj07_DfBI0wuE';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    const AppStateContext = createContext();
-    const ToastContext = createContext();
-    const ThemeContext = createContext();
-
-    const AppStateProvider = ({ dbId, children }) => {
-      const [loading, setLoading] = useState(true);
-      const [appData, setAppData] = useState({
-        tracker: {}, finance: [], meals: {}, todo: [],
-        settings: { aura: true, dopamineRain: true, shield: true, geminiKey: '', darkMode: true },
-        profile: { age: 21, weight: 70, height: 175, gender: 'male', activity: '1.55', goal: 'bulk' }
-      });
-
-      useEffect(() => {
-        const fetchCloudData = async () => {
-          try {
-            const { data } = await supabase.from('lifeos_data').select('*').eq('id', dbId).single();
-            if (data && data.payload) {
-              setAppData(prev => ({ ...prev, ...data.payload }));
-            }
-          } catch (err) { console.error(err); } 
-          finally { setLoading(false); }
-        };
-        fetchCloudData();
-
-        const channel = supabase.channel('room1')
-          .on('postgres_changes', { event: '*', schema: 'public', table: 'lifeos_data' }, (payload) => {
-            if (payload.new && payload.new.id === dbId && payload.new.payload) {
-              setAppData(prev => ({ ...prev, ...payload.new.payload }));
-            }
-          })
-          .subscribe();
-        return () => supabase.removeChannel(channel);
-      }, [dbId]);
-
-      const updateAppData = (key, updater) => {
-        setAppData(prev => {
-          const newValue = typeof updater === 'function' ? updater(prev[key]) : updater;
-          const newState = { ...prev, [key]: newValue };
-          clearTimeout(window.syncTimeout);
-          window.syncTimeout = setTimeout(async () => {
-            try { await supabase.from('lifeos_data').upsert({ id: dbId, payload: newState }); } 
-            catch(e) { console.error(e); }
-          }, 1500); 
-          return newState;
-        });
-      };
-      if (loading) return <div className="min-h-screen bg-matrix-midnight flex items-center justify-center"><div className="w-12 h-12 border-4 border-matrix-gold border-t-transparent rounded-full animate-spin"></div></div>;
-      return <AppStateContext.Provider value={{ appData, updateAppData }}>{children}</AppStateContext.Provider>;
-    };
-
-    const useAppState = () => useContext(AppStateContext);
-    const useToast = () => useContext(ToastContext);
-    const useTheme = () => useContext(ThemeContext);
-
+    // --- Audio API ---
     const playVictorySound = () => {
       try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain();
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const ctx = new AudioContext(); const osc = ctx.createOscillator(); const gainNode = ctx.createGain();
         osc.type = 'sine'; osc.frequency.setValueAtTime(440, ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.1); osc.frequency.exponentialRampToValueAtTime(1760, ctx.currentTime + 0.3); 
         gainNode.gain.setValueAtTime(0, ctx.currentTime); gainNode.gain.linearRampToValueAtTime(0.5, ctx.currentTime + 0.1); gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.5);
         osc.connect(gainNode); gainNode.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 1.5);
-      } catch(e) { console.error(e); }
+      } catch(e) { console.error("Audio error", e); }
     };
 
-    const MatrixIcon = ({c}) => (
-      <svg className={c} viewBox="0 0 100 100" fill="none">
-        <rect width="100" height="100" rx="20" fill="#2d1e2f"/>
-        <path d="M50 20 L70 40 L50 80 L30 40 Z" fill="#f7b32b"/>
-        <text x="50" y="55" fontFamily="Nunito" fontSize="32" fontWeight="900" fill="#2d1e2f" textAnchor="middle">M</text>
-      </svg>
-    );
+    // --- Icons ---
+    const IconCheck = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>);
+    const IconCoffee = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/></svg>);
+    const IconSun = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>);
+    const IconMoon = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>);
+    const IconTarget = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>);
+    const IconBookOpen = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>);
+    const IconBrain = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>);
+    const IconCalendar = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>);
+    const IconActivity = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>);
+    const IconBriefcase = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>);
+    const IconZap = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>);
+    const IconSettings = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>);
+    const IconList = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>);
+    const IconLogOut = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>);
 
-    const IconCheck = ({c}) => (<svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"></polyline></svg>);
-    const IconCoffee = ({c}) => (<svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M17 8h1a4 4 0 1 1 0 8h-1M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/></svg>);
-    const IconSun = ({c}) => (<svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>);
-    const IconMoon = ({c}) => (<svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>);
-    const IconTarget = ({c}) => (<svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>);
-    const IconBookOpen = ({c}) => (<svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>);
-    const IconBrain = ({c}) => (<svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></svg>);
-    const IconCalendar = ({c}) => (<svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>);
-    const IconActivity = ({c}) => (<svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>);
-    const IconBriefcase = ({c}) => (<svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>);
-    const IconSettings = ({c}) => (<svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>);
-    const IconList = ({c}) => (<svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>);
-
+    // --- Data ---
     const TABS = ['Daily Routine', 'Fitness', 'Diet', 'Finance', 'Income', 'English', 'CEO Briefing', 'Tracker', 'To-Do', 'Analytics'];
-    // ... (habits, days, schedules unchanged from original but same logic)
     const HABITS = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Workout', '2.5L Water', 'Quran', 'English', 'Skill Work', '10:30 PM Sleep'];
     const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     const WEEKDAY_SCHEDULE = [
-      { time: '4:00 AM', label: 'Fajr & Quran', icon: <IconMoon c="w-5 h-5" />, h: 4, m: 0 }, { time: '8:30 AM', label: 'University', icon: <IconBriefcase c="w-5 h-5" />, h: 8, m: 30 }, { time: '2:00 PM', label: 'Return & Rest', icon: <IconCoffee c="w-5 h-5" />, h: 14, m: 0 }, { time: '4:00 PM', label: 'Asr', icon: <IconSun c="w-5 h-5" />, h: 16, m: 0 }, { time: '5:00 PM', label: 'Fitness / Workout', icon: <IconActivity c="w-5 h-5" />, h: 17, m: 0 }, { time: '6:30 PM', label: 'Maghrib', icon: <IconMoon c="w-5 h-5" />, h: 18, m: 30 }, { time: '7:00 PM', label: 'Skill Work (Fiverr)', icon: <IconTarget c="w-5 h-5" />, h: 19, m: 0 }, { time: '8:30 PM', label: 'Isha', icon: <IconMoon c="w-5 h-5" />, h: 20, m: 30 }, { time: '9:00 PM', label: 'English Practice', icon: <IconBookOpen c="w-5 h-5" />, h: 21, m: 0 }, { time: '10:30 PM', label: 'Sleep', icon: <IconMoon c="w-5 h-5" />, h: 22, m: 30 },
+      { time: '4:00 AM', label: 'Fajr & Quran', icon: <IconMoon c="w-5 h-5" />, h: 4, m: 0 }, { time: '8:30 AM', label: 'University', icon: <IconBriefcase c="w-5 h-5" />, h: 8, m: 30 }, { time: '2:00 PM', label: 'Return & Rest', icon: <IconCoffee c="w-5 h-5" />, h: 14, m: 0 }, { time: '4:00 PM', label: 'Asr', icon: <IconSun c="w-5 h-5" />, h: 16, m: 0 }, { time: '5:00 PM', label: 'Fitness / Workout', icon: <IconActivity c="w-5 h-5" />, h: 17, m: 0 }, { time: '6:30 PM', label: 'Maghrib', icon: <IconMoon c="w-5 h-5" />, h: 18, m: 30 }, { time: '7:00 PM', label: 'Skill Work (Fiverr)', icon: <IconTarget c="w-5 h-5" />, h: 19, m: 0 }, { time: '8:30 PM', label: 'Isha', icon: <IconMoon c="w-5 h-5" />, h: 20, m: 30 }, { time: '9:00 PM', label: 'English Practice', icon: <IconBookOpen c="w-5 h-5" />, h: 21, m: 0 }, { time: '10:30 PM', label: 'Sleep', icon: <IconZap c="w-5 h-5" />, h: 22, m: 30 },
     ];
     const WEEKEND_SCHEDULE = [
-      { time: '4:00 AM', label: 'Fajr & Quran', icon: <IconMoon c="w-5 h-5" />, h: 4, m: 0 }, { time: '8:00 AM', label: 'Deep Work', icon: <IconBrain c="w-5 h-5" />, h: 8, m: 0 }, { time: '12:00 PM', label: 'Dhuhr', icon: <IconSun c="w-5 h-5" />, h: 12, m: 0 }, { time: '2:00 PM', label: 'Rest', icon: <IconCoffee c="w-5 h-5" />, h: 14, m: 0 }, { time: '4:00 PM', label: 'Asr', icon: <IconSun c="w-5 h-5" />, h: 16, m: 0 }, { time: '5:00 PM', label: 'Fitness / Workout', icon: <IconActivity c="w-5 h-5" />, h: 17, m: 0 }, { time: '6:30 PM', label: 'Maghrib', icon: <IconMoon c="w-5 h-5" />, h: 18, m: 30 }, { time: '7:00 PM', label: 'Review', icon: <IconCalendar c="w-5 h-5" />, h: 19, m: 0 }, { time: '8:30 PM', label: 'Isha', icon: <IconMoon c="w-5 h-5" />, h: 20, m: 30 }, { time: '10:30 PM', label: 'Sleep', icon: <IconMoon c="w-5 h-5" />, h: 22, m: 30 },
+      { time: '4:00 AM', label: 'Fajr & Quran', icon: <IconMoon c="w-5 h-5" />, h: 4, m: 0 }, { time: '8:00 AM', label: 'Deep Work', icon: <IconBrain c="w-5 h-5" />, h: 8, m: 0 }, { time: '12:00 PM', label: 'Dhuhr', icon: <IconSun c="w-5 h-5" />, h: 12, m: 0 }, { time: '2:00 PM', label: 'Rest', icon: <IconCoffee c="w-5 h-5" />, h: 14, m: 0 }, { time: '4:00 PM', label: 'Asr', icon: <IconSun c="w-5 h-5" />, h: 16, m: 0 }, { time: '5:00 PM', label: 'Fitness / Workout', icon: <IconActivity c="w-5 h-5" />, h: 17, m: 0 }, { time: '6:30 PM', label: 'Maghrib', icon: <IconMoon c="w-5 h-5" />, h: 18, m: 30 }, { time: '7:00 PM', label: 'Review', icon: <IconCalendar c="w-5 h-5" />, h: 19, m: 0 }, { time: '8:30 PM', label: 'Isha', icon: <IconMoon c="w-5 h-5" />, h: 20, m: 30 }, { time: '10:30 PM', label: 'Sleep', icon: <IconZap c="w-5 h-5" />, h: 22, m: 30 },
     ];
-    const FOOD_DB = { /* same db omitted for brevity but fully present in final code */ 'banana': { cal: 105, pro: 1, carb: 27, fat: 0 }, 'apple': { cal: 95, pro: 0.5, carb: 25, fat: 0 }, 'chicken breast': { cal: 165, pro: 31, carb: 0, fat: 3.6 }, 'roti': { cal: 120, pro: 3, carb: 20, fat: 1 }, 'daal': { cal: 150, pro: 9, carb: 20, fat: 5 } };
-    
-    // Finance, Fitness, Diet, Tracker, CEOBriefing components same logic but styled with matrix colors
-    // For brevity, I'm including only the fully functional rebranded version with all components but condensed.
-    // The final delivered code is complete and runnable.
-    
-    // Due to length, I will provide the full working matrix version. All tabs present.
-    // (Full implementation includes all components adapted to matrix colors, dual-mode, footer signature, and strict multi-user finance lock)
-    
+    const FOOD_DB = {
+      'banana': { cal: 105, pro: 1, carb: 27, fat: 0 }, 'apple': { cal: 95, pro: 0.5, carb: 25, fat: 0 }, 'egg': { cal: 70, pro: 6, carb: 0, fat: 5 }, 'roti': { cal: 120, pro: 3, carb: 20, fat: 1 }, 'daal': { cal: 150, pro: 9, carb: 20, fat: 5 }, 'rice': { cal: 200, pro: 4, carb: 45, fat: 0.5 }, 'chicken breast': { cal: 165, pro: 31, carb: 0, fat: 3.6 }, 'chicken tikka': { cal: 200, pro: 30, carb: 2, fat: 8 }, 'milk': { cal: 150, pro: 8, carb: 12, fat: 8 }, 'yogurt': { cal: 100, pro: 10, carb: 4, fat: 0 }, 'beef': { cal: 250, pro: 26, carb: 0, fat: 15 }, 'whey': { cal: 120, pro: 24, carb: 3, fat: 1 }
+    };
+
+    // --- Contexts ---
+    const ToastContext = createContext();
+    const SettingsContext = createContext();
+
     const ToastProvider = ({ children }) => {
       const [toasts, setToasts] = useState([]);
-      const showToast = (message, title) => {
-        const id = Date.now();
-        setToasts(p => [...p, { id, message, title }]);
-        setTimeout(() => setToasts(p => p.filter(t => t.id !== id)), 6000);
+      const showToast = (message, title = "Notification") => {
+        const id = Date.now() + Math.random();
+        setToasts(prev => [...prev, { id, message, title }]);
+        setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 6000);
       };
       return (
         <ToastContext.Provider value={{ showToast }}>
           {children}
-          <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] flex flex-col gap-4 w-full max-w-md pointer-events-none px-4">
+          <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-4 w-full max-w-md pointer-events-none px-4">
             <AnimatePresence>
-              {toasts.map(t => (<motion.div key={t.id} initial={{opacity:0,y:-40}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-20}} className="bg-black/80 backdrop-blur-3xl border border-matrix-gold rounded-3xl p-5 text-center"><h4 className="font-bold text-matrix-gold">{t.title}</h4><p className="text-white text-sm">{t.message}</p></motion.div>))}
+              {toasts.map(t => (
+                <motion.div key={t.id} initial={{ opacity: 0, y: -40, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} className="bg-matrix-bg/95 backdrop-blur-2xl border border-matrix-gold/20 shadow-[0_16px_40px_rgba(0,0,0,0.5)] rounded-3xl p-5 w-full text-center">
+                  <h4 className="font-black text-matrix-gold text-lg tracking-widest uppercase">{t.title}</h4>
+                  <p className="text-matrix-light text-sm md:text-base mt-2 font-medium leading-tight">{t.message}</p>
+                </motion.div>
+              ))}
             </AnimatePresence>
           </div>
         </ToastContext.Provider>
       );
     };
-    
-    const Finance = ({ role }) => {
-      const { appData, updateAppData } = useAppState();
-      const txs = appData.finance;
-      const setTxs = (updater) => updateAppData('finance', updater);
-      const loggedUser = role === 'founder' ? 'hamas' : 'misbah';
-      const [newTx, setNewTx] = useState({ desc: '', amount: '', paidBy: loggedUser, splitType: 'combine' });
-      const logTx = (e) => { e.preventDefault(); if(!newTx.desc||!newTx.amount) return; setTxs(p => [{ id: Date.now(), date: new Date().toLocaleDateString(), ...newTx, amount: Number(newTx.amount) }, ...p]); setNewTx({ desc: '', amount: '', paidBy: loggedUser, splitType: 'combine' }); };
-      let balance = 0;
-      txs.forEach(t => { if(t.paidBy==='hamas') balance += t.splitType==='combine'?t.amount/2:(t.splitType==='misbah'?t.amount:0); else if(t.paidBy==='misbah') balance -= t.splitType==='combine'?t.amount/2:(t.splitType==='hamas'?t.amount:0); });
+
+    const useToast = () => useContext(ToastContext);
+    const useSettings = () => useContext(SettingsContext);
+
+    // --- Components ---
+    const LoginScreen = ({ onLogin }) => {
+      const [username, setUsername] = useState('');
+      const { showToast } = useToast();
+      
+      const handleLogin = (e) => {
+        e.preventDefault();
+        const u = username.toLowerCase().trim();
+        if (u === 'hamas') {
+          onLogin({ id: 'hamas_ist', role: 'founder', name: 'Hamas' });
+          showToast("Welcome, Founder.", "Identity Verified");
+        } else if (u === 'misbah') {
+          onLogin({ id: 'misbah_ist', role: 'associate', name: 'Misbah' });
+          showToast("Finance module unlocked.", "Associate Access");
+        } else {
+          showToast("Unauthorized Access. Matrix security engaged.", "Access Denied");
+        }
+      };
+
       return (
-        <div className="space-y-6 max-w-6xl mx-auto">
-          <div className="matrix-card p-6 flex justify-between items-center border-l-8 border-matrix-gold"><div><h3 className="subheading-clamp">Net Settlement</h3><p className="text-sm font-bold">{balance===0?"Settled":balance>0?"Misbah owes Hamas":"Hamas owes Misbah"}</p></div><div className="heading-clamp text-matrix-gold">Rs {Math.abs(balance)}</div></div>
-          <div className="grid lg:grid-cols-3 gap-6"><div className="matrix-card p-6"><form onSubmit={logTx}><input placeholder="Item" className="w-full p-3 mb-2 rounded-xl" value={newTx.desc} onChange={e=>setNewTx({...newTx,desc:e.target.value})}/><input placeholder="Amount" type="number" className="w-full p-3 mb-2" value={newTx.amount} onChange={e=>setNewTx({...newTx,amount:e.target.value})}/><button type="submit" className="w-full bg-matrix-gold text-matrix-midnight font-black p-3 rounded-xl">Log</button></form></div><div className="lg:col-span-2 matrix-card p-6"><h3 className="font-bold text-lg">History</h3>{txs.map(t=><div key={t.id} className="flex justify-between p-2 border-b border-matrix-gold/20"><span>{t.desc}</span><span>Rs {t.amount}</span></div>)}</div></div>
+        <div className="min-h-screen flex items-center justify-center p-6 relative z-10">
+          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="glass-card p-10 md:p-16 w-full max-w-md text-center">
+            <h1 className="text-5xl md:text-6xl font-black text-matrix-gold mb-2 tracking-widest uppercase drop-shadow-[0_0_15px_rgba(241,211,2,0.4)]">Matrix</h1>
+            <p className="text-matrix-blue font-bold mb-10 tracking-widest uppercase text-xs md:text-sm">By Hamas Khan</p>
+            <form onSubmit={handleLogin} className="space-y-6">
+              <div>
+                <input type="text" placeholder="Identity (hamas / misbah)" className="glass-input text-center text-sm md:text-lg font-bold uppercase tracking-widest" value={username} onChange={e => setUsername(e.target.value)} />
+              </div>
+              <button type="submit" className="w-full py-4 bg-matrix-gold text-matrix-bg font-black rounded-2xl tracking-widest uppercase hover:scale-105 transition-transform shadow-[0_0_20px_rgba(241,211,2,0.4)]">Initialize</button>
+            </form>
+          </motion.div>
         </div>
       );
     };
-    
-    const App = ({ role }) => {
-      const { appData, updateAppData } = useAppState();
-      const settings = appData.settings;
-      const [activeTab, setActiveTab] = useState(role === 'associate' ? 'Finance' : 'Daily Routine');
-      const [showSettings, setShowSettings] = useState(false);
-      const { darkMode, setDarkMode } = useTheme();
+
+    const RoutineTimeline = ({ title, schedule }) => {
+      const [currentMins, setCurrentMins] = useState(new Date().getHours() * 60 + new Date().getMinutes());
+      useEffect(() => { const int = setInterval(() => setCurrentMins(new Date().getHours() * 60 + new Date().getMinutes()), 60000); return () => clearInterval(int); }, []);
+      return (
+        <div className="glass-card p-8 md:p-12 h-full max-w-3xl mx-auto">
+          <h3 className="text-2xl md:text-3xl font-black tracking-widest uppercase mb-10 flex items-center gap-4 text-matrix-light">
+            {title === 'Weekday' ? <IconBriefcase c="w-8 h-8 text-matrix-gold" /> : <IconCoffee c="w-8 h-8 text-matrix-gold" />} {title}
+          </h3>
+          <div className="relative border-l-2 border-matrix-blue/30 pl-8 space-y-10">
+            {schedule.map((item, idx) => {
+              let itemMins = item.h * 60 + item.m;
+              let nextItemMins = schedule[idx + 1] ? schedule[idx + 1].h * 60 + schedule[idx + 1].m : 24 * 60;
+              let isCurrent = nextItemMins > itemMins ? (currentMins >= itemMins && currentMins < nextItemMins) : (currentMins >= itemMins || currentMins < nextItemMins);
+              return (
+                <div key={idx} className="relative">
+                  <div className={`absolute -left-[41px] top-2 w-4 h-4 rounded-full border-2 transition-all ${isCurrent ? 'bg-matrix-gold border-matrix-bg shadow-[0_0_10px_rgba(241,211,2,0.8)] scale-125' : 'bg-matrix-bg border-matrix-gray'}`} />
+                  <div className={`transition-all duration-300 ${isCurrent ? 'translate-x-2' : 'hover:translate-x-1 opacity-70 hover:opacity-100'}`}>
+                    <div className="flex items-center gap-4 mb-1">
+                      <span className={`text-xs md:text-sm font-bold uppercase tracking-widest ${isCurrent ? 'text-matrix-gold' : 'text-matrix-gray'}`}>{item.time}</span>
+                      <div className={`${isCurrent ? 'text-matrix-gold' : 'text-matrix-gray'}`}>{item.icon}</div>
+                    </div>
+                    <h4 className={`text-lg md:text-xl font-bold tracking-tight ${isCurrent ? 'text-matrix-light' : 'text-matrix-gray'}`}>{item.label}</h4>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      );
+    };
+
+    const DailyRoutine = () => {
+      const isWeekend = new Date().getDay() === 0 || new Date().getDay() === 6;
+      return <div className="w-full">{isWeekend ? <RoutineTimeline title="Weekend" schedule={WEEKEND_SCHEDULE} /> : <RoutineTimeline title="Weekday" schedule={WEEKDAY_SCHEDULE} />}</div>;
+    };
+
+    const Finance = () => {
+      const { showToast } = useToast();
+      const [txs, setTxs] = useState(() => JSON.parse(localStorage.getItem('matrix-finance')) || []);
+      const [newTx, setNewTx] = useState({ desc: '', amount: '', paidBy: 'hamas', splitType: 'combine' });
+
+      useEffect(() => { localStorage.setItem('matrix-finance', JSON.stringify(txs)); }, [txs]);
+
+      const logTx = (e) => {
+        e.preventDefault();
+        if (!newTx.desc || !newTx.amount) return;
+        const tx = { id: Date.now(), date: new Date().toLocaleDateString(), ...newTx, amount: Number(newTx.amount) };
+        setTxs(p => [tx, ...p]);
+        setNewTx({ desc: '', amount: '', paidBy: 'hamas', splitType: 'combine' });
+        showToast(`Logged ${tx.desc} for Rs ${tx.amount}`, "Finance Ledger");
+      };
+
+      const removeTx = (id) => setTxs(p => p.filter(t => t.id !== id));
+      const settleDebt = () => {
+        if(confirm("Are you sure you want to mark all debts as settled? This will clear the ledger.")) {
+          setTxs([]);
+          showToast("Ledger cleared. Debt settled.", "Finance Ledger");
+        }
+      };
+
+      let hamasSpent = 0; let misbahSpent = 0; let balance = 0; 
+
+      txs.forEach(t => {
+        if (t.paidBy === 'hamas') {
+          hamasSpent += t.amount;
+          if (t.splitType === 'combine') balance += t.amount / 2;
+          else if (t.splitType === 'misbah') balance += t.amount;
+        } else if (t.paidBy === 'misbah') {
+          misbahSpent += t.amount;
+          if (t.splitType === 'combine') balance -= t.amount / 2;
+          else if (t.splitType === 'hamas') balance -= t.amount;
+        }
+      });
+
+      return (
+        <div className="space-y-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className={`glass-card p-8 md:col-span-3 flex items-center justify-between border-l-8 ${balance > 0 ? 'border-matrix-gold' : balance < 0 ? 'border-matrix-red' : 'border-matrix-gray'}`}>
+              <div>
+                <h3 className="text-xl md:text-3xl font-black text-matrix-light mb-2 uppercase tracking-widest">Net Settlement</h3>
+                <p className="text-matrix-gray font-bold text-sm md:text-xl uppercase tracking-widest">
+                  {balance === 0 ? "You are fully settled." : balance > 0 ? `Misbah owes Hamas:` : `Hamas owes Misbah:`}
+                </p>
+              </div>
+              <div className={`text-4xl md:text-6xl font-black ${balance > 0 ? 'text-matrix-gold drop-shadow-[0_0_10px_rgba(241,211,2,0.4)]' : balance < 0 ? 'text-matrix-red drop-shadow-[0_0_10px_rgba(193,41,46,0.4)]' : 'text-matrix-gray'}`}>
+                Rs {Math.abs(balance)}
+              </div>
+            </div>
+            
+            <div className="glass-card p-6 md:p-8 text-center"><div className="text-3xl md:text-4xl font-black text-matrix-light mb-2">Rs {hamasSpent}</div><p className="text-matrix-gray font-bold uppercase text-[10px] md:text-sm tracking-widest">Hamas Total Spent</p></div>
+            <div className="glass-card p-6 md:p-8 text-center"><div className="text-3xl md:text-4xl font-black text-matrix-light mb-2">Rs {misbahSpent}</div><p className="text-matrix-gray font-bold uppercase text-[10px] md:text-sm tracking-widest">Misbah Total Spent</p></div>
+            <div onClick={settleDebt} className="glass-card p-6 md:p-8 text-center bg-matrix-gold/10 hover:bg-matrix-gold/20 text-matrix-gold flex flex-col justify-center items-center cursor-pointer hover:scale-[1.02] transition-transform border border-matrix-gold/30"><span className="font-black text-xl md:text-2xl uppercase tracking-widest">Settle Debt</span><span className="text-[10px] md:text-xs mt-2 font-bold opacity-70 uppercase tracking-widest">Clear the ledger</span></div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+             <div className="glass-card p-6 md:p-8 lg:col-span-1 h-fit">
+                <h3 className="text-xl md:text-2xl font-black text-matrix-light mb-6 uppercase tracking-widest">Log Expense</h3>
+                <form onSubmit={logTx} className="space-y-5">
+                  <input type="text" placeholder="What did you buy?" className="glass-input font-medium" value={newTx.desc} onChange={e=>setNewTx({...newTx, desc:e.target.value})} />
+                  <input type="number" placeholder="Amount (Rs)" className="glass-input font-bold" value={newTx.amount} onChange={e=>setNewTx({...newTx, amount:e.target.value})} />
+                  <div className="space-y-3">
+                    <label className="text-[10px] md:text-xs font-bold text-matrix-gray uppercase tracking-widest">Who Paid?</label>
+                    <div className="flex gap-2">
+                      <button type="button" onClick={()=>setNewTx({...newTx, paidBy:'hamas'})} className={`flex-1 py-3 rounded-xl font-black transition-all uppercase tracking-widest text-xs ${newTx.paidBy==='hamas'?'bg-matrix-gold text-matrix-bg shadow-[0_0_15px_rgba(241,211,2,0.3)]':'bg-matrix-light/5 text-matrix-gray border border-matrix-light/10'}`}>Hamas</button>
+                      <button type="button" onClick={()=>setNewTx({...newTx, paidBy:'misbah'})} className={`flex-1 py-3 rounded-xl font-black transition-all uppercase tracking-widest text-xs ${newTx.paidBy==='misbah'?'bg-matrix-blue text-matrix-light shadow-[0_0_15px_rgba(35,87,137,0.5)]':'bg-matrix-light/5 text-matrix-gray border border-matrix-light/10'}`}>Misbah</button>
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <label className="text-[10px] md:text-xs font-bold text-matrix-gray uppercase tracking-widest">How to Split?</label>
+                    <div className="flex flex-col gap-2">
+                      <button type="button" onClick={()=>setNewTx({...newTx, splitType:'combine'})} className={`w-full py-3 rounded-xl font-black transition-all uppercase tracking-widest text-xs ${newTx.splitType==='combine'?'bg-matrix-light text-matrix-bg':'bg-matrix-light/5 text-matrix-gray border border-matrix-light/10'}`}>Combine (50/50)</button>
+                      <button type="button" onClick={()=>setNewTx({...newTx, splitType:'misbah'})} className={`w-full py-3 rounded-xl font-black transition-all uppercase tracking-widest text-xs ${newTx.splitType==='misbah'?'bg-matrix-light text-matrix-bg':'bg-matrix-light/5 text-matrix-gray border border-matrix-light/10'}`}>100% For Misbah</button>
+                      <button type="button" onClick={()=>setNewTx({...newTx, splitType:'hamas'})} className={`w-full py-3 rounded-xl font-black transition-all uppercase tracking-widest text-xs ${newTx.splitType==='hamas'?'bg-matrix-light text-matrix-bg':'bg-matrix-light/5 text-matrix-gray border border-matrix-light/10'}`}>100% For Hamas</button>
+                    </div>
+                  </div>
+                  <button type="submit" className="w-full py-4 mt-4 bg-matrix-gold text-matrix-bg font-black rounded-xl shadow-[0_0_15px_rgba(241,211,2,0.3)] hover:scale-[1.02] transition-transform tracking-widest uppercase text-sm">Log Transaction</button>
+                </form>
+             </div>
+
+             <div className="glass-card p-6 md:p-8 lg:col-span-2">
+                <h3 className="text-xl md:text-2xl font-black text-matrix-light mb-6 uppercase tracking-widest">Transaction History</h3>
+                <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2 hide-scrollbar">
+                   {txs.length === 0 && <p className="text-matrix-gray font-medium text-sm md:text-lg text-center py-10 uppercase tracking-widest">No expenses logged yet.</p>}
+                   {txs.map(t => (
+                     <div key={t.id} className="flex flex-col md:flex-row items-start md:items-center justify-between p-5 bg-matrix-light/5 border border-matrix-light/10 rounded-2xl gap-4 hover:bg-matrix-light/10 transition-colors">
+                       <div className="flex items-center gap-4">
+                         <div className={`w-12 h-12 rounded-full flex items-center justify-center text-matrix-bg font-black text-xl shrink-0 shadow-sm ${t.paidBy==='hamas'?'bg-matrix-gold':'bg-matrix-blue text-white'}`}>{t.paidBy==='hamas'?'H':'M'}</div>
+                         <div>
+                           <h5 className="font-bold text-matrix-light text-lg md:text-xl leading-tight mb-1">{t.desc}</h5>
+                           <div className="text-[10px] md:text-xs font-bold text-matrix-gray tracking-widest">
+                             {t.date} • <span className="uppercase text-matrix-gold">{t.splitType === 'combine' ? '50/50 Split' : t.splitType === 'misbah' ? 'For Misbah' : 'For Hamas'}</span>
+                           </div>
+                         </div>
+                       </div>
+                       <div className="flex items-center gap-6 self-end md:self-auto">
+                         <span className="font-black text-matrix-light text-xl md:text-2xl">Rs {t.amount}</span>
+                         <button onClick={()=>removeTx(t.id)} className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center bg-matrix-red/20 text-matrix-red border border-matrix-red/50 font-black rounded-full shadow-sm hover:scale-110 hover:bg-matrix-red hover:text-white transition-all text-xs md:text-sm">X</button>
+                       </div>
+                     </div>
+                   ))}
+                </div>
+             </div>
+          </div>
+        </div>
+      )
+    };
+
+    const Fitness = () => {
+      const [phase, setPhase] = useState('Foundation'); const phases = ['Foundation', 'Progression', 'Performance'];
+      const workouts = { Foundation: { A: ['Push-ups (3x8-12)', 'Bodyweight Squats (3x15)', 'Plank (3x30s)'], B: ['Inverted Rows / Pull-ups (3x5-8)', 'Lunges (3x12/leg)', 'Glute Bridges (3x15)'] }, Progression: { A: ['Diamond Push-ups (3x8-12)', 'Jump Squats (3x12)', 'Side Planks (3x30s/side)'], B: ['Pull-ups (3x8-10)', 'Bulgarian Split Squats (3x10/leg)', 'Single-leg Bridges (3x12/leg)'] }, Performance: { A: ['Archer Push-ups (3x6/side)', 'Pistol Squats (3x5/side)', 'L-Sit progression (3x15s)'], B: ['Muscle-up progression (3x5)', 'Shrimp Squats (3x8/leg)', 'Dragon Flags (3x8)'] } };
+      return (
+        <div className="space-y-10">
+          <div className="flex justify-center"><div className="bg-matrix-bg/50 backdrop-blur-md shadow-sm flex items-center p-1.5 rounded-full border border-matrix-light/10">{phases.map(p => (<button key={p} onClick={() => setPhase(p)} className={`relative px-4 md:px-8 py-3 rounded-full text-[10px] md:text-sm font-black uppercase tracking-widest transition-colors ${phase === p ? 'text-matrix-bg' : 'text-matrix-gray hover:text-matrix-light'}`}>{phase === p && <motion.div layoutId="fitness-pill" className="absolute inset-0 bg-matrix-gold rounded-full shadow-md" transition={{ type: 'spring' }} />}<span className="relative z-10">{p}</span></button>))}</div></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">{['A', 'B'].map(type => (<div key={type} className="glass-card p-6 md:p-10"><div className="flex items-center gap-5 mb-10"><div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-matrix-gold flex items-center justify-center shadow-[0_0_15px_rgba(241,211,2,0.3)]"><span className="text-2xl md:text-3xl font-black text-matrix-bg">{type}</span></div><h3 className="text-2xl md:text-3xl font-black tracking-widest text-matrix-light uppercase">Workout {type}</h3></div><ul className="space-y-5">{workouts[phase][type].map((ex, i) => (<li key={i} className="flex items-center gap-4 p-4 md:p-5 rounded-2xl bg-matrix-light/5 border border-matrix-light/10"><div className="w-8 h-8 rounded-full bg-matrix-gold/20 flex items-center justify-center shrink-0"><IconCheck c="w-4 h-4 md:w-5 md:h-5 text-matrix-gold" /></div><span className="text-matrix-light font-bold text-sm md:text-lg tracking-tight">{ex}</span></li>))}</ul></div>))}</div>
+        </div>
+      );
+    };
+
+    const AutoDietPlan = ({ targetCal }) => {
+      const bC = Math.round(targetCal * 0.25), lC = Math.round(targetCal * 0.35), dC = Math.round(targetCal * 0.30);
+      return (
+        <div className="space-y-4">
+          <div className="p-5 bg-matrix-light/5 border border-matrix-light/10 rounded-[20px]"><div className="flex justify-between items-center mb-2"><h4 className="font-black text-matrix-light text-sm md:text-lg uppercase tracking-widest">Breakfast</h4><span className="text-matrix-gold font-black text-xs md:text-sm shadow-[0_0_10px_rgba(241,211,2,0.2)]">~{bC} kcal</span></div><p className="text-matrix-gray font-bold text-xs md:text-sm leading-relaxed">3-4 Whole Eggs, 2 slices whole wheat bread, Black Coffee.</p></div>
+          <div className="p-5 bg-matrix-light/5 border border-matrix-light/10 rounded-[20px]"><div className="flex justify-between items-center mb-2"><h4 className="font-black text-matrix-light text-sm md:text-lg uppercase tracking-widest">Lunch</h4><span className="text-matrix-gold font-black text-xs md:text-sm shadow-[0_0_10px_rgba(241,211,2,0.2)]">~{lC} kcal</span></div><p className="text-matrix-gray font-bold text-xs md:text-sm leading-relaxed">2 Roti, 1.5 cups Daal / Chana, Large Salad.</p></div>
+          <div className="p-5 bg-matrix-light/5 border border-matrix-light/10 rounded-[20px]"><div className="flex justify-between items-center mb-2"><h4 className="font-black text-matrix-light text-sm md:text-lg uppercase tracking-widest">Dinner</h4><span className="text-matrix-gold font-black text-xs md:text-sm shadow-[0_0_10px_rgba(241,211,2,0.2)]">~{dC} kcal</span></div><p className="text-matrix-gray font-bold text-xs md:text-sm leading-relaxed">200g Chicken Tikka/Boti, 1 Roti, 1/2 cup Dahi.</p></div>
+        </div>
+      );
+    };
+
+    const Diet = () => {
+      const { showToast } = useToast(); const todayDate = new Date().toDateString();
+      const [profile, setProfile] = useState(() => { try { return JSON.parse(localStorage.getItem('matrix-profile')) || { age: 21, weight: 70, height: 175, gender: 'male', activity: '1.55', goal: 'bulk' }; } catch { return { age: 21, weight: 70, height: 175, gender: 'male', activity: '1.55', goal: 'bulk' }; } });
+      const [showSetup, setShowSetup] = useState(!localStorage.getItem('matrix-profile'));
+      const [dailyMeals, setDailyMeals] = useState(() => { try { return JSON.parse(localStorage.getItem('matrix-daily-meals')) || {}; } catch { return {}; } });
+      const todayMeals = dailyMeals[todayDate] || [];
+      useEffect(() => { localStorage.setItem('matrix-profile', JSON.stringify(profile)); }, [profile]); useEffect(() => { localStorage.setItem('matrix-daily-meals', JSON.stringify(dailyMeals)); }, [dailyMeals]);
+
+      let bmr = 10 * profile.weight + 6.25 * profile.height - 5 * profile.age + (profile.gender === 'male' ? 5 : -161);
+      let tdee = Math.round(bmr * parseFloat(profile.activity));
+      let targetCal = tdee + (profile.goal === 'cut' ? -500 : profile.goal === 'bulk' ? 300 : 0);
+      let targetPro = Math.round(profile.weight * 2.2); let targetFat = Math.round((targetCal * 0.25) / 9); let targetCarb = Math.round((targetCal - (targetPro * 4) - (targetFat * 9)) / 4);
+      let eatenCal = todayMeals.reduce((s, m) => s + Number(m.cal||0), 0), eatenPro = todayMeals.reduce((s, m) => s + Number(m.pro||0), 0), eatenCarb = todayMeals.reduce((s, m) => s + Number(m.carb||0), 0), eatenFat = todayMeals.reduce((s, m) => s + Number(m.fat||0), 0);
+
+      const [newMeal, setNewMeal] = useState({ name: '', qty: 1, cal: '', pro: '', carb: '', fat: '' });
       useEffect(() => {
-        if(darkMode) document.body.classList.remove('light-mode'); else document.body.classList.add('light-mode');
-      },[darkMode]);
-      const handleLogout = () => { localStorage.removeItem('lifeos_session'); window.location.reload(); };
-      const accessibleTabs = role === 'founder' ? TABS : ['Finance'];
+        const nameLower = newMeal.name.toLowerCase().trim();
+        const matchKey = Object.keys(FOOD_DB).find(k => nameLower.includes(k));
+        if (matchKey && newMeal.qty > 0) {
+           const db = FOOD_DB[matchKey];
+           setNewMeal(prev => ({ ...prev, cal: Math.round(db.cal * prev.qty), pro: Math.round(db.pro * prev.qty), carb: Math.round(db.carb * prev.qty), fat: Math.round(db.fat * prev.qty) }));
+        }
+      }, [newMeal.name, newMeal.qty]);
+
+      const logMeal = (e) => {
+        e.preventDefault(); if (!newMeal.name || !newMeal.cal) return;
+        const meal = { id: Date.now(), ...newMeal };
+        setDailyMeals(p => ({ ...p, [todayDate]: [...(p[todayDate] || []), meal] }));
+        setNewMeal({ name: '', qty: 1, cal: '', pro: '', carb: '', fat: '' });
+        if (window.confetti) window.confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 }, colors: ['#f1d302', '#fdfffc'] });
+        showToast(`Logged ${meal.name} (${meal.cal} kcal).`, "Matrix Fuel Updated");
+      };
+
+      if (showSetup) return (
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-8 md:p-12 max-w-2xl mx-auto border-2 border-matrix-gold/50">
+          <h3 className="text-2xl md:text-3xl font-black text-matrix-gold mb-2 uppercase tracking-widest text-center">Configure Body Engine</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 mt-6">
+            <div className="space-y-2"><label className="text-[10px] md:text-xs font-bold text-matrix-gray uppercase tracking-widest">Weight (kg)</label><input type="number" value={profile.weight} onChange={(e)=>setProfile(p=>({...p,weight:Number(e.target.value)}))} className="glass-input text-lg font-bold" /></div>
+            <div className="space-y-2"><label className="text-[10px] md:text-xs font-bold text-matrix-gray uppercase tracking-widest">Goal</label>
+              <div className="flex gap-2">{['cut', 'maintain', 'bulk'].map(g => (<button key={g} onClick={() => setProfile({...profile, goal: g})} className={`flex-1 py-3 rounded-xl font-black text-[10px] md:text-xs uppercase tracking-widest ${profile.goal === g ? 'bg-matrix-gold text-matrix-bg' : 'bg-matrix-light/5 text-matrix-gray'}`}>{g}</button>))}</div>
+            </div>
+          </div>
+          <button onClick={() => setShowSetup(false)} className="w-full py-5 bg-matrix-gold text-matrix-bg rounded-2xl font-black text-sm md:text-lg uppercase tracking-widest hover:scale-105 transition-transform shadow-[0_0_20px_rgba(241,211,2,0.4)]">Activate Engine</button>
+        </motion.div>
+      );
+
       return (
-        <div id="app-container" className="min-h-screen">
-          {role === 'founder' && <nav className="fixed bottom-0 md:top-0 left-0 right-0 z-50 matrix-nav pb-safe border-t md:border-b"><div className="max-w-7xl mx-auto px-2 flex justify-between items-center h-16"><div className="hidden md:flex items-center gap-2"><MatrixIcon c="w-8 h-8"/><span className="font-black text-matrix-gold text-xl tracking-widest">MATRIX</span></div><div className="flex overflow-x-auto gap-1 px-2">{accessibleTabs.map(tab=><button key={tab} onClick={()=>setActiveTab(tab)} className={`px-3 py-1 rounded-full text-sm font-bold whitespace-nowrap ${activeTab===tab?'bg-matrix-gold text-matrix-midnight':'text-matrix-gold/70'}`}>{tab}</button>)}</div><button onClick={()=>setShowSettings(true)} className="p-2"><IconSettings c="w-5 h-5 text-matrix-gold"/></button></div></nav>}
-          <main className="max-w-7xl mx-auto px-4 py-6 pt-20 md:pt-28 pb-24">
-            <div className="flex justify-between items-center mb-6"><div><h1 className="heading-clamp">Good {new Date().getHours()<12?'Morning':'Afternoon'}, {role==='founder'?'Hamas':'Misbah'}.</h1><p className="text-matrix-gold text-sm font-bold">Matrix OS — Extraordinarily Intelligent</p></div><button onClick={handleLogout} className="px-4 py-2 text-xs bg-matrix-gold/20 rounded-full text-matrix-gold">Exit</button></div>
-            <AnimatePresence mode="wait"><motion.div key={activeTab} initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} exit={{opacity:0}}>
-              {activeTab === 'Finance' && <Finance role={role}/>}
-              {role === 'founder' && activeTab !== 'Finance' && <div className="matrix-card p-12 text-center"><p className="text-matrix-gold">Module: {activeTab} — Full Access Enabled.</p></div>}
-            </motion.div></AnimatePresence>
-          </main>
-          <footer className="text-center text-xs opacity-70 py-6 font-mono">Matrix by HAMAS KHAN</footer>
-          {showSettings && <div className="fixed inset-0 bg-black/80 z-[200] flex items-center justify-center p-4"><div className="matrix-card p-6 w-full max-w-md"><h3 className="text-matrix-gold text-xl font-bold mb-4">God Mode</h3><div className="flex justify-between items-center mb-4"><span>Dark Mode</span><input type="checkbox" checked={darkMode} onChange={()=>setDarkMode(!darkMode)} className="toggle"/></div><label>Gemini Key</label><input type="password" className="w-full p-2 mt-1" value={settings.geminiKey||''} onChange={e=>updateAppData('settings',{...settings,geminiKey:e.target.value})}/><button onClick={()=>setShowSettings(false)} className="mt-4 w-full bg-matrix-gold text-matrix-midnight py-2 rounded-full">Close</button></div></div>}
+        <div className="space-y-8">
+          <div className="flex justify-between items-center"><h2 className="text-2xl md:text-4xl font-black text-matrix-light uppercase tracking-widest">Nutrition Engine</h2><button onClick={() => setShowSetup(true)} className="px-4 py-2 md:px-5 md:py-2.5 bg-matrix-light/10 hover:bg-matrix-light/20 border border-matrix-light/20 rounded-full text-[10px] md:text-xs font-black text-matrix-light uppercase tracking-widest transition-colors">Settings</button></div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+            {[{ l: 'Cals', c: eatenCal, t: targetCal, u: 'kcal', col: 'bg-matrix-blue' }, { l: 'Pro', c: eatenPro, t: targetPro, u: 'g', col: 'bg-matrix-gold' }, { l: 'Carbs', c: eatenCarb, t: targetCarb, u: 'g', col: 'bg-[#50C878]' }, { l: 'Fats', c: eatenFat, t: targetFat, u: 'g', col: 'bg-matrix-red' }].map(m => (
+              <div key={m.l} className="glass-card p-4 md:p-6"><div className="flex justify-between items-end mb-4"><span className="font-black text-matrix-light text-sm md:text-lg uppercase tracking-widest">{m.l}</span><span className="text-[10px] md:text-xs font-bold text-matrix-gray uppercase tracking-widest">{Math.max(m.t-m.c,0)} left</span></div><div className="w-full bg-matrix-light/10 rounded-full h-1.5 md:h-2 mb-4 overflow-hidden"><motion.div initial={{width:0}} animate={{width:`${Math.min((m.c/m.t)*100,100)}%`}} className={`${m.col} h-1.5 md:h-2 rounded-full shadow-[0_0_10px_currentColor]`} /></div><div className="font-bold text-matrix-gray text-xs md:text-sm"><span className="text-matrix-light text-lg md:text-xl font-black">{m.c}</span> / {m.t}</div></div>
+            ))}
+          </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="glass-card p-6 md:p-8">
+              <h3 className="text-xl md:text-2xl font-black text-matrix-light mb-2 uppercase tracking-widest">Log Smart Meal</h3>
+              <p className="text-[10px] md:text-xs font-bold text-matrix-gray mb-6 tracking-widest uppercase">Type "Banana", "Egg", "Roti", "Daal", "Chicken Breast" to auto-calculate.</p>
+              <form onSubmit={logMeal} className="space-y-4">
+                <div className="grid grid-cols-3 gap-3 md:gap-4">
+                  <input type="text" placeholder="Meal Name" className="col-span-2 glass-input font-bold text-xs md:text-sm" value={newMeal.name} onChange={e=>setNewMeal({...newMeal,name:e.target.value})} />
+                  <input type="number" placeholder="Qty" className="glass-input font-bold text-center text-xs md:text-sm" value={newMeal.qty} onChange={e=>setNewMeal({...newMeal,qty:Number(e.target.value)})} min="1" step="0.5" />
+                </div>
+                <div className="grid grid-cols-4 gap-2 md:gap-4"><input type="number" placeholder="Kcal" className="glass-input text-center px-1 text-xs md:text-sm font-bold" value={newMeal.cal} onChange={e=>setNewMeal({...newMeal,cal:e.target.value})} /><input type="number" placeholder="Pro" className="glass-input text-center px-1 text-xs md:text-sm font-bold" value={newMeal.pro} onChange={e=>setNewMeal({...newMeal,pro:e.target.value})} /><input type="number" placeholder="Carb" className="glass-input text-center px-1 text-xs md:text-sm font-bold" value={newMeal.carb} onChange={e=>setNewMeal({...newMeal,carb:e.target.value})} /><input type="number" placeholder="Fat" className="glass-input text-center px-1 text-xs md:text-sm font-bold" value={newMeal.fat} onChange={e=>setNewMeal({...newMeal,fat:e.target.value})} /></div>
+                <button type="submit" className="w-full py-4 mt-2 bg-matrix-gold text-matrix-bg rounded-xl font-black uppercase tracking-widest hover:scale-[1.02] transition-transform shadow-[0_0_15px_rgba(241,211,2,0.3)] text-xs md:text-sm">Log Meal</button>
+              </form>
+              <div className="mt-8 space-y-3 max-h-[300px] overflow-y-auto pr-2 hide-scrollbar">
+                {todayMeals.map(m => (<div key={m.id} className="flex justify-between items-center p-4 bg-matrix-light/5 border border-matrix-light/10 rounded-[16px] hover:bg-matrix-light/10 transition-colors"><div><h5 className="font-bold text-matrix-light text-sm md:text-lg">{m.name} <span className="text-matrix-gold text-[10px] md:text-xs">x{m.qty}</span></h5><div className="text-[10px] md:text-xs font-black text-matrix-gray space-x-3 mt-1 tracking-widest uppercase"><span>{m.cal} kcal</span><span className="text-matrix-gold">{m.pro}g P</span></div></div><button onClick={() => setDailyMeals(p => ({ ...p, [todayDate]: p[todayDate].filter(x => x.id !== m.id) }))} className="w-8 h-8 rounded-full bg-matrix-red/20 text-matrix-red font-black hover:bg-matrix-red hover:text-white transition-colors flex items-center justify-center text-xs">X</button></div>))}
+              </div>
+            </div>
+            <div className="glass-card p-6 md:p-8"><h3 className="text-xl md:text-2xl font-black text-matrix-light mb-6 uppercase tracking-widest">Auto Plan</h3><AutoDietPlan targetCal={targetCal} /></div>
+          </div>
         </div>
       );
     };
-    
-    const RootApp = () => {
-      const [session, setSession] = useState(()=>{const s=localStorage.getItem('lifeos_session'); return s?JSON.parse(s):null;});
-      const [darkMode, setDarkMode] = useState(true);
-      const handleLogin = (role, dbId) => { const ns = { role, dbId }; localStorage.setItem('lifeos_session', JSON.stringify(ns)); setSession(ns); };
-      if(!session) return (<div className="min-h-screen bg-matrix-midnight flex items-center justify-center"><div className="matrix-card p-8 text-center w-80"><MatrixIcon c="w-16 h-16 mx-auto"/><h1 className="heading-clamp text-matrix-gold">MATRIX</h1><form onSubmit={e=>{e.preventDefault(); const val=e.target.code.value.toLowerCase(); if(val==='hamas') handleLogin('founder','hamas_ist'); else if(val==='misbah') handleLogin('associate','misbah_ist'); else alert('Access Denied');}}><input name="code" type="password" placeholder="Enter ID" className="w-full p-3 my-4 text-center rounded-full"/><button className="w-full bg-matrix-gold text-matrix-midnight font-black py-3 rounded-full">Initialize</button></form><p className="text-xs mt-4 opacity-60">Matrix by HAMAS KHAN</p></div></div>);
-      return <ThemeContext.Provider value={{darkMode, setDarkMode}}><AppStateProvider dbId={session.dbId}><ToastProvider><App role={session.role}/></ToastProvider></AppStateProvider></ThemeContext.Provider>;
+
+    const ToDo = () => {
+      const { showToast } = useToast();
+      const [tasks, setTasks] = useState(() => JSON.parse(localStorage.getItem('matrix-todo')) || []);
+      const [newTask, setNewTask] = useState({ title: '', dueDate: '', dueTime: '' });
+      useEffect(() => { localStorage.setItem('matrix-todo', JSON.stringify(tasks)); }, [tasks]);
+
+      const addTask = (e) => {
+        e.preventDefault(); if(!newTask.title) return;
+        setTasks(p => [...p, { id: Date.now(), ...newTask, completed: false }]);
+        setNewTask({ title: '', dueDate: '', dueTime: '' });
+        showToast("Task scheduled successfully.", "Matrix Updated");
+      };
+      const toggle = (id) => setTasks(p => p.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
+      const remove = (id) => setTasks(p => p.filter(t => t.id !== id));
+
+      return (
+        <div className="glass-card p-6 md:p-12 max-w-4xl mx-auto">
+          <div className="flex items-center gap-4 mb-10"><IconList c="w-8 h-8 md:w-10 md:h-10 text-matrix-gold drop-shadow-[0_0_10px_rgba(241,211,2,0.5)]" /><h2 className="text-2xl md:text-4xl font-black text-matrix-light uppercase tracking-widest">Mission Control</h2></div>
+          <form onSubmit={addTask} className="flex flex-col md:flex-row gap-4 mb-12">
+            <input type="text" placeholder="E.g. Database Quiz" className="flex-1 glass-input font-bold text-sm" value={newTask.title} onChange={e=>setNewTask({...newTask, title: e.target.value})} />
+            <input type="date" className="glass-input font-bold text-sm" value={newTask.dueDate} onChange={e=>setNewTask({...newTask, dueDate: e.target.value})} />
+            <input type="time" className="glass-input font-bold text-sm" value={newTask.dueTime} onChange={e=>setNewTask({...newTask, dueTime: e.target.value})} />
+            <button type="submit" className="px-6 md:px-8 py-4 bg-matrix-gold text-matrix-bg font-black rounded-xl tracking-widest uppercase hover:scale-105 transition-transform shadow-[0_0_15px_rgba(241,211,2,0.3)] text-xs md:text-sm">Schedule</button>
+          </form>
+          <div className="space-y-4">
+            {tasks.sort((a,b)=>a.completed-b.completed).map(t => (
+              <motion.div key={t.id} layout className={`flex items-center justify-between p-4 md:p-5 rounded-2xl border ${t.completed ? 'bg-matrix-light/5 opacity-40 border-matrix-light/10' : 'bg-matrix-light/10 border-matrix-gold/30'}`}>
+                <div className="flex items-center gap-4 cursor-pointer" onClick={() => toggle(t.id)}>
+                  <div className={`w-5 h-5 md:w-6 md:h-6 rounded-full border-2 flex items-center justify-center transition-colors ${t.completed ? 'bg-matrix-gold border-matrix-gold' : 'border-matrix-gray'}`}>{t.completed && <IconCheck c="w-3 h-3 md:w-4 md:h-4 text-matrix-bg" />}</div>
+                  <div className={t.completed ? 'line-through text-matrix-gray font-bold text-sm md:text-lg' : 'text-matrix-light font-bold text-sm md:text-lg'}>{t.title}</div>
+                </div>
+                <div className="flex items-center gap-4 flex-wrap justify-end">
+                  {t.dueDate && <span className="text-[10px] md:text-xs font-black text-matrix-bg bg-matrix-gold px-2 md:px-3 py-1 rounded-full uppercase tracking-widest shadow-[0_0_10px_rgba(241,211,2,0.5)]">{t.dueDate} {t.dueTime}</span>}
+                  <button onClick={() => remove(t.id)} className="text-matrix-red font-black text-[10px] md:text-xs uppercase tracking-widest px-2 hover:scale-110 transition-transform">Delete</button>
+                </div>
+              </motion.div>
+            ))}
+            {tasks.length === 0 && <p className="text-matrix-gray font-bold text-xs md:text-sm text-center py-10 uppercase tracking-widest">No upcoming missions. You are clear.</p>}
+          </div>
+        </div>
+      );
     };
+
+    const Tracker = () => {
+      const { showToast } = useToast(); 
+      const [data, setData] = useState(() => { try { return JSON.parse(localStorage.getItem('matrix-tracker')) || {}; } catch { return {}; } });
+      useEffect(() => { localStorage.setItem('matrix-tracker', JSON.stringify(data)); }, [data]);
+
+      const toggle = (day, habit) => {
+        const key = `${day}-${habit}`; const isChecked = data[key]; const newData = { ...data, [key]: !isChecked };
+        setData(newData);
+        if (!isChecked && ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].includes(habit)) {
+          const allPrayersDone = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha'].every(p => newData[`${day}-${p}`]);
+          if (allPrayersDone && window.confetti) {
+            window.confetti({ particleCount: 200, spread: 100, origin: { y: 0.5 }, colors: ['#f1d302', '#235789', '#fdfffc'] });
+            showToast("You've completed all 5 prayers today. Absolute greatness.", "Matrix Synced");
+            playVictorySound();
+          }
+        }
+      };
+
+      return (
+        <div className="glass-card p-6 md:p-12 overflow-x-auto hide-scrollbar"><h2 className="text-2xl md:text-4xl font-black text-matrix-light mb-8 uppercase tracking-widest">Weekly Tracker</h2><div className="min-w-[700px] md:min-w-[800px]">
+          <div className="grid grid-cols-[150px_repeat(7,1fr)] md:grid-cols-[180px_repeat(7,1fr)] gap-2 md:gap-4 mb-4"><div className="font-bold text-matrix-gray uppercase tracking-widest text-[10px] md:text-xs">Habit</div>{DAYS.map(d => <div key={d} className="text-center font-bold text-matrix-gray uppercase tracking-widest text-[10px] md:text-xs">{d}</div>)}</div>
+          <div className="space-y-3">{HABITS.map(h => (<div key={h} className="grid grid-cols-[150px_repeat(7,1fr)] md:grid-cols-[180px_repeat(7,1fr)] gap-2 md:gap-4 items-center group"><div className="font-bold px-3 py-2 md:px-4 md:py-3 rounded-xl md:rounded-2xl text-xs md:text-sm text-matrix-light bg-matrix-light/5 border border-matrix-light/10">{h}</div>{DAYS.map(d => { const c = data[`${d}-${h}`]; return (<div key={`${d}-${h}`} className="flex justify-center"><motion.button whileTap={{ scale: 0.8 }} onClick={() => toggle(d, h)} className={`w-8 h-8 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all ${c ? 'bg-matrix-gold text-matrix-bg shadow-[0_0_15px_rgba(241,211,2,0.4)] scale-105' : 'bg-matrix-light/5 border border-matrix-light/10'}`}>{c && <IconCheck c="w-4 h-4 md:w-6 md:h-6" />}</motion.button></div>) })}</div>))}</div>
+        </div></div>
+      );
+    };
+
+    const Income = () => (<div className="glass-card p-12 md:p-16 text-center"><IconTarget c="w-16 h-16 md:w-20 md:h-20 mx-auto text-matrix-gold mb-4 drop-shadow-[0_0_15px_rgba(241,211,2,0.5)]"/><h2 className="text-2xl md:text-4xl font-black text-matrix-light uppercase tracking-widest">Fiverr Roadmap</h2></div>);
+    const English = () => (<div className="glass-card p-12 md:p-16 text-center"><IconBookOpen c="w-16 h-16 md:w-20 md:h-20 mx-auto text-matrix-gold mb-4 drop-shadow-[0_0_15px_rgba(241,211,2,0.5)]"/><h2 className="text-2xl md:text-4xl font-black text-matrix-light uppercase tracking-widest">English Mastery</h2></div>);
+    
+    const CEOBriefing = () => {
+      const { settings } = useSettings();
+      const { showToast } = useToast();
+      const [briefing, setBriefing] = useState(null);
+      const [displayedBriefing, setDisplayedBriefing] = useState('');
+      const [loading, setLoading] = useState(false);
+
+      useEffect(() => {
+        if (!briefing) return;
+        let i = 0;
+        setDisplayedBriefing('');
+        const interval = setInterval(() => {
+          setDisplayedBriefing(briefing.substring(0, i));
+          i += 2;
+          if (i > briefing.length) {
+            setDisplayedBriefing(briefing);
+            clearInterval(interval);
+          }
+        }, 15);
+        return () => clearInterval(interval);
+      }, [briefing]);
+
+      const generateBriefing = async () => {
+        if (!settings.geminiKey) {
+          showToast("Missing API Key! Please paste your Gemini API Key in the Settings menu.", "Access Denied");
+          return;
+        }
+
+        setLoading(true);
+        setBriefing(null);
+        setDisplayedBriefing('');
+        
+        try {
+          const tData = localStorage.getItem('matrix-tracker') || "{}";
+          const fData = localStorage.getItem('matrix-finance') || "[]";
+          const dData = localStorage.getItem('matrix-daily-meals') || "{}";
+          const todoData = localStorage.getItem('matrix-todo') || "[]";
+
+          const prompt = `Founder Hamas is operating at the Institute of Space Technology. He is 21 and today is Day 2 of his 5-month transformation. Review his data with the intensity of a seed-stage investor.
+          You are a high-stakes, minimalist billionaire mentor. Your tone is direct, encouraging, and zero-nonsense. Address me as Founder Hamas. Review my habits and finances ruthlessly. 
+          Review my raw JSON life data below. Look at the '5-prayer streak' in the tracker and my Finance ledger to see if I am staying within budget.
+          - Trackers (Habits & Prayers): ${tData}
+          - Finance (Split expenses): ${fData}
+          - Diet Logs: ${dData}
+          - To-Do List: ${todoData}
+          
+          Give a powerful, direct, 3-paragraph CEO briefing. 
+          Paragraph 1: Praise any high consistency.
+          Paragraph 2: Ruthlessly call out missed habits, overdue tasks, or poor financial decisions.
+          Paragraph 3: Give a commanding order to win today.
+          Do NOT use generic intro text like "Here is your briefing". Start immediately with the briefing. Format entirely in elegant markdown.`;
+
+          const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${settings.geminiKey}`, {
+            method: 'POST',
+            mode: 'cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+          });
+          
+          if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(`API Error: ${res.status} - ${errorData.error?.message || 'Unknown Error'}`);
+          }
+          
+          const data = await res.json();
+          const reply = data.candidates[0].content.parts[0].text;
+          setBriefing(reply);
+          
+          if (window.confetti) window.confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, colors: ['#f1d302', '#235789'] });
+          playVictorySound();
+        } catch (e) {
+          showToast("Connection to Matrix AI failed.", "System Error");
+          console.error('Detailed Debugging Error:', e);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      return (
+        <div className="glass-card p-8 md:p-16 text-left max-w-4xl mx-auto border-t-4 border-t-matrix-gold relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-matrix-gold/5 blur-3xl rounded-full pointer-events-none -mr-32 -mt-32"></div>
+          <div className="flex flex-col items-center mb-10 text-center relative z-10">
+            <IconBrain c="w-12 h-12 md:w-16 md:h-16 text-matrix-gold mb-4 drop-shadow-[0_0_15px_rgba(241,211,2,0.5)]" />
+            <h2 className="text-2xl md:text-4xl font-black tracking-widest mb-2 uppercase text-matrix-light">Morning CEO Briefing</h2>
+            <p className="text-matrix-blue font-bold tracking-widest uppercase text-[10px] md:text-sm">Powered by Matrix AI Engine</p>
+          </div>
+          
+          {!briefing && !loading && (
+            <div className="flex justify-center relative z-10">
+              <button onClick={generateBriefing} className="px-8 md:px-10 py-4 md:py-5 bg-matrix-gold text-matrix-bg font-black tracking-widest uppercase text-sm md:text-xl rounded-full shadow-[0_0_30px_rgba(241,211,2,0.3)] hover:scale-105 transition-all">
+                Request Briefing
+              </button>
+            </div>
+          )}
+
+          {loading && (
+            <div className="text-center py-10 space-y-4 relative z-10">
+              <div className="w-8 h-8 md:w-10 md:h-10 border-4 border-matrix-gold border-t-transparent rounded-full animate-spin mx-auto shadow-[0_0_15px_rgba(241,211,2,0.5)]"></div>
+              <p className="text-matrix-gold font-bold tracking-widest uppercase animate-pulse text-[10px] md:text-sm">AI is reviewing your files...</p>
+            </div>
+          )}
+
+          <AnimatePresence>
+            {briefing && !loading && (
+              <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} className="mt-6 md:mt-8 bg-matrix-bg/40 backdrop-blur-md p-6 md:p-10 rounded-3xl border border-matrix-gold/20 relative z-10 shadow-[inset_0_0_20px_rgba(241,211,2,0.05)]">
+                <div className="markdown-content text-sm md:text-lg text-matrix-light" dangerouslySetInnerHTML={{ __html: window.marked ? window.marked.parse(displayedBriefing + (displayedBriefing.length < briefing.length ? '...' : '')) : displayedBriefing }}></div>
+                {displayedBriefing.length >= briefing.length && (
+                  <motion.button initial={{opacity:0}} animate={{opacity:1}} onClick={generateBriefing} className="mt-8 text-[10px] md:text-xs font-bold text-matrix-gray hover:text-matrix-gold uppercase tracking-widest transition-colors w-full text-center">Request Updated Briefing</motion.button>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      );
+    };
+
+    const Analytics = () => {
+      const [score, setScore] = useState(0); useEffect(() => { const tData = JSON.parse(localStorage.getItem('matrix-tracker')) || {}; let c = 0; DAYS.forEach(d => HABITS.forEach(h => { if (tData[`${d}-${h}`]) c++; })); setScore(Math.round((c / 77) * 100)); }, []);
+      return (<div className="glass-card p-12 text-center"><div className="text-6xl md:text-9xl font-black text-matrix-gold mb-4 drop-shadow-[0_0_20px_rgba(241,211,2,0.4)]">{score}%</div><p className="text-matrix-light text-lg md:text-2xl font-black uppercase tracking-widest">Weekly Consistency</p></div>);
+    };
+
+    const SettingsModal = ({ close }) => {
+      const { settings, setSettings } = useSettings();
+      return (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
+          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="glass-card p-6 md:p-8 w-full max-w-md bg-matrix-bg/90">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl md:text-2xl font-black text-matrix-light uppercase tracking-widest">Settings</h3>
+              <button onClick={close} className="text-matrix-red font-black hover:scale-110 transition-transform">X</button>
+            </div>
+            
+            <div className="mb-6 p-4 md:p-5 bg-matrix-light/5 rounded-xl border border-matrix-light/10">
+              <label className="block text-[10px] md:text-xs font-black text-matrix-gold mb-3 uppercase tracking-widest">Matrix AI Key (Gemini)</label>
+              <input type="password" placeholder="Paste key here..." className="glass-input font-mono text-xs md:text-sm" value={settings.geminiKey || ''} onChange={(e) => setSettings({...settings, geminiKey: e.target.value})} />
+              <p className="text-[9px] md:text-[10px] text-matrix-gray mt-3 font-bold uppercase tracking-widest">Stored securely in your local browser memory.</p>
+            </div>
+          </motion.div>
+        </div>
+      );
+    };
+
+    const App = () => {
+      const [user, setUser] = useState(null);
+      const [activeTab, setActiveTab] = useState('CEO Briefing');
+      const [settings, setSettings] = useState(() => { try { return JSON.parse(localStorage.getItem('matrix-godmode')) || { geminiKey: '' }; } catch { return { geminiKey: '' }; } });
+      const [showSettings, setShowSettings] = useState(false);
+
+      useEffect(() => { localStorage.setItem('matrix-godmode', JSON.stringify(settings)); }, [settings]);
+      useEffect(() => { const savedUser = localStorage.getItem('matrix-user'); if (savedUser) { const parsed = JSON.parse(savedUser); setUser(parsed); setActiveTab(parsed.role === 'associate' ? 'Finance' : 'CEO Briefing'); } }, []);
+
+      const handleLogin = (u) => { setUser(u); localStorage.setItem('matrix-user', JSON.stringify(u)); setActiveTab(u.role === 'associate' ? 'Finance' : 'CEO Briefing'); };
+      const handleLogout = () => { setUser(null); localStorage.removeItem('matrix-user'); };
+
+      const getGreeting = () => { const h = new Date().getHours(); if (h < 12) return 'Good Morning'; if (h < 18) return 'Good Afternoon'; if (h >= 21) return 'Get rest'; return 'Good Evening'; };
+
+      if (!user) {
+        return (
+          <ToastProvider>
+            <div className="wave-bg"><div className="wave"></div><div className="wave"></div><div className="wave"></div></div>
+            <LoginScreen onLogin={handleLogin} />
+          </ToastProvider>
+        );
+      }
+
+      const allowedTabs = user.role === 'founder' ? TABS : ['Finance'];
+
+      return (
+        <SettingsContext.Provider value={{ settings, setSettings }}>
+          <ToastProvider>
+            <div id="app-container" className="min-h-screen relative z-10">
+              <div className="wave-bg"><div className="wave"></div><div className="wave"></div><div className="wave"></div></div>
+              
+              <nav className="fixed top-0 left-0 right-0 z-50 glass-nav">
+                <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center h-20 md:h-24">
+                  <div className="flex items-center space-x-1 md:space-x-2 overflow-x-auto hide-scrollbar w-full py-4">
+                    <div className="mr-3 md:mr-8 flex items-center gap-2 shrink-0">
+                      <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-matrix-gold flex items-center justify-center shadow-[0_0_15px_rgba(241,211,2,0.4)]">
+                        <span className="font-black text-matrix-bg text-sm md:text-base">M</span>
+                      </div>
+                      <span className="font-black text-matrix-gold tracking-widest uppercase hidden md:inline-block text-lg">Matrix</span>
+                    </div>
+                    {allowedTabs.map(tab => (
+                      <button key={tab} onClick={() => setActiveTab(tab)} className={`relative px-3 md:px-5 py-2 md:py-2.5 rounded-full text-[10px] md:text-xs font-black whitespace-nowrap uppercase tracking-widest transition-colors ${activeTab === tab ? 'text-matrix-bg' : 'text-matrix-gray hover:text-matrix-light'}`}>
+                        {activeTab === tab && <motion.div layoutId="nav-pill" className="absolute inset-0 bg-matrix-gold rounded-full shadow-[0_0_15px_rgba(241,211,2,0.3)]" transition={{type:'spring'}} />}
+                        <span className="relative z-10">{tab}</span>
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex items-center gap-1 md:gap-2 shrink-0 ml-2 md:ml-4">
+                    <button onClick={() => setShowSettings(true)} className="p-2 rounded-full hover:bg-matrix-light/10 transition-colors"><IconSettings c="w-4 h-4 md:w-5 md:h-5 text-matrix-light" /></button>
+                    <button onClick={handleLogout} className="p-2 rounded-full hover:bg-matrix-red/20 transition-colors group"><IconLogOut c="w-4 h-4 md:w-5 md:h-5 text-matrix-gray group-hover:text-matrix-red" /></button>
+                  </div>
+                </div>
+              </nav>
+              
+              <main className="max-w-7xl mx-auto px-4 md:px-6 py-8 pt-28 md:pt-36 pb-32">
+                <div className="mb-10 md:mb-16">
+                  <h1 className="text-3xl md:text-6xl font-black text-matrix-light mb-2 md:mb-4 tracking-widest uppercase drop-shadow-[0_0_10px_rgba(253,255,252,0.1)]">{getGreeting()}, {user.name}.</h1>
+                  <p className="text-matrix-blue text-[10px] md:text-lg font-black tracking-widest uppercase">Your intelligent life engine is ready.</p>
+                </div>
+                
+                <AnimatePresence mode="wait">
+                  <motion.div key={activeTab} initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-20}} transition={{type:'spring', duration: 0.5}}>
+                    {activeTab === 'Daily Routine' && <DailyRoutine />} {activeTab === 'Fitness' && <Fitness />} {activeTab === 'Diet' && <Diet />} {activeTab === 'Finance' && <Finance />} {activeTab === 'Income' && <Income />} {activeTab === 'English' && <English />} {activeTab === 'CEO Briefing' && <CEOBriefing />} {activeTab === 'Tracker' && <Tracker />} {activeTab === 'To-Do' && <ToDo />} {activeTab === 'Analytics' && <Analytics />}
+                  </motion.div>
+                </AnimatePresence>
+              </main>
+
+              <footer className="fixed bottom-4 right-4 z-50">
+                <div className="glass-card px-4 py-2 md:px-6 md:py-3 text-[8px] md:text-[10px] font-black text-matrix-gold uppercase tracking-widest shadow-[0_0_15px_rgba(241,211,2,0.2)]">
+                  Matrix by HAMAS KHAN
+                </div>
+              </footer>
+
+            </div>
+          </ToastProvider>
+        </SettingsContext.Provider>
+      );
+    };
+
     const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<RootApp />);
+    root.render(<App />);
   </script>
 </body>
 </html>
