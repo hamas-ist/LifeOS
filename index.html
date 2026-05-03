@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#000000">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23000%22/><text x=%2250%22 y=%2250%22 font-size=%2260%22 fill=%22white%22 text-anchor=%22middle%22 dominant-baseline=%22central%22>L</text></svg>">
-  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22LifeOS%22%2C%22short_name%22%3A%22LifeOS%22%2C%22display%22%3A%22standalone%22%2C%22start_url%22%3A%22.%22%2C%22background_color%22%3A%22%23000000%22%2C%22theme_color%22%3A%22%23000000%22%7D">
-  <title>LifeOS - Extraordinarily Intelligent</title>
+  <meta name="theme-color" content="#050505">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><defs><radialGradient id=%22g%22 cx=%2250%25%22 cy=%2250%25%22 r=%2250%25%22><stop offset=%220%25%22 stop-color=%22%23FFD700%22 stop-opacity=%220.8%22/><stop offset=%22100%25%22 stop-color=%22%23FFD700%22 stop-opacity=%220%22/></radialGradient></defs><rect width=%22100%22 height=%22100%22 fill=%22%23000%22/><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22url(%23g)%22/><text x=%2250%22 y=%2250%22 font-family=%22Nunito, sans-serif%22 font-weight=%22900%22 font-size=%2260%22 fill=%22%2350C878%22 text-anchor=%22middle%22 dominant-baseline=%22central%22>L</text></svg>">
+  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22LuxeOS%22%2C%22short_name%22%3A%22LuxeOS%22%2C%22display%22%3A%22standalone%22%2C%22start_url%22%3A%22.%22%2C%22background_color%22%3A%22%23050505%22%2C%22theme_color%22%3A%22%23050505%22%7D">
+  <title>LuxeOS - Extraordinarily Intelligent</title>
   
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -27,42 +27,66 @@
       darkMode: 'class',
       theme: {
         extend: {
-          colors: { apple: { bg: '#f5f5f7', card: '#ffffff', text: '#1d1d1f', gray: '#86868b', lightGray: '#e5e5ea', blue: '#0066cc', green: '#34c759', red: '#ff3b30', orange: '#ff9500' } },
+          colors: { apple: { bg: '#050505', card: '#1a1a1a', text: '#ffffff', gray: '#a1a1a6', lightGray: '#333333', blue: '#0F52BA', green: '#50C878', red: '#ff3b30', orange: '#FFD700', purple: '#9966CC' } },
           fontFamily: { sans: ['Nunito', 'sans-serif'] }
         }
       }
     }
   </script>
   <style>
-    body { font-family: 'Nunito', sans-serif; background-color: #f5f5f7; color: #1d1d1f; margin: 0; padding: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; transition: background-color 0.5s ease, color 0.5s ease; }
-    .dark body { background-color: #000000; color: #ffffff; }
-    .dark .apple-card { background: #111111; box-shadow: 0 4px 24px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05); }
-    .dark .apple-nav { background: rgba(0, 0, 0, 0.72); border-color: rgba(255,255,255,0.05); }
-    .dark .bg-\[\#f5f5f7\] { background-color: #1c1c1e; }
-    .dark .text-apple-text { color: #ffffff; }
-    .dark .text-apple-gray { color: #a1a1a6; }
-    .dark .bg-white { background-color: #111111; border-color: rgba(255,255,255,0.05); }
-    .dark input, .dark textarea, .dark select { background-color: #1c1c1e; color: #ffffff; border: 1px solid rgba(255,255,255,0.1); }
-    .dark .border-black\/5 { border-color: rgba(255,255,255,0.05); }
+    body { font-family: 'Nunito', sans-serif; background-color: #050505; color: #ffffff; margin: 0; padding: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; position: relative; }
     
-    .apple-card { background: #ffffff; border-radius: 28px; box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04); border: 1px solid rgba(0, 0, 0, 0.02); transition: all 0.3s ease; }
-    .apple-nav { background: rgba(255, 255, 255, 0.72); backdrop-filter: saturate(180%) blur(20px); transition: all 0.3s ease; }
+    /* Flowing waves background */
+    body::before, body::after {
+      content: ""; position: fixed; width: 200vw; height: 200vh; top: -50%; left: -50%; z-index: -3;
+      background: radial-gradient(circle, rgba(80,200,120,0.15) 0%, rgba(255,215,0,0.1) 30%, rgba(0,0,0,0) 70%);
+      animation: waveMove 30s infinite linear; opacity: 0.6; pointer-events: none;
+    }
+    body::after {
+      background: radial-gradient(circle, rgba(15,82,186,0.15) 0%, rgba(153,102,204,0.1) 30%, rgba(0,0,0,0) 70%);
+      animation: waveMove 40s infinite linear reverse; opacity: 0.5; pointer-events: none;
+    }
+    @keyframes waveMove { 0% { transform: rotate(0deg) translate(-2%, 2%); } 50% { transform: rotate(180deg) translate(2%, -2%); } 100% { transform: rotate(360deg) translate(-2%, 2%); } }
+
+    /* Luxe Glassmorphic Cards */
+    .apple-card { 
+      background: rgba(20, 20, 20, 0.65); 
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      border-radius: 28px; 
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6); 
+      position: relative; z-index: 1; transition: all 0.3s ease; 
+    }
+    /* Iridescent glowing borders */
+    .apple-card::before {
+      content: ""; position: absolute; inset: -1px; border-radius: 29px;
+      background: linear-gradient(45deg, #50C878, #FFD700, #0F52BA, #9966CC, #50C878);
+      background-size: 400% 400%; z-index: -1; animation: gradientSpin 10s ease infinite; opacity: 0.85;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: exclude; -webkit-mask-composite: xor; padding: 1px; pointer-events: none;
+    }
+    @keyframes gradientSpin { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+    .apple-nav { background: rgba(10, 10, 10, 0.75); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-color: rgba(255,255,255,0.1); transition: all 0.3s ease; }
     ::-webkit-scrollbar { display: none; }
     @supports (padding-bottom: env(safe-area-inset-bottom)) { .pb-safe { padding-bottom: env(safe-area-inset-bottom); } }
     
+    input, textarea, select { background-color: rgba(255,255,255,0.05) !important; color: #ffffff !important; border: 1px solid rgba(255,255,255,0.1) !important; backdrop-filter: blur(10px); }
+    input::placeholder { color: #888 !important; }
+    
+    .bg-\[\#f5f5f7\] { background-color: rgba(255,255,255,0.05) !important; backdrop-filter: blur(10px); }
+    .bg-white { background-color: rgba(255,255,255,0.1) !important; backdrop-filter: blur(10px); }
+    .text-apple-text { color: #ffffff !important; }
+    .text-apple-gray { color: #a1a1a6 !important; }
+
+    /* Clamp typography for headers */
+    .heading-clamp { font-size: clamp(1.8rem, 6vw, 3.75rem); line-height: 1.1; font-weight: 900; }
+    .subheading-clamp { font-size: clamp(1.2rem, 4vw, 2.25rem); line-height: 1.2; font-weight: 800; }
+
     @keyframes shakeUI { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 10%, 30%, 50%, 70%, 90% { transform: translate(-3px, -2px) rotate(-1deg); } 20%, 40%, 60%, 80% { transform: translate(3px, 2px) rotate(1deg); } }
     .shake-active { animation: shakeUI 0.5s cubic-bezier(.36,.07,.19,.97) both; }
 
-    .stealth-mode { filter: grayscale(100%) contrast(110%); }
-    .deepwork-mode { background-color: #000000 !important; color: #ffffff !important; }
-    .deepwork-mode .apple-card, .deepwork-mode .apple-nav, .deepwork-mode input, .deepwork-mode select, .deepwork-mode textarea { background-color: #111111 !important; color: #ffffff !important; border-color: #333333 !important; box-shadow: none !important; }
-    .deepwork-mode .text-apple-text, .deepwork-mode .text-apple-gray, .deepwork-mode p, .deepwork-mode span, .deepwork-mode h1, .deepwork-mode h2, .deepwork-mode h3 { color: #dddddd !important; }
-    .deepwork-mode .bg-\[\#f5f5f7\] { background-color: #222222 !important; }
-    
-    .focus-sphere { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; height: 400px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.1), rgba(0,0,0,1)); box-shadow: 0 0 100px rgba(255,255,255,0.05), inset 0 0 50px rgba(255,255,255,0.05); pointer-events: none; z-index: -1; opacity: 0; transition: opacity 2s; }
-    .deepwork-mode .focus-sphere { opacity: 1; animation: breathe 19s infinite ease-in-out; }
-    @keyframes breathe { 0% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 20px rgba(255,255,255,0.02); } 21% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 80px rgba(255,255,255,0.1); } 57% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 80px rgba(255,255,255,0.1); } 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 20px rgba(255,255,255,0.02); } }
-    .aura-red { box-shadow: inset 0 0 150px rgba(255, 59, 48, 0.15); pointer-events: none; position: fixed; inset: 0; z-index: 9999; transition: opacity 2s; }
+    .aura-red { box-shadow: inset 0 0 150px rgba(255, 59, 48, 0.2); pointer-events: none; position: fixed; inset: 0; z-index: 9999; transition: opacity 2s; }
     .aura-gold { position: fixed; inset: 0; z-index: -2; background: radial-gradient(circle at 50% 0%, rgba(255, 215, 0, 0.15) 0%, transparent 70%); animation: goldPulse 4s infinite alternate; }
     @keyframes goldPulse { from { opacity: 0.5; } to { opacity: 1; } }
     .shield-container { position: fixed; bottom: 30px; right: 30px; z-index: 100; perspective: 1000px; }
@@ -98,7 +122,7 @@
       const [loading, setLoading] = useState(true);
       const [appData, setAppData] = useState({
         tracker: {}, finance: [], meals: {}, todo: [],
-        settings: { aura: true, autoStealth: true, dopamineRain: true, shield: true, darkMode: false, geminiKey: '' },
+        settings: { aura: true, dopamineRain: true, shield: true, geminiKey: '' },
         profile: { age: 21, weight: 70, height: 175, gender: 'male', activity: '1.55', goal: 'bulk' }
       });
 
@@ -140,7 +164,7 @@
         });
       };
 
-      if (loading) return <div className="min-h-screen bg-[#f5f5f7] dark:bg-[#000] flex items-center justify-center"><div className="w-12 h-12 border-4 border-apple-blue border-t-transparent rounded-full animate-spin"></div></div>;
+      if (loading) return <div className="min-h-screen bg-transparent flex items-center justify-center"><div className="w-12 h-12 border-4 border-apple-green border-t-transparent rounded-full animate-spin"></div></div>;
       return <AppStateContext.Provider value={{ appData, updateAppData }}>{children}</AppStateContext.Provider>;
     };
 
@@ -156,6 +180,19 @@
       } catch(e) { console.error(e); }
     };
 
+    const LuxeIcon = ({c}) => (
+      <svg className={c} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="g" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#FFD700" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="#FFD700" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="50" cy="50" r="40" fill="url(#g)"/>
+        <text x="50" y="50" font-family="Nunito, sans-serif" font-weight="900" font-size="60" fill="#50C878" text-anchor="middle" dominant-baseline="central">L</text>
+      </svg>
+    );
+
     const IconCheck = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>);
     const IconCoffee = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><line x1="6" x2="6" y1="2" y2="4"/><line x1="10" x2="10" y1="2" y2="4"/><line x1="14" x2="14" y1="2" y2="4"/></svg>);
     const IconSun = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>);
@@ -166,7 +203,6 @@
     const IconCalendar = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>);
     const IconActivity = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>);
     const IconBriefcase = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>);
-    const IconZap = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>);
     const IconSettings = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>);
     const IconList = ({c}) => (<svg className={c} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>);
 
@@ -174,13 +210,26 @@
     const HABITS = ['Fajr', 'Dhuhr', 'Asr', 'Maghrib', 'Isha', 'Workout', '2.5L Water', 'Quran', 'English', 'Skill Work', '10:30 PM Sleep'];
     const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     const WEEKDAY_SCHEDULE = [
-      { time: '4:00 AM', label: 'Fajr & Quran', icon: <IconMoon c="w-5 h-5" />, h: 4, m: 0 }, { time: '8:30 AM', label: 'University', icon: <IconBriefcase c="w-5 h-5" />, h: 8, m: 30 }, { time: '2:00 PM', label: 'Return & Rest', icon: <IconCoffee c="w-5 h-5" />, h: 14, m: 0 }, { time: '4:00 PM', label: 'Asr', icon: <IconSun c="w-5 h-5" />, h: 16, m: 0 }, { time: '5:00 PM', label: 'Fitness / Workout', icon: <IconActivity c="w-5 h-5" />, h: 17, m: 0 }, { time: '6:30 PM', label: 'Maghrib', icon: <IconMoon c="w-5 h-5" />, h: 18, m: 30 }, { time: '7:00 PM', label: 'Skill Work (Fiverr)', icon: <IconTarget c="w-5 h-5" />, h: 19, m: 0 }, { time: '8:30 PM', label: 'Isha', icon: <IconMoon c="w-5 h-5" />, h: 20, m: 30 }, { time: '9:00 PM', label: 'English Practice', icon: <IconBookOpen c="w-5 h-5" />, h: 21, m: 0 }, { time: '10:30 PM', label: 'Sleep', icon: <IconZap c="w-5 h-5" />, h: 22, m: 30 },
+      { time: '4:00 AM', label: 'Fajr & Quran', icon: <IconMoon c="w-5 h-5" />, h: 4, m: 0 }, { time: '8:30 AM', label: 'University', icon: <IconBriefcase c="w-5 h-5" />, h: 8, m: 30 }, { time: '2:00 PM', label: 'Return & Rest', icon: <IconCoffee c="w-5 h-5" />, h: 14, m: 0 }, { time: '4:00 PM', label: 'Asr', icon: <IconSun c="w-5 h-5" />, h: 16, m: 0 }, { time: '5:00 PM', label: 'Fitness / Workout', icon: <IconActivity c="w-5 h-5" />, h: 17, m: 0 }, { time: '6:30 PM', label: 'Maghrib', icon: <IconMoon c="w-5 h-5" />, h: 18, m: 30 }, { time: '7:00 PM', label: 'Skill Work (Fiverr)', icon: <IconTarget c="w-5 h-5" />, h: 19, m: 0 }, { time: '8:30 PM', label: 'Isha', icon: <IconMoon c="w-5 h-5" />, h: 20, m: 30 }, { time: '9:00 PM', label: 'English Practice', icon: <IconBookOpen c="w-5 h-5" />, h: 21, m: 0 }, { time: '10:30 PM', label: 'Sleep', icon: <IconMoon c="w-5 h-5" />, h: 22, m: 30 },
     ];
     const WEEKEND_SCHEDULE = [
-      { time: '4:00 AM', label: 'Fajr & Quran', icon: <IconMoon c="w-5 h-5" />, h: 4, m: 0 }, { time: '8:00 AM', label: 'Deep Work', icon: <IconBrain c="w-5 h-5" />, h: 8, m: 0 }, { time: '12:00 PM', label: 'Dhuhr', icon: <IconSun c="w-5 h-5" />, h: 12, m: 0 }, { time: '2:00 PM', label: 'Rest', icon: <IconCoffee c="w-5 h-5" />, h: 14, m: 0 }, { time: '4:00 PM', label: 'Asr', icon: <IconSun c="w-5 h-5" />, h: 16, m: 0 }, { time: '5:00 PM', label: 'Fitness / Workout', icon: <IconActivity c="w-5 h-5" />, h: 17, m: 0 }, { time: '6:30 PM', label: 'Maghrib', icon: <IconMoon c="w-5 h-5" />, h: 18, m: 30 }, { time: '7:00 PM', label: 'Review', icon: <IconCalendar c="w-5 h-5" />, h: 19, m: 0 }, { time: '8:30 PM', label: 'Isha', icon: <IconMoon c="w-5 h-5" />, h: 20, m: 30 }, { time: '10:30 PM', label: 'Sleep', icon: <IconZap c="w-5 h-5" />, h: 22, m: 30 },
+      { time: '4:00 AM', label: 'Fajr & Quran', icon: <IconMoon c="w-5 h-5" />, h: 4, m: 0 }, { time: '8:00 AM', label: 'Deep Work', icon: <IconBrain c="w-5 h-5" />, h: 8, m: 0 }, { time: '12:00 PM', label: 'Dhuhr', icon: <IconSun c="w-5 h-5" />, h: 12, m: 0 }, { time: '2:00 PM', label: 'Rest', icon: <IconCoffee c="w-5 h-5" />, h: 14, m: 0 }, { time: '4:00 PM', label: 'Asr', icon: <IconSun c="w-5 h-5" />, h: 16, m: 0 }, { time: '5:00 PM', label: 'Fitness / Workout', icon: <IconActivity c="w-5 h-5" />, h: 17, m: 0 }, { time: '6:30 PM', label: 'Maghrib', icon: <IconMoon c="w-5 h-5" />, h: 18, m: 30 }, { time: '7:00 PM', label: 'Review', icon: <IconCalendar c="w-5 h-5" />, h: 19, m: 0 }, { time: '8:30 PM', label: 'Isha', icon: <IconMoon c="w-5 h-5" />, h: 20, m: 30 }, { time: '10:30 PM', label: 'Sleep', icon: <IconMoon c="w-5 h-5" />, h: 22, m: 30 },
     ];
+
     const FOOD_DB = {
-      'banana': { cal: 105, pro: 1, carb: 27, fat: 0 }, 'apple': { cal: 95, pro: 0.5, carb: 25, fat: 0 }, 'egg': { cal: 70, pro: 6, carb: 0, fat: 5 }, 'roti': { cal: 120, pro: 3, carb: 20, fat: 1 }, 'daal': { cal: 150, pro: 9, carb: 20, fat: 5 }, 'rice': { cal: 200, pro: 4, carb: 45, fat: 0.5 }, 'chicken breast': { cal: 165, pro: 31, carb: 0, fat: 3.6 }, 'chicken tikka': { cal: 200, pro: 30, carb: 2, fat: 8 }, 'milk': { cal: 150, pro: 8, carb: 12, fat: 8 }, 'yogurt': { cal: 100, pro: 10, carb: 4, fat: 0 }, 'beef': { cal: 250, pro: 26, carb: 0, fat: 15 }, 'whey protein': { cal: 120, pro: 24, carb: 3, fat: 1 }, 'oats': { cal: 389, pro: 16, carb: 66, fat: 6 }, 'peanut butter': { cal: 588, pro: 25, carb: 20, fat: 50 }, 'almonds': { cal: 579, pro: 21, carb: 21, fat: 49 }, 'sweet potato': { cal: 86, pro: 1.6, carb: 20, fat: 0.1 }, 'salmon': { cal: 208, pro: 20, carb: 0, fat: 13 }, 'olive oil': { cal: 884, pro: 0, carb: 0, fat: 100 }, 'broccoli': { cal: 34, pro: 2.8, carb: 6.6, fat: 0.4 }, 'spinach': { cal: 23, pro: 2.9, carb: 3.6, fat: 0.4 }, 'biryani': { cal: 350, pro: 15, carb: 45, fat: 12 }, 'karahi': { cal: 450, pro: 25, carb: 10, fat: 35 }, 'naan': { cal: 260, pro: 8, carb: 45, fat: 4 }, 'dates': { cal: 282, pro: 2.5, carb: 75, fat: 0.4 }
+      'banana': { cal: 105, pro: 1, carb: 27, fat: 0 }, 'apple': { cal: 95, pro: 0.5, carb: 25, fat: 0 }, 'egg': { cal: 70, pro: 6, carb: 0, fat: 5 }, 'egg whites (3)': { cal: 50, pro: 11, carb: 0, fat: 0 },
+      'roti': { cal: 120, pro: 3, carb: 20, fat: 1 }, 'daal': { cal: 150, pro: 9, carb: 20, fat: 5 }, 'rice': { cal: 200, pro: 4, carb: 45, fat: 0.5 }, 'chicken breast': { cal: 165, pro: 31, carb: 0, fat: 3.6 },
+      'chicken tikka': { cal: 200, pro: 30, carb: 2, fat: 8 }, 'milk': { cal: 150, pro: 8, carb: 12, fat: 8 }, 'yogurt': { cal: 100, pro: 10, carb: 4, fat: 0 }, 'beef': { cal: 250, pro: 26, carb: 0, fat: 15 },
+      'whey protein': { cal: 120, pro: 24, carb: 3, fat: 1 }, 'oats': { cal: 389, pro: 16, carb: 66, fat: 6 }, 'peanut butter': { cal: 588, pro: 25, carb: 20, fat: 50 }, 'almonds': { cal: 579, pro: 21, carb: 21, fat: 49 },
+      'sweet potato': { cal: 86, pro: 1.6, carb: 20, fat: 0.1 }, 'salmon': { cal: 208, pro: 20, carb: 0, fat: 13 }, 'olive oil': { cal: 884, pro: 0, carb: 0, fat: 100 }, 'broccoli': { cal: 34, pro: 2.8, carb: 6.6, fat: 0.4 },
+      'spinach': { cal: 23, pro: 2.9, carb: 3.6, fat: 0.4 }, 'biryani': { cal: 350, pro: 15, carb: 45, fat: 12 }, 'karahi': { cal: 450, pro: 25, carb: 10, fat: 35 }, 'naan': { cal: 260, pro: 8, carb: 45, fat: 4 },
+      'dates': { cal: 282, pro: 2.5, carb: 75, fat: 0.4 }, 'nihari': { cal: 500, pro: 35, carb: 10, fat: 35 }, 'haleem': { cal: 380, pro: 22, carb: 35, fat: 18 }, 'lassi (sweet)': { cal: 250, pro: 8, carb: 30, fat: 10 },
+      'mutton pulao': { cal: 400, pro: 20, carb: 45, fat: 15 }, 'chapli kebab': { cal: 280, pro: 18, carb: 5, fat: 22 }, 'seekh kebab': { cal: 200, pro: 18, carb: 4, fat: 12 }, 'chana chaat': { cal: 220, pro: 10, carb: 35, fat: 5 },
+      'samosa': { cal: 250, pro: 4, carb: 25, fat: 15 }, 'pakora': { cal: 180, pro: 5, carb: 15, fat: 12 }, 'beef boti': { cal: 220, pro: 24, carb: 2, fat: 12 }, 'greek yogurt': { cal: 100, pro: 10, carb: 4, fat: 0 },
+      'creatine': { cal: 0, pro: 0, carb: 0, fat: 0 }, 'paratha': { cal: 300, pro: 6, carb: 40, fat: 14 }, 'chai (with sugar)': { cal: 100, pro: 2, carb: 15, fat: 3 }, 'watermelon': { cal: 30, pro: 0.6, carb: 8, fat: 0.2 },
+      'mango': { cal: 60, pro: 0.8, carb: 15, fat: 0.4 }, 'cottage cheese': { cal: 98, pro: 11, carb: 3, fat: 4 }, 'black coffee': { cal: 2, pro: 0, carb: 0, fat: 0 }, 'green tea': { cal: 2, pro: 0, carb: 0, fat: 0 },
+      'walnuts': { cal: 654, pro: 15, carb: 14, fat: 65 }, 'chia seeds': { cal: 486, pro: 17, carb: 42, fat: 31 }, 'flax seeds': { cal: 534, pro: 18, carb: 29, fat: 42 }, 'lentil soup': { cal: 180, pro: 12, carb: 28, fat: 3 },
+      'paneer': { cal: 265, pro: 18, carb: 3, fat: 20 }, 'soya chunks': { cal: 345, pro: 52, carb: 33, fat: 0.5 }, 'brown rice': { cal: 216, pro: 5, carb: 45, fat: 2 }, 'quinoa': { cal: 120, pro: 4, carb: 21, fat: 2 }
     };
 
     const ToastProvider = ({ children }) => {
@@ -196,9 +245,9 @@
           <div className="fixed top-24 left-1/2 -translate-x-1/2 z-[100] flex flex-col items-center gap-4 w-full max-w-md pointer-events-none px-4">
             <AnimatePresence>
               {toasts.map(t => (
-                <motion.div key={t.id} initial={{ opacity: 0, y: -40, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} className="bg-white/95 dark:bg-[#111]/95 backdrop-blur-2xl border border-black/5 shadow-[0_16px_40px_rgba(0,0,0,0.12)] dark:shadow-[0_16px_40px_rgba(0,0,0,0.6)] rounded-3xl p-5 w-full text-center">
-                  <h4 className="font-bold text-apple-text text-sm md:text-lg tracking-tight">{t.title}</h4>
-                  <p className="text-apple-gray text-xs md:text-sm mt-1 font-semibold leading-tight">{t.message}</p>
+                <motion.div key={t.id} initial={{ opacity: 0, y: -40, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} className="bg-black/80 backdrop-blur-3xl border border-white/20 shadow-[0_16px_40px_rgba(0,0,0,0.6)] rounded-3xl p-5 w-full text-center">
+                  <h4 className="font-bold text-white text-sm md:text-lg tracking-tight">{t.title}</h4>
+                  <p className="text-gray-300 text-xs md:text-sm mt-1 font-semibold leading-tight">{t.message}</p>
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -267,22 +316,22 @@
     const RoutineModal = ({ slot, close }) => {
       if (!slot) return null;
       return (
-        <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
-          <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} className="apple-card p-6 md:p-8 w-full max-w-md relative overflow-hidden shadow-[0_0_60px_rgba(52,199,89,0.2)] dark:shadow-[0_0_60px_rgba(52,199,89,0.3)] border border-apple-green/30">
-            <div className="absolute top-0 left-0 w-full h-2 bg-apple-green"></div>
-            <button onClick={close} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-[#f5f5f7] dark:bg-[#111] dark:text-white rounded-full text-apple-text font-bold">X</button>
+        <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/80 backdrop-blur-xl p-4">
+          <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} className="apple-card p-6 md:p-8 w-full max-w-md relative overflow-hidden shadow-[0_0_60px_rgba(80,200,120,0.3)] border border-apple-green/50">
+            <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-apple-green to-apple-blue"></div>
+            <button onClick={close} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-full text-white font-bold transition-colors">X</button>
             <div className="flex items-center gap-4 mb-6">
-              <div className="p-3 bg-apple-green/10 rounded-2xl">{slot.icon}</div>
+              <div className="p-3 bg-apple-green/20 rounded-2xl">{slot.icon}</div>
               <div>
-                <h3 className="text-xl md:text-2xl font-bold text-apple-text leading-tight">{slot.label}</h3>
+                <h3 className="text-xl md:text-2xl font-bold text-white leading-tight">{slot.label}</h3>
                 <p className="text-apple-green font-bold text-xs md:text-sm tracking-widest uppercase">{slot.time}</p>
               </div>
             </div>
             <div className="space-y-4 mb-6">
-               <div className="p-4 bg-[#f5f5f7] rounded-2xl flex items-center gap-3"><IconTarget c="w-5 h-5 text-apple-gray"/> <span className="font-bold text-sm text-apple-text">Focus on the objective.</span></div>
-               <div className="p-4 bg-[#f5f5f7] rounded-2xl flex items-center gap-3"><IconBrain c="w-5 h-5 text-apple-gray"/> <span className="font-bold text-sm text-apple-text">Zero distractions.</span></div>
+               <div className="p-4 bg-white/5 rounded-2xl flex items-center gap-3"><IconTarget c="w-5 h-5 text-gray-300"/> <span className="font-bold text-sm text-white">Focus on the objective.</span></div>
+               <div className="p-4 bg-white/5 rounded-2xl flex items-center gap-3"><IconBrain c="w-5 h-5 text-gray-300"/> <span className="font-bold text-sm text-white">Zero distractions.</span></div>
             </div>
-            <button onClick={close} className="w-full py-4 bg-[#1d1d1f] dark:bg-apple-green text-white dark:text-black rounded-2xl font-bold text-sm md:text-lg hover:scale-[1.02] transition-transform shadow-xl">Engage Mission</button>
+            <button onClick={close} className="w-full py-4 bg-apple-green text-black rounded-2xl font-black text-sm md:text-lg hover:scale-[1.02] transition-transform shadow-[0_0_20px_rgba(80,200,120,0.4)]">Engage Mission</button>
           </motion.div>
         </div>
       );
@@ -294,23 +343,23 @@
       useEffect(() => { const int = setInterval(() => setCurrentMins(new Date().getHours() * 60 + new Date().getMinutes()), 60000); return () => clearInterval(int); }, []);
       return (
         <div className="apple-card p-6 md:p-12 h-full max-w-3xl mx-auto relative">
-          <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-8 md:mb-10 flex items-center gap-3 md:gap-4 text-apple-text">
+          <h3 className="subheading-clamp text-apple-text mb-8 md:mb-10 flex items-center gap-3 md:gap-4">
             {title === 'Weekday' ? <IconBriefcase c="w-6 h-6 md:w-8 md:h-8 text-apple-blue" /> : <IconCoffee c="w-6 h-6 md:w-8 md:h-8 text-apple-blue" />} {title}
           </h3>
-          <div className="relative border-l-2 border-apple-lightGray dark:border-white/10 pl-6 md:pl-8 space-y-8 md:space-y-10">
+          <div className="relative border-l-2 border-white/20 pl-6 md:pl-8 space-y-8 md:space-y-10">
             {schedule.map((item, idx) => {
               let itemMins = item.h * 60 + item.m;
               let nextItemMins = schedule[idx + 1] ? schedule[idx + 1].h * 60 + schedule[idx + 1].m : 24 * 60;
               let isCurrent = nextItemMins > itemMins ? (currentMins >= itemMins && currentMins < nextItemMins) : (currentMins >= itemMins || currentMins < nextItemMins);
               return (
                 <div key={idx} className="relative cursor-pointer group" onClick={() => setSelectedSlot(item)}>
-                  <div className={`absolute -left-[33px] md:-left-[41px] top-1.5 md:top-2 w-4 h-4 rounded-full border-2 transition-all group-hover:scale-150 ${isCurrent ? 'bg-apple-blue border-white dark:border-black shadow-[0_0_0_4px_rgba(0,102,204,0.2)] scale-125' : 'bg-white dark:bg-[#111] border-apple-lightGray dark:border-gray-600'}`} />
+                  <div className={`absolute -left-[33px] md:-left-[41px] top-1.5 md:top-2 w-4 h-4 rounded-full border-2 transition-all group-hover:scale-150 ${isCurrent ? 'bg-apple-blue border-white shadow-[0_0_15px_rgba(15,82,186,0.8)] scale-125' : 'bg-[#111] border-gray-500'}`} />
                   <div className={`transition-all duration-300 ${isCurrent ? 'translate-x-2' : 'group-hover:translate-x-2 opacity-70 group-hover:opacity-100'}`}>
                     <div className="flex items-center gap-3 md:gap-4 mb-1">
-                      <span className={`text-xs md:text-sm font-bold tracking-tight ${isCurrent ? 'text-apple-blue' : 'text-apple-gray'}`}>{item.time}</span>
-                      <div className={`${isCurrent ? 'text-apple-blue' : 'text-apple-gray'}`}>{item.icon}</div>
+                      <span className={`text-xs md:text-sm font-bold tracking-tight ${isCurrent ? 'text-apple-blue drop-shadow-md' : 'text-gray-400'}`}>{item.time}</span>
+                      <div className={`${isCurrent ? 'text-apple-blue' : 'text-gray-400'}`}>{item.icon}</div>
                     </div>
-                    <h4 className={`text-sm md:text-xl font-bold tracking-tight ${isCurrent ? 'text-apple-text' : 'text-apple-gray'}`}>{item.label}</h4>
+                    <h4 className={`text-sm md:text-xl font-bold tracking-tight ${isCurrent ? 'text-white' : 'text-gray-300'}`}>{item.label}</h4>
                   </div>
                 </div>
               );
@@ -371,70 +420,70 @@
       return (
         <div className="space-y-6 md:space-y-8 max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-            <div className={`apple-card p-6 md:p-8 md:col-span-3 flex items-center justify-between border-l-8 ${balance > 0 ? 'border-apple-green' : balance < 0 ? 'border-apple-red' : 'border-apple-gray'}`}>
+            <div className={`apple-card p-6 md:p-8 md:col-span-3 flex items-center justify-between border-l-8 ${balance > 0 ? 'border-apple-green' : balance < 0 ? 'border-apple-red' : 'border-gray-500'}`}>
               <div>
-                <h3 className="text-xl md:text-3xl font-bold text-apple-text mb-1 md:mb-2">Net Settlement</h3>
-                <p className="text-apple-gray font-bold text-xs md:text-xl">
+                <h3 className="subheading-clamp text-white mb-1 md:mb-2">Net Settlement</h3>
+                <p className="text-gray-300 font-bold text-xs md:text-xl">
                   {balance === 0 ? "Fully settled." : balance > 0 ? `Misbah owes Hamas:` : `Hamas owes Misbah:`}
                 </p>
               </div>
-              <div className={`text-3xl md:text-6xl font-black ${balance > 0 ? 'text-apple-green' : balance < 0 ? 'text-apple-red' : 'text-apple-gray'}`}>
+              <div className={`heading-clamp ${balance > 0 ? 'text-apple-green drop-shadow-[0_0_15px_rgba(80,200,120,0.5)]' : balance < 0 ? 'text-apple-red drop-shadow-[0_0_15px_rgba(255,59,48,0.5)]' : 'text-gray-400'}`}>
                 Rs {Math.abs(balance)}
               </div>
             </div>
             
-            <div className="apple-card p-6 md:p-8 text-center"><div className="text-2xl md:text-4xl font-bold text-apple-text mb-1 md:mb-2">Rs {hamasSpent}</div><p className="text-apple-gray font-bold uppercase text-xs">Hamas Total Spent</p></div>
-            <div className="apple-card p-6 md:p-8 text-center"><div className="text-2xl md:text-4xl font-bold text-apple-text mb-1 md:mb-2">Rs {misbahSpent}</div><p className="text-apple-gray font-bold uppercase text-xs">Misbah Total Spent</p></div>
+            <div className="apple-card p-6 md:p-8 text-center"><div className="text-2xl md:text-4xl font-black text-white mb-1 md:mb-2">Rs {hamasSpent}</div><p className="text-gray-400 font-bold uppercase text-xs">Hamas Total Spent</p></div>
+            <div className="apple-card p-6 md:p-8 text-center"><div className="text-2xl md:text-4xl font-black text-white mb-1 md:mb-2">Rs {misbahSpent}</div><p className="text-gray-400 font-bold uppercase text-xs">Misbah Total Spent</p></div>
             {role === 'founder' && (
-              <div onClick={settleDebt} className="apple-card p-6 md:p-8 text-center bg-[#1d1d1f] dark:bg-white text-white dark:text-black shadow-xl flex flex-col justify-center items-center cursor-pointer hover:scale-[1.02] transition-transform"><span className="font-bold text-lg md:text-2xl">Settle Debt</span><span className="text-xs mt-1 font-bold opacity-70">Clear the ledger</span></div>
+              <div onClick={settleDebt} className="apple-card p-6 md:p-8 text-center bg-white/10 hover:bg-white/20 text-white shadow-xl flex flex-col justify-center items-center cursor-pointer hover:scale-[1.02] transition-transform"><span className="font-bold text-lg md:text-2xl">Settle Debt</span><span className="text-xs mt-1 font-bold opacity-70">Clear the ledger</span></div>
             )}
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
              <div className="apple-card p-6 md:p-8 lg:col-span-1 h-fit">
-                <h3 className="text-xl md:text-2xl font-bold text-apple-text mb-4 md:mb-6">Log Expense</h3>
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">Log Expense</h3>
                 <form onSubmit={logTx} className="space-y-4 md:space-y-5">
-                  <input type="text" placeholder="What did you buy?" className="w-full p-3 md:p-4 bg-[#f5f5f7] rounded-xl font-bold text-sm md:text-base" value={newTx.desc} onChange={e=>setNewTx({...newTx, desc:e.target.value})} />
-                  <input type="number" placeholder="Amount (Rs)" className="w-full p-3 md:p-4 bg-[#f5f5f7] rounded-xl font-bold text-sm md:text-base" value={newTx.amount} onChange={e=>setNewTx({...newTx, amount:e.target.value})} />
+                  <input type="text" placeholder="What did you buy?" className="w-full p-3 md:p-4 rounded-xl font-bold text-sm md:text-base" value={newTx.desc} onChange={e=>setNewTx({...newTx, desc:e.target.value})} />
+                  <input type="number" placeholder="Amount (Rs)" className="w-full p-3 md:p-4 rounded-xl font-bold text-sm md:text-base" value={newTx.amount} onChange={e=>setNewTx({...newTx, amount:e.target.value})} />
                   
                   <div className="space-y-2 md:space-y-3">
-                    <label className="text-[10px] md:text-xs font-bold text-apple-gray uppercase">Who Paid?</label>
+                    <label className="text-[10px] md:text-xs font-bold text-gray-400 uppercase">Who Paid?</label>
                     <div className="flex gap-2">
-                      <button type="button" onClick={()=>setNewTx({...newTx, paidBy:'hamas'})} className={`flex-1 py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.paidBy==='hamas'?'bg-apple-blue text-white shadow-md':'bg-[#f5f5f7] text-apple-gray'}`}>Hamas</button>
-                      <button type="button" onClick={()=>setNewTx({...newTx, paidBy:'misbah'})} className={`flex-1 py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.paidBy==='misbah'?'bg-apple-blue text-white shadow-md':'bg-[#f5f5f7] text-apple-gray'}`}>Misbah</button>
+                      <button type="button" onClick={()=>setNewTx({...newTx, paidBy:'hamas'})} className={`flex-1 py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.paidBy==='hamas'?'bg-apple-blue text-white shadow-[0_0_15px_rgba(15,82,186,0.5)]':'bg-white/5 text-gray-400 hover:bg-white/10'}`}>Hamas</button>
+                      <button type="button" onClick={()=>setNewTx({...newTx, paidBy:'misbah'})} className={`flex-1 py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.paidBy==='misbah'?'bg-apple-blue text-white shadow-[0_0_15px_rgba(15,82,186,0.5)]':'bg-white/5 text-gray-400 hover:bg-white/10'}`}>Misbah</button>
                     </div>
                   </div>
 
                   <div className="space-y-2 md:space-y-3">
-                    <label className="text-[10px] md:text-xs font-bold text-apple-gray uppercase">How to Split?</label>
+                    <label className="text-[10px] md:text-xs font-bold text-gray-400 uppercase">How to Split?</label>
                     <div className="flex flex-col gap-2">
-                      <button type="button" onClick={()=>setNewTx({...newTx, splitType:'combine'})} className={`w-full py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.splitType==='combine'?'bg-apple-text text-white dark:bg-white dark:text-black':'bg-[#f5f5f7] text-apple-gray'}`}>Combine (50/50)</button>
-                      <button type="button" onClick={()=>setNewTx({...newTx, splitType:'misbah'})} className={`w-full py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.splitType==='misbah'?'bg-apple-text text-white dark:bg-white dark:text-black':'bg-[#f5f5f7] text-apple-gray'}`}>100% For Misbah</button>
-                      <button type="button" onClick={()=>setNewTx({...newTx, splitType:'hamas'})} className={`w-full py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.splitType==='hamas'?'bg-apple-text text-white dark:bg-white dark:text-black':'bg-[#f5f5f7] text-apple-gray'}`}>100% For Hamas</button>
+                      <button type="button" onClick={()=>setNewTx({...newTx, splitType:'combine'})} className={`w-full py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.splitType==='combine'?'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.4)]':'bg-white/5 text-gray-400 hover:bg-white/10'}`}>Combine (50/50)</button>
+                      <button type="button" onClick={()=>setNewTx({...newTx, splitType:'misbah'})} className={`w-full py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.splitType==='misbah'?'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.4)]':'bg-white/5 text-gray-400 hover:bg-white/10'}`}>100% For Misbah</button>
+                      <button type="button" onClick={()=>setNewTx({...newTx, splitType:'hamas'})} className={`w-full py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.splitType==='hamas'?'bg-white text-black shadow-[0_0_15px_rgba(255,255,255,0.4)]':'bg-white/5 text-gray-400 hover:bg-white/10'}`}>100% For Hamas</button>
                     </div>
                   </div>
-                  <button type="submit" className="w-full py-3 md:py-4 mt-2 bg-apple-green text-white font-bold rounded-xl shadow-md hover:scale-[1.02] transition-transform text-sm md:text-base">Log Transaction</button>
+                  <button type="submit" className="w-full py-3 md:py-4 mt-2 bg-apple-green text-black font-black rounded-xl shadow-[0_0_20px_rgba(80,200,120,0.4)] hover:scale-[1.02] transition-transform text-sm md:text-base">Log Transaction</button>
                 </form>
              </div>
 
              <div className="apple-card p-6 md:p-8 lg:col-span-2">
-                <h3 className="text-xl md:text-2xl font-bold text-apple-text mb-4 md:mb-6">Transaction History</h3>
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-4 md:mb-6">Transaction History</h3>
                 <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
-                   {txs.length === 0 && <p className="text-apple-gray font-bold text-sm text-center py-10">No expenses logged yet.</p>}
+                   {txs.length === 0 && <p className="text-gray-400 font-bold text-sm text-center py-10">No expenses logged yet.</p>}
                    {txs.map(t => (
-                     <div key={t.id} className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 bg-[#f5f5f7] rounded-xl gap-3">
+                     <div key={t.id} className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 bg-white/5 rounded-xl gap-3 border border-white/5 hover:bg-white/10 transition-colors">
                        <div className="flex items-center gap-3">
-                         <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm ${t.paidBy==='hamas'?'bg-apple-blue':'bg-apple-orange'}`}>{t.paidBy==='hamas'?'H':'M'}</div>
+                         <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-black text-sm shrink-0 shadow-lg ${t.paidBy==='hamas'?'bg-apple-blue':'bg-apple-orange'}`}>{t.paidBy==='hamas'?'H':'M'}</div>
                          <div>
-                           <h5 className="font-bold text-apple-text text-sm md:text-lg leading-tight mb-0.5">{t.desc}</h5>
-                           <div className="text-xs font-bold text-apple-gray">
+                           <h5 className="font-bold text-white text-sm md:text-lg leading-tight mb-0.5">{t.desc}</h5>
+                           <div className="text-xs font-bold text-gray-400">
                              {t.date} • <span className="uppercase text-apple-blue">{t.splitType === 'combine' ? '50/50 Split' : t.splitType === 'misbah' ? 'For Misbah' : 'For Hamas'}</span>
                            </div>
                          </div>
                        </div>
                        <div className="flex items-center gap-4 self-end md:self-auto">
-                         <span className="font-black text-apple-text text-lg md:text-xl">Rs {t.amount}</span>
-                         <button onClick={()=>removeTx(t.id)} className="w-8 h-8 flex items-center justify-center bg-white text-apple-red font-bold rounded-full shadow-sm hover:scale-110 transition-transform text-xs">X</button>
+                         <span className="font-black text-white text-lg md:text-xl">Rs {t.amount}</span>
+                         <button onClick={()=>removeTx(t.id)} className="w-8 h-8 flex items-center justify-center bg-white/10 hover:bg-apple-red hover:text-white text-apple-red font-bold rounded-full transition-all text-xs">X</button>
                        </div>
                      </div>
                    ))}
@@ -450,8 +499,8 @@
       const workouts = { Foundation: { A: ['Push-ups (3x8-12)', 'Bodyweight Squats (3x15)', 'Plank (3x30s)'], B: ['Inverted Rows / Pull-ups (3x5-8)', 'Lunges (3x12/leg)', 'Glute Bridges (3x15)'] }, Progression: { A: ['Diamond Push-ups (3x8-12)', 'Jump Squats (3x12)', 'Side Planks (3x30s/side)'], B: ['Pull-ups (3x8-10)', 'Bulgarian Split Squats (3x10/leg)', 'Single-leg Bridges (3x12/leg)'] }, Performance: { A: ['Archer Push-ups (3x6/side)', 'Pistol Squats (3x5/side)', 'L-Sit progression (3x15s)'], B: ['Muscle-up progression (3x5)', 'Shrimp Squats (3x8/leg)', 'Dragon Flags (3x8)'] } };
       return (
         <div className="space-y-6 md:space-y-10">
-          <div className="flex justify-center"><div className="bg-white/80 dark:bg-black/80 backdrop-blur-md shadow-sm flex items-center p-1.5 rounded-full border border-black/5 overflow-x-auto hide-scrollbar max-w-full">{phases.map(p => (<button key={p} onClick={() => setPhase(p)} className={`relative px-4 py-2 md:px-8 md:py-3 rounded-full text-xs md:text-sm font-bold transition-colors whitespace-nowrap ${phase === p ? 'text-white dark:text-black' : 'text-apple-gray hover:text-apple-text'}`}>{phase === p && <motion.div layoutId="fitness-pill" className="absolute inset-0 bg-[#1d1d1f] dark:bg-white rounded-full shadow-md" transition={{ type: 'spring' }} />}<span className="relative z-10">{p}</span></button>))}</div></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">{['A', 'B'].map(type => (<div key={type} className="apple-card p-6 md:p-10"><div className="flex items-center gap-4 mb-6 md:mb-10"><div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-[#f5f5f7] flex items-center justify-center"><span className="text-2xl md:text-3xl font-bold text-apple-text">{type}</span></div><h3 className="text-2xl md:text-3xl font-bold tracking-tight text-apple-text">Workout {type}</h3></div><ul className="space-y-4">{workouts[phase][type].map((ex, i) => (<li key={i} className="flex items-center gap-3 md:gap-4 p-4 rounded-xl bg-[#f5f5f7]/50 border border-black/5"><div className="w-8 h-8 rounded-full bg-apple-blue/10 flex items-center justify-center shrink-0"><IconCheck c="w-4 h-4 text-apple-blue" /></div><span className="text-apple-text font-bold text-sm md:text-lg tracking-tight">{ex}</span></li>))}</ul></div>))}</div>
+          <div className="flex justify-center"><div className="bg-black/50 backdrop-blur-md shadow-lg flex items-center p-1.5 rounded-full border border-white/10 overflow-x-auto hide-scrollbar max-w-full">{phases.map(p => (<button key={p} onClick={() => setPhase(p)} className={`relative px-4 py-2 md:px-8 md:py-3 rounded-full text-xs md:text-sm font-bold transition-colors whitespace-nowrap ${phase === p ? 'text-black' : 'text-gray-400 hover:text-white'}`}>{phase === p && <motion.div layoutId="fitness-pill" className="absolute inset-0 bg-white rounded-full shadow-[0_0_15px_rgba(255,255,255,0.5)]" transition={{ type: 'spring' }} />}<span className="relative z-10">{p}</span></button>))}</div></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">{['A', 'B'].map(type => (<div key={type} className="apple-card p-6 md:p-10"><div className="flex items-center gap-4 mb-6 md:mb-10"><div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-white/10 flex items-center justify-center"><span className="text-2xl md:text-3xl font-black text-white">{type}</span></div><h3 className="subheading-clamp text-white">Workout {type}</h3></div><ul className="space-y-4">{workouts[phase][type].map((ex, i) => (<li key={i} className="flex items-center gap-3 md:gap-4 p-4 rounded-xl bg-white/5 border border-white/5"><div className="w-8 h-8 rounded-full bg-apple-blue/20 flex items-center justify-center shrink-0"><IconCheck c="w-4 h-4 text-apple-blue" /></div><span className="text-white font-bold text-sm md:text-lg tracking-tight">{ex}</span></li>))}</ul></div>))}</div>
         </div>
       );
     };
@@ -460,9 +509,9 @@
       const bC = Math.round(targetCal * 0.25), lC = Math.round(targetCal * 0.35), dC = Math.round(targetCal * 0.30);
       return (
         <div className="space-y-3 md:space-y-4">
-          <div className="p-4 bg-[#f5f5f7] rounded-xl"><div className="flex justify-between items-center mb-1"><h4 className="font-bold text-apple-text text-sm md:text-lg">Breakfast</h4><span className="text-apple-blue font-bold text-xs">~{bC} kcal</span></div><p className="text-apple-gray font-semibold text-xs md:text-sm">3-4 Whole Eggs, 2 slices whole wheat bread, Black Coffee.</p></div>
-          <div className="p-4 bg-[#f5f5f7] rounded-xl"><div className="flex justify-between items-center mb-1"><h4 className="font-bold text-apple-text text-sm md:text-lg">Lunch</h4><span className="text-apple-blue font-bold text-xs">~{lC} kcal</span></div><p className="text-apple-gray font-semibold text-xs md:text-sm">2 Roti, 1.5 cups Daal / Chana, Large Salad.</p></div>
-          <div className="p-4 bg-[#f5f5f7] rounded-xl"><div className="flex justify-between items-center mb-1"><h4 className="font-bold text-apple-text text-sm md:text-lg">Dinner</h4><span className="text-apple-blue font-bold text-xs">~{dC} kcal</span></div><p className="text-apple-gray font-semibold text-xs md:text-sm">200g Chicken Tikka/Boti, 1 Roti, 1/2 cup Dahi.</p></div>
+          <div className="p-4 bg-white/5 border border-white/5 rounded-xl"><div className="flex justify-between items-center mb-1"><h4 className="font-bold text-white text-sm md:text-lg">Breakfast</h4><span className="text-apple-blue font-bold text-xs">~{bC} kcal</span></div><p className="text-gray-400 font-semibold text-xs md:text-sm">3-4 Whole Eggs, 2 slices whole wheat bread, Black Coffee.</p></div>
+          <div className="p-4 bg-white/5 border border-white/5 rounded-xl"><div className="flex justify-between items-center mb-1"><h4 className="font-bold text-white text-sm md:text-lg">Lunch</h4><span className="text-apple-blue font-bold text-xs">~{lC} kcal</span></div><p className="text-gray-400 font-semibold text-xs md:text-sm">2 Roti, 1.5 cups Daal / Chana, Large Salad.</p></div>
+          <div className="p-4 bg-white/5 border border-white/5 rounded-xl"><div className="flex justify-between items-center mb-1"><h4 className="font-bold text-white text-sm md:text-lg">Dinner</h4><span className="text-apple-blue font-bold text-xs">~{dC} kcal</span></div><p className="text-gray-400 font-semibold text-xs md:text-sm">200g Chicken Tikka/Boti, 1 Roti, 1/2 cup Dahi.</p></div>
         </div>
       );
     };
@@ -526,54 +575,54 @@
       };
 
       if (showSetup) return (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="apple-card p-6 md:p-12 max-w-2xl mx-auto border-2 border-apple-blue/20">
-          <h3 className="text-xl md:text-3xl font-bold text-apple-text mb-2">Configure Body Engine</h3>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="apple-card p-6 md:p-12 max-w-2xl mx-auto border-2 border-apple-blue/50">
+          <h3 className="subheading-clamp text-white mb-2">Configure Body Engine</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8 mt-4 md:mt-6">
-            <div className="space-y-1 md:space-y-2"><label className="text-xs md:text-sm font-bold text-apple-gray">Weight (kg)</label><input type="number" value={profile.weight} onChange={(e)=>setProfile(p=>({...p,weight:Number(e.target.value)}))} className="w-full p-3 md:p-4 bg-[#f5f5f7] rounded-xl font-bold text-sm" /></div>
-            <div className="space-y-1 md:space-y-2"><label className="text-xs md:text-sm font-bold text-apple-gray">Goal</label>
-              <div className="flex gap-2">{['cut', 'maintain', 'bulk'].map(g => (<button key={g} onClick={() => setProfile(p=>({...p, goal: g}))} className={`flex-1 py-2 md:py-3 rounded-xl font-bold text-xs capitalize ${profile.goal === g ? 'bg-apple-blue text-white' : 'bg-[#f5f5f7] text-apple-gray'}`}>{g}</button>))}</div>
+            <div className="space-y-1 md:space-y-2"><label className="text-xs md:text-sm font-bold text-gray-400">Weight (kg)</label><input type="number" value={profile.weight} onChange={(e)=>setProfile(p=>({...p,weight:Number(e.target.value)}))} className="w-full p-3 md:p-4 rounded-xl font-bold text-sm" /></div>
+            <div className="space-y-1 md:space-y-2"><label className="text-xs md:text-sm font-bold text-gray-400">Goal</label>
+              <div className="flex gap-2">{['cut', 'maintain', 'bulk'].map(g => (<button key={g} onClick={() => setProfile(p=>({...p, goal: g}))} className={`flex-1 py-2 md:py-3 rounded-xl font-bold text-xs capitalize transition-colors ${profile.goal === g ? 'bg-apple-blue text-white shadow-[0_0_15px_rgba(15,82,186,0.6)]' : 'bg-white/5 text-gray-400'}`}>{g}</button>))}</div>
             </div>
           </div>
-          <button onClick={() => setShowSetup(false)} className="w-full py-4 bg-[#1d1d1f] dark:bg-white text-white dark:text-black rounded-xl font-bold text-sm md:text-lg">Activate</button>
+          <button onClick={() => setShowSetup(false)} className="w-full py-4 bg-white text-black rounded-xl font-black text-sm md:text-lg shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:scale-[1.02] transition-transform">Activate Engine</button>
         </motion.div>
       );
 
       return (
         <div className="space-y-6 md:space-y-8">
-          <div className="flex justify-between items-center"><h2 className="text-2xl md:text-4xl font-bold text-apple-text">Nutrition Engine</h2><button onClick={() => setShowSetup(true)} className="px-4 py-2 bg-white border border-black/5 rounded-full text-xs md:text-sm font-bold text-apple-gray shadow-sm">Settings</button></div>
+          <div className="flex justify-between items-center"><h2 className="heading-clamp text-white">Nutrition Engine</h2><button onClick={() => setShowSetup(true)} className="px-4 py-2 bg-white/10 hover:bg-white/20 border border-white/10 rounded-full text-xs md:text-sm font-bold text-white shadow-sm transition-colors">Settings</button></div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {[{ l: 'Cals', c: eatenCal, t: targetCal, u: 'kcal', col: 'bg-apple-blue' }, { l: 'Pro', c: eatenPro, t: targetPro, u: 'g', col: 'bg-apple-green' }, { l: 'Carbs', c: eatenCarb, t: targetCarb, u: 'g', col: 'bg-apple-orange' }, { l: 'Fats', c: eatenFat, t: targetFat, u: 'g', col: 'bg-apple-red' }].map(m => (
-              <div key={m.l} className="apple-card p-4 md:p-6"><div className="flex justify-between items-end mb-2 md:mb-4"><span className="font-bold text-apple-text text-sm md:text-lg">{m.l}</span><span className="text-[10px] md:text-xs font-bold text-apple-gray">{Math.max(m.t-m.c,0)} left</span></div><div className="w-full bg-[#f5f5f7] rounded-full h-2 md:h-3 mb-2 md:mb-4 overflow-hidden"><motion.div initial={{width:0}} animate={{width:`${Math.min((m.c/m.t)*100,100)}%`}} className={`${m.col} h-full rounded-full`} /></div><div className="font-bold text-apple-gray text-xs md:text-sm"><span className="text-apple-text text-sm md:text-xl">{m.c}</span> / {m.t}</div></div>
+            {[{ l: 'Cals', c: eatenCal, t: targetCal, u: 'kcal', col: 'bg-apple-blue shadow-[0_0_15px_rgba(15,82,186,0.8)]' }, { l: 'Pro', c: eatenPro, t: targetPro, u: 'g', col: 'bg-apple-green shadow-[0_0_15px_rgba(80,200,120,0.8)]' }, { l: 'Carbs', c: eatenCarb, t: targetCarb, u: 'g', col: 'bg-apple-orange shadow-[0_0_15px_rgba(255,215,0,0.8)]' }, { l: 'Fats', c: eatenFat, t: targetFat, u: 'g', col: 'bg-apple-purple shadow-[0_0_15px_rgba(153,102,204,0.8)]' }].map(m => (
+              <div key={m.l} className="apple-card p-4 md:p-6"><div className="flex justify-between items-end mb-2 md:mb-4"><span className="font-bold text-white text-sm md:text-lg">{m.l}</span><span className="text-[10px] md:text-xs font-bold text-gray-400">{Math.max(m.t-m.c,0)} left</span></div><div className="w-full bg-white/10 rounded-full h-2 md:h-3 mb-2 md:mb-4 overflow-hidden"><motion.div initial={{width:0}} animate={{width:`${Math.min((m.c/m.t)*100,100)}%`}} className={`${m.col} h-full rounded-full`} /></div><div className="font-bold text-gray-400 text-xs md:text-sm"><span className="text-white text-sm md:text-xl font-black">{m.c}</span> / {m.t}</div></div>
             ))}
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
             <div className="apple-card p-6 md:p-8">
-              <h3 className="text-xl md:text-2xl font-bold text-apple-text mb-1 md:mb-2">Log Smart Meal</h3>
-              <p className="text-xs md:text-sm font-bold text-apple-gray mb-4 md:mb-6">Search global food database...</p>
+              <h3 className="subheading-clamp text-white mb-1 md:mb-2">Log Smart Meal</h3>
+              <p className="text-xs md:text-sm font-bold text-gray-400 mb-4 md:mb-6">Search global food database...</p>
               <form onSubmit={logMeal} className="space-y-3 md:space-y-4">
                 <div className="grid grid-cols-3 gap-3 md:gap-4 relative">
                   <div className="col-span-2 relative">
-                    <input type="text" placeholder="Meal Name" className="w-full p-3 md:p-4 bg-[#f5f5f7] rounded-xl font-bold text-sm" value={newMeal.name} onChange={e=>{setNewMeal({...newMeal,name:e.target.value}); setShowSuggestions(true);}} onFocus={()=>setShowSuggestions(true)} onBlur={()=>setTimeout(()=>setShowSuggestions(false), 200)} />
+                    <input type="text" placeholder="Meal Name" className="w-full p-3 md:p-4 rounded-xl font-bold text-sm" value={newMeal.name} onChange={e=>{setNewMeal({...newMeal,name:e.target.value}); setShowSuggestions(true);}} onFocus={()=>setShowSuggestions(true)} onBlur={()=>setTimeout(()=>setShowSuggestions(false), 200)} />
                     <AnimatePresence>
                       {showSuggestions && suggestions.length > 0 && (
-                        <motion.ul initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#1c1c1e] border border-black/5 rounded-xl shadow-xl z-50 max-h-48 overflow-y-auto">
+                        <motion.ul initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} className="absolute top-full left-0 right-0 mt-2 bg-[#111]/90 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl z-50 max-h-48 overflow-y-auto">
                           {suggestions.map(s => (
-                            <li key={s} onClick={() => selectFood(s)} className="p-3 hover:bg-apple-blue hover:text-white cursor-pointer font-bold capitalize text-sm text-apple-text">{s} <span className="text-[10px] opacity-70 ml-1">({FOOD_DB[s].cal} kcal)</span></li>
+                            <li key={s} onClick={() => selectFood(s)} className="p-3 hover:bg-apple-blue hover:text-white cursor-pointer font-bold capitalize text-sm text-gray-200 transition-colors">{s} <span className="text-[10px] opacity-70 ml-1">({FOOD_DB[s].cal} kcal)</span></li>
                           ))}
                         </motion.ul>
                       )}
                     </AnimatePresence>
                   </div>
-                  <input type="number" placeholder="Qty" className="p-3 md:p-4 bg-[#f5f5f7] rounded-xl font-bold text-center text-sm" value={newMeal.qty} onChange={handleQtyChange} min="1" step="0.5" />
+                  <input type="number" placeholder="Qty" className="p-3 md:p-4 rounded-xl font-bold text-center text-sm" value={newMeal.qty} onChange={handleQtyChange} min="1" step="0.5" />
                 </div>
-                <div className="grid grid-cols-4 gap-3 md:gap-4"><input type="number" placeholder="Kcal" className="p-3 md:p-4 bg-[#f5f5f7] rounded-xl text-center text-sm font-bold" value={newMeal.cal} onChange={e=>setNewMeal({...newMeal,cal:e.target.value})} /><input type="number" placeholder="Pro" className="p-3 md:p-4 bg-[#f5f5f7] rounded-xl text-center text-sm font-bold" value={newMeal.pro} onChange={e=>setNewMeal({...newMeal,pro:e.target.value})} /><input type="number" placeholder="Carb" className="p-3 md:p-4 bg-[#f5f5f7] rounded-xl text-center text-sm font-bold" value={newMeal.carb} onChange={e=>setNewMeal({...newMeal,carb:e.target.value})} /><input type="number" placeholder="Fat" className="p-3 md:p-4 bg-[#f5f5f7] rounded-xl text-center text-sm font-bold" value={newMeal.fat} onChange={e=>setNewMeal({...newMeal,fat:e.target.value})} /></div>
-                <button type="submit" className="w-full py-3 md:py-4 bg-[#1d1d1f] dark:bg-apple-blue text-white rounded-xl font-bold text-sm md:text-base">Log</button>
+                <div className="grid grid-cols-4 gap-3 md:gap-4"><input type="number" placeholder="Kcal" className="p-3 md:p-4 rounded-xl text-center text-sm font-bold" value={newMeal.cal} onChange={e=>setNewMeal({...newMeal,cal:e.target.value})} /><input type="number" placeholder="Pro" className="p-3 md:p-4 rounded-xl text-center text-sm font-bold" value={newMeal.pro} onChange={e=>setNewMeal({...newMeal,pro:e.target.value})} /><input type="number" placeholder="Carb" className="p-3 md:p-4 rounded-xl text-center text-sm font-bold" value={newMeal.carb} onChange={e=>setNewMeal({...newMeal,carb:e.target.value})} /><input type="number" placeholder="Fat" className="p-3 md:p-4 rounded-xl text-center text-sm font-bold" value={newMeal.fat} onChange={e=>setNewMeal({...newMeal,fat:e.target.value})} /></div>
+                <button type="submit" className="w-full py-3 md:py-4 bg-apple-blue text-white rounded-xl font-black shadow-[0_0_15px_rgba(15,82,186,0.5)] hover:scale-[1.02] transition-transform text-sm md:text-base">Log Item</button>
               </form>
               <div className="mt-6 md:mt-8 space-y-2 md:space-y-3">
-                {todayMeals.map(m => (<div key={m.id} className="flex justify-between items-center p-3 md:p-4 bg-[#f5f5f7] rounded-xl"><div><h5 className="font-bold text-apple-text text-sm">{m.name} <span className="text-apple-gray text-[10px]">x{m.qty}</span></h5><div className="text-xs font-bold text-apple-gray space-x-2 mt-0.5"><span>{m.cal} kcal</span><span className="text-apple-green">{m.pro}g P</span></div></div><button onClick={() => setDailyMeals(p => ({ ...p, [todayDate]: p[todayDate].filter(x => x.id !== m.id) }))} className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-white text-apple-red font-bold text-xs">X</button></div>))}
+                {todayMeals.map(m => (<div key={m.id} className="flex justify-between items-center p-3 md:p-4 bg-white/5 border border-white/5 rounded-xl"><div><h5 className="font-bold text-white text-sm">{m.name} <span className="text-gray-400 text-[10px]">x{m.qty}</span></h5><div className="text-xs font-bold text-gray-400 space-x-2 mt-0.5"><span>{m.cal} kcal</span><span className="text-apple-green">{m.pro}g P</span></div></div><button onClick={() => setDailyMeals(p => ({ ...p, [todayDate]: p[todayDate].filter(x => x.id !== m.id) }))} className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-white/10 hover:bg-apple-red hover:text-white transition-colors text-apple-red font-bold text-xs">X</button></div>))}
               </div>
             </div>
-            <div className="apple-card p-6 md:p-8"><h3 className="text-xl md:text-2xl font-bold text-apple-text mb-4 md:mb-6">Auto Plan</h3><AutoDietPlan targetCal={targetCal} /></div>
+            <div className="apple-card p-6 md:p-8"><h3 className="subheading-clamp text-white mb-4 md:mb-6">Auto Plan</h3><AutoDietPlan targetCal={targetCal} /></div>
           </div>
         </div>
       );
@@ -598,27 +647,27 @@
 
       return (
         <div className="apple-card p-6 md:p-12 max-w-4xl mx-auto">
-          <div className="flex items-center gap-3 md:gap-4 mb-8 md:mb-10"><IconList c="w-8 h-8 md:w-10 md:h-10 text-apple-blue" /><h2 className="text-2xl md:text-4xl font-bold text-apple-text">Mission Control</h2></div>
+          <div className="flex items-center gap-3 md:gap-4 mb-8 md:mb-10"><IconList c="w-8 h-8 md:w-10 md:h-10 text-apple-blue drop-shadow-[0_0_10px_rgba(15,82,186,0.8)]" /><h2 className="heading-clamp text-white">Mission Control</h2></div>
           <form onSubmit={addTask} className="flex flex-col md:flex-row gap-3 md:gap-4 mb-8 md:mb-12">
-            <input type="text" placeholder="E.g. Database Quiz" className="flex-1 p-3 md:p-4 bg-[#f5f5f7] rounded-xl font-bold text-sm md:text-base" value={newTask.title} onChange={e=>setNewTask({...newTask, title: e.target.value})} />
-            <input type="date" className="p-3 md:p-4 bg-[#f5f5f7] rounded-xl font-bold font-sans text-sm md:text-base" value={newTask.dueDate} onChange={e=>setNewTask({...newTask, dueDate: e.target.value})} />
-            <input type="time" className="p-3 md:p-4 bg-[#f5f5f7] rounded-xl font-bold font-sans text-sm md:text-base" value={newTask.dueTime} onChange={e=>setNewTask({...newTask, dueTime: e.target.value})} />
-            <button type="submit" className="px-6 py-3 md:px-8 md:py-4 bg-apple-blue text-white font-bold rounded-xl text-sm md:text-base">Schedule</button>
+            <input type="text" placeholder="E.g. Database Quiz" className="flex-1 p-3 md:p-4 rounded-xl font-bold text-sm md:text-base" value={newTask.title} onChange={e=>setNewTask({...newTask, title: e.target.value})} />
+            <input type="date" className="p-3 md:p-4 rounded-xl font-bold font-sans text-sm md:text-base" value={newTask.dueDate} onChange={e=>setNewTask({...newTask, dueDate: e.target.value})} />
+            <input type="time" className="p-3 md:p-4 rounded-xl font-bold font-sans text-sm md:text-base" value={newTask.dueTime} onChange={e=>setNewTask({...newTask, dueTime: e.target.value})} />
+            <button type="submit" className="px-6 py-3 md:px-8 md:py-4 bg-apple-blue text-white font-black rounded-xl text-sm md:text-base shadow-[0_0_15px_rgba(15,82,186,0.5)] hover:scale-105 transition-transform">Schedule</button>
           </form>
           <div className="space-y-3 md:space-y-4">
             {tasks.sort((a,b)=>a.completed-b.completed).map(t => (
-              <motion.div key={t.id} layout className={`flex items-center justify-between p-4 md:p-5 rounded-xl border ${t.completed ? 'bg-white dark:bg-[#111] opacity-50 border-black/5' : 'bg-[#f5f5f7] border-black/5'}`}>
+              <motion.div key={t.id} layout className={`flex items-center justify-between p-4 md:p-5 rounded-xl border transition-all ${t.completed ? 'bg-white/5 opacity-50 border-transparent' : 'bg-white/10 border-white/10 hover:border-white/30'}`}>
                 <div className="flex items-center gap-3 md:gap-4 cursor-pointer" onClick={() => toggle(t.id)}>
-                  <div className={`w-5 h-5 md:w-6 md:h-6 rounded-full border-2 flex items-center justify-center transition-colors ${t.completed ? 'bg-apple-blue border-apple-blue' : 'border-apple-gray'}`}>{t.completed && <IconCheck c="w-3 h-3 md:w-4 md:h-4 text-white" />}</div>
-                  <div className={t.completed ? 'line-through text-apple-gray text-sm md:text-lg font-bold' : 'text-apple-text font-bold text-sm md:text-lg'}>{t.title}</div>
+                  <div className={`w-5 h-5 md:w-6 md:h-6 rounded-full border-2 flex items-center justify-center transition-colors ${t.completed ? 'bg-apple-green border-apple-green' : 'border-gray-400'}`}>{t.completed && <IconCheck c="w-3 h-3 md:w-4 md:h-4 text-black" />}</div>
+                  <div className={t.completed ? 'line-through text-gray-500 text-sm md:text-lg font-bold' : 'text-white font-bold text-sm md:text-lg'}>{t.title}</div>
                 </div>
                 <div className="flex items-center gap-2 md:gap-4">
-                  {t.dueDate && <span className="text-[10px] md:text-sm font-bold text-apple-orange bg-apple-orange/10 px-2 py-1 md:px-3 rounded-full">{t.dueDate} {t.dueTime}</span>}
-                  <button onClick={() => remove(t.id)} className="text-apple-red font-bold text-xs md:text-sm px-2">Delete</button>
+                  {t.dueDate && <span className="text-[10px] md:text-sm font-bold text-apple-orange bg-apple-orange/20 px-2 py-1 md:px-3 rounded-full border border-apple-orange/30">{t.dueDate} {t.dueTime}</span>}
+                  <button onClick={() => remove(t.id)} className="text-apple-red font-bold text-xs md:text-sm px-2 hover:drop-shadow-[0_0_5px_rgba(255,59,48,0.8)] transition-all">Delete</button>
                 </div>
               </motion.div>
             ))}
-            {tasks.length === 0 && <p className="text-apple-gray font-bold text-sm md:text-base text-center py-10">No upcoming missions. You are clear.</p>}
+            {tasks.length === 0 && <p className="text-gray-500 font-bold text-sm md:text-base text-center py-10">No upcoming missions. You are clear.</p>}
           </div>
         </div>
       );
@@ -650,15 +699,15 @@
       };
 
       return (
-        <div className="apple-card p-6 md:p-12 overflow-x-auto"><h2 className="text-2xl md:text-4xl font-bold text-apple-text mb-6 md:mb-8">Weekly Tracker</h2><div className="min-w-[800px] md:min-w-[900px]">
-          <div className="grid grid-cols-[180px_repeat(7,1fr)] md:grid-cols-[220px_repeat(7,1fr)] gap-2 md:gap-4 mb-4"><div className="font-bold text-apple-gray text-sm md:text-base">Habit</div>{DAYS.map(d => <div key={d} className="text-center font-bold text-apple-gray text-sm md:text-base">{d}</div>)}</div>
-          <div className="space-y-2 md:space-y-3">{HABITS.map(h => (<div key={h} className="grid grid-cols-[180px_repeat(7,1fr)] md:grid-cols-[220px_repeat(7,1fr)] gap-2 md:gap-4 items-center group"><div className="font-bold px-3 py-2 md:px-4 md:py-3 rounded-xl text-sm md:text-lg text-apple-text bg-[#f5f5f7]">{h}</div>{DAYS.map(d => { const c = data[`${d}-${h}`]; return (<div key={`${d}-${h}`} className="flex justify-center"><motion.button whileTap={{ scale: 0.8 }} onClick={() => toggle(d, h)} className={`w-8 h-8 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all ${c ? 'bg-apple-green text-white scale-105' : 'bg-[#f5f5f7]'}`}>{c && <IconCheck c="w-4 h-4 md:w-6 md:h-6" />}</motion.button></div>) })}</div>))}</div>
+        <div className="apple-card p-6 md:p-12 overflow-x-auto"><h2 className="heading-clamp text-white mb-6 md:mb-8">Weekly Tracker</h2><div className="min-w-[800px] md:min-w-[900px]">
+          <div className="grid grid-cols-[180px_repeat(7,1fr)] md:grid-cols-[220px_repeat(7,1fr)] gap-2 md:gap-4 mb-4"><div className="font-bold text-gray-400 text-sm md:text-base">Habit</div>{DAYS.map(d => <div key={d} className="text-center font-bold text-gray-400 text-sm md:text-base">{d}</div>)}</div>
+          <div className="space-y-2 md:space-y-3">{HABITS.map(h => (<div key={h} className="grid grid-cols-[180px_repeat(7,1fr)] md:grid-cols-[220px_repeat(7,1fr)] gap-2 md:gap-4 items-center group"><div className="font-bold px-3 py-2 md:px-4 md:py-3 rounded-xl text-sm md:text-lg text-white bg-white/10 border border-white/5">{h}</div>{DAYS.map(d => { const c = data[`${d}-${h}`]; return (<div key={`${d}-${h}`} className="flex justify-center"><motion.button whileTap={{ scale: 0.8 }} onClick={() => toggle(d, h)} className={`w-8 h-8 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all ${c ? 'bg-apple-green text-black scale-105 shadow-[0_0_15px_rgba(80,200,120,0.6)]' : 'bg-white/5 border border-white/10 hover:bg-white/10'}`}>{c && <IconCheck c="w-4 h-4 md:w-6 md:h-6" />}</motion.button></div>) })}</div>))}</div>
         </div></div>
       );
     };
 
-    const Income = () => (<div className="apple-card p-12 md:p-16 text-center"><IconTarget c="w-16 h-16 md:w-20 md:h-20 mx-auto text-apple-blue mb-4"/><h2 className="text-2xl md:text-4xl font-bold text-apple-text">Fiverr Roadmap</h2></div>);
-    const English = () => (<div className="apple-card p-12 md:p-16 text-center"><IconBookOpen c="w-16 h-16 md:w-20 md:h-20 mx-auto text-apple-blue mb-4"/><h2 className="text-2xl md:text-4xl font-bold text-apple-text">English Mastery</h2></div>);
+    const Income = () => (<div className="apple-card p-12 md:p-16 text-center"><IconTarget c="w-16 h-16 md:w-20 md:h-20 mx-auto text-apple-blue mb-4 drop-shadow-[0_0_15px_rgba(15,82,186,0.8)]"/><h2 className="heading-clamp text-white">Fiverr Roadmap</h2></div>);
+    const English = () => (<div className="apple-card p-12 md:p-16 text-center"><IconBookOpen c="w-16 h-16 md:w-20 md:h-20 mx-auto text-apple-purple mb-4 drop-shadow-[0_0_15px_rgba(153,102,204,0.8)]"/><h2 className="heading-clamp text-white">English Mastery</h2></div>);
     
     const CEOBriefing = () => {
       const { showToast } = useToast();
@@ -739,16 +788,16 @@
       };
 
       return (
-        <div className="apple-card p-8 md:p-16 text-left bg-gradient-to-br from-[#111] to-[#333] text-white shadow-xl max-w-4xl mx-auto border border-black/10 dark:border-white/10">
+        <div className="apple-card p-8 md:p-16 text-left border border-white/20 shadow-[0_0_50px_rgba(0,0,0,0.8)] max-w-4xl mx-auto">
           <div className="flex flex-col items-center mb-8 md:mb-10 text-center">
-            <IconBrain c="w-12 h-12 md:w-16 md:h-16 text-apple-blue mb-3 md:mb-4" />
-            <h2 className="text-2xl md:text-4xl font-bold tracking-tight mb-2">Morning CEO Briefing</h2>
-            <p className="text-gray-400 font-bold text-xs md:text-sm">Powered by Gemini AI Engine</p>
+            <IconBrain c="w-12 h-12 md:w-16 md:h-16 text-apple-blue mb-3 md:mb-4 drop-shadow-[0_0_15px_rgba(15,82,186,0.8)]" />
+            <h2 className="heading-clamp text-white mb-2">Morning CEO Briefing</h2>
+            <p className="text-apple-blue font-bold text-xs md:text-sm tracking-widest uppercase">Powered by Gemini AI Engine</p>
           </div>
           
           {!briefing && !loading && (
             <div className="flex justify-center">
-              <button onClick={generateBriefing} className="px-8 py-4 md:px-10 md:py-5 bg-white text-black font-bold text-sm md:text-xl rounded-full shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:scale-105 transition-all">
+              <button onClick={generateBriefing} className="px-8 py-4 md:px-10 md:py-5 bg-white text-black font-black text-sm md:text-xl rounded-full shadow-[0_0_40px_rgba(255,255,255,0.4)] hover:scale-105 transition-all">
                 Request Briefing
               </button>
             </div>
@@ -763,10 +812,10 @@
 
           <AnimatePresence>
             {briefing && !loading && (
-              <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} className="mt-6 md:mt-8 bg-black/40 backdrop-blur-md p-6 md:p-10 rounded-3xl border border-white/10">
+              <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} className="mt-6 md:mt-8 bg-black/60 backdrop-blur-md p-6 md:p-10 rounded-3xl border border-white/10 shadow-inner">
                 <div className="markdown-content text-sm md:text-lg" dangerouslySetInnerHTML={{ __html: window.marked ? window.marked.parse(displayedBriefing + (displayedBriefing.length < briefing.length ? '...' : '')) : displayedBriefing }}></div>
                 {displayedBriefing.length >= briefing.length && (
-                  <motion.button initial={{opacity:0}} animate={{opacity:1}} onClick={generateBriefing} className="mt-6 md:mt-8 text-xs md:text-sm font-bold text-apple-gray hover:text-white uppercase tracking-widest transition-colors">Request Updated Briefing</motion.button>
+                  <motion.button initial={{opacity:0}} animate={{opacity:1}} onClick={generateBriefing} className="mt-6 md:mt-8 text-xs md:text-sm font-bold text-gray-500 hover:text-white uppercase tracking-widest transition-colors">Request Updated Briefing</motion.button>
                 )}
               </motion.div>
             )}
@@ -783,7 +832,7 @@
         DAYS.forEach(d => HABITS.forEach(h => { if (tData[`${d}-${h}`]) c++; })); 
         setScore(Math.round((c / 77) * 100)); 
       }, [appData.tracker]);
-      return (<div className="apple-card p-12 text-center"><div className="text-6xl md:text-9xl font-black text-apple-text mb-2 md:mb-4">{score}%</div><p className="text-apple-gray text-lg md:text-2xl font-bold">Weekly Consistency</p></div>);
+      return (<div className="apple-card p-12 text-center"><div className="text-6xl md:text-9xl font-black text-white mb-2 md:mb-4 drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">{score}%</div><p className="text-apple-green text-lg md:text-2xl font-black uppercase tracking-widest">Weekly Consistency</p></div>);
     };
 
     const SettingsModal = ({ close }) => {
@@ -791,23 +840,23 @@
       const settings = appData.settings;
       const setSettings = (updater) => updateAppData('settings', updater);
       return (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="apple-card p-6 md:p-8 w-full max-w-md bg-white">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="apple-card p-6 md:p-8 w-full max-w-md border border-white/20">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl md:text-2xl font-bold text-apple-text">God Mode Settings</h3>
-              <button onClick={close} className="text-apple-red font-bold text-sm">Close</button>
+              <h3 className="subheading-clamp text-white">God Mode Settings</h3>
+              <button onClick={close} className="text-apple-red font-bold text-sm bg-white/10 px-3 py-1 rounded-full hover:bg-apple-red hover:text-white transition-colors">Close</button>
             </div>
             
-            <div className="mb-6 p-4 bg-[#f5f5f7] rounded-xl border border-black/5">
-              <label className="block text-xs md:text-sm font-bold text-apple-text mb-2 uppercase tracking-tight">Gemini API Key</label>
-              <input type="password" placeholder="Paste key here..." className="w-full p-3 rounded-lg bg-white border border-black/10 font-mono text-xs md:text-sm focus:outline-apple-blue" value={settings.geminiKey || ''} onChange={(e) => setSettings({...settings, geminiKey: e.target.value})} />
-              <p className="text-[10px] md:text-xs text-apple-gray mt-2 font-bold">Stored securely in your cloud engine.</p>
+            <div className="mb-6 p-4 bg-white/5 rounded-xl border border-white/10">
+              <label className="block text-xs md:text-sm font-bold text-gray-300 mb-2 uppercase tracking-tight">Gemini API Key</label>
+              <input type="password" placeholder="Paste key here..." className="w-full p-3 rounded-lg font-mono text-xs md:text-sm focus:border-apple-blue" value={settings.geminiKey || ''} onChange={(e) => setSettings({...settings, geminiKey: e.target.value})} />
+              <p className="text-[10px] md:text-xs text-gray-500 mt-2 font-bold">Stored securely in your cloud engine.</p>
             </div>
 
             <div className="space-y-3 md:space-y-4">
-              {['aura', 'autoStealth', 'darkMode', 'dopamineRain', 'shield'].map(k => (
-                <div key={k} className="flex justify-between items-center p-3 md:p-4 bg-[#f5f5f7] rounded-xl">
-                  <span className="font-bold capitalize text-apple-text text-sm">{k.replace(/([A-Z])/g, ' $1').trim()}</span>
+              {['aura', 'dopamineRain', 'shield'].map(k => (
+                <div key={k} className="flex justify-between items-center p-3 md:p-4 bg-white/5 rounded-xl border border-white/5">
+                  <span className="font-bold capitalize text-white text-sm">{k.replace(/([A-Z])/g, ' $1').trim()}</span>
                   <input type="checkbox" checked={settings[k]} onChange={(e)=>setSettings({...settings, [k]: e.target.checked})} className="w-5 h-5 md:w-6 md:h-6 cursor-pointer accent-apple-blue" />
                 </div>
               ))}
@@ -828,14 +877,14 @@
       };
       
       return (
-        <div className="min-h-screen flex items-center justify-center bg-[#f5f5f7] dark:bg-[#000000] p-6">
-          <motion.div initial={{opacity:0, scale:0.95}} animate={{opacity:1, scale:1}} className="apple-card p-8 md:p-10 max-w-sm w-full text-center shadow-2xl dark:shadow-[0_0_50px_rgba(255,255,255,0.05)] border border-black/5 dark:border-white/5">
-            <IconZap c="w-10 h-10 md:w-12 md:h-12 text-apple-text mx-auto mb-4 md:mb-6" />
-            <h1 className="text-2xl md:text-3xl font-black text-apple-text mb-2 tracking-tight">LifeOS</h1>
-            <p className="text-apple-gray text-xs md:text-sm font-bold mb-6 md:mb-8">Authenticate Identity</p>
+        <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden">
+          <motion.div initial={{opacity:0, scale:0.95}} animate={{opacity:1, scale:1}} className="apple-card p-8 md:p-12 max-w-sm w-full text-center shadow-[0_0_60px_rgba(0,0,0,0.8)] border border-white/10">
+            <LuxeIcon c="w-16 h-16 md:w-24 md:h-24 mx-auto mb-6 drop-shadow-[0_0_20px_rgba(255,215,0,0.5)]" />
+            <h1 className="heading-clamp text-white mb-2 tracking-tight">LuxeOS</h1>
+            <p className="text-apple-green text-xs md:text-sm font-bold tracking-widest uppercase mb-8">Authenticate Identity</p>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <input type="password" placeholder="Enter ID" className="w-full p-4 rounded-xl bg-[#f5f5f7] dark:bg-[#1c1c1e] font-mono text-center text-apple-text focus:outline-apple-blue font-bold tracking-[0.3em] text-sm md:text-base" value={passcode} onChange={e=>setPasscode(e.target.value)} />
-              <button type="submit" className="w-full py-4 bg-[#1d1d1f] dark:bg-white text-white dark:text-black rounded-xl font-bold hover:scale-[1.02] transition-transform text-sm md:text-base">Initialize</button>
+              <input type="password" placeholder="Enter ID" className="w-full p-4 rounded-xl font-mono text-center text-white focus:border-apple-blue focus:shadow-[0_0_15px_rgba(15,82,186,0.5)] font-black tracking-[0.3em] text-sm md:text-base transition-all bg-black/50" value={passcode} onChange={e=>setPasscode(e.target.value)} />
+              <button type="submit" className="w-full py-4 bg-white text-black rounded-xl font-black shadow-[0_0_20px_rgba(255,255,255,0.4)] hover:scale-[1.02] transition-transform text-sm md:text-base tracking-widest uppercase">Initialize</button>
             </form>
           </motion.div>
         </div>
@@ -847,17 +896,11 @@
       const settings = appData.settings;
       const [activeTab, setActiveTab] = useState(role === 'associate' ? 'Finance' : 'Daily Routine');
       const [showSettings, setShowSettings] = useState(false);
-      const [timeMode, setTimeMode] = useState('normal'); const [aura, setAura] = useState('none'); const [shieldLevel, setShieldLevel] = useState('iron');
-
-      useEffect(() => {
-        if (settings.darkMode) document.documentElement.classList.add('dark');
-        else document.documentElement.classList.remove('dark');
-      }, [settings.darkMode]);
+      const [aura, setAura] = useState('none'); const [shieldLevel, setShieldLevel] = useState('iron');
 
       useEffect(() => {
         const checkContext = () => {
-          const now = new Date(); const h = now.getHours(); const m = now.getMinutes();
-          if (settings.autoStealth) { if (h >= 8 && h < 16 && !(h===8 && m<30)) setTimeMode('stealth'); else if ((h >= 20 && h <= 22) && !(h===20 && m<45) && !(h===22 && m>=30)) setTimeMode('deepwork'); else setTimeMode('normal'); } else setTimeMode('normal');
+          const h = new Date().getHours();
           if (settings.aura) { const tData = appData.tracker; let c = 0; Object.values(tData).forEach(v => { if(v) c++; }); if (h >= 18 && c < 3) setAura('red'); else if (c > 20) setAura('gold'); else setAura('none'); } else setAura('none');
           if (settings.shield) { const tData = appData.tracker; let c = 0; Object.values(tData).forEach(v => { if(v) c++; }); if (c > 30) setShieldLevel('gold'); else if (c > 15) setShieldLevel('silver'); else if (c > 5) setShieldLevel('bronze'); else setShieldLevel('iron'); }
         };
@@ -867,7 +910,7 @@
       const getGreeting = () => { const h = new Date().getHours(); if (h < 12) return 'Good Morning'; if (h < 18) return 'Good Afternoon'; if (h >= 21) return 'Get rest'; return 'Good Evening'; };
 
       const getTabIcon = (tab, active) => {
-        const c = `w-5 h-5 md:w-6 md:h-6 ${active ? 'text-apple-blue md:text-white dark:md:text-black' : 'text-apple-gray dark:text-gray-400'}`;
+        const c = `w-5 h-5 md:w-6 md:h-6 transition-colors ${active ? 'text-white' : 'text-gray-400'}`;
         switch(tab) {
           case 'Daily Routine': return <IconCalendar c={c}/>;
           case 'Fitness': return <IconActivity c={c}/>;
@@ -889,30 +932,32 @@
       };
 
       return (
-        <div id="app-container" className={`min-h-screen ${timeMode === 'stealth' ? 'stealth-mode' : timeMode === 'deepwork' ? 'deepwork-mode' : ''}`}>
+        <div id="app-container" className="min-h-screen">
           <RoutineNotifier role={role} />
           {aura === 'red' && role === 'founder' && <div className="aura-red"></div>} 
           {aura === 'gold' && role === 'founder' && <div className="aura-gold"></div>} 
-          {timeMode === 'deepwork' && role === 'founder' && <div className="focus-sphere"></div>}
           
           {role === 'founder' && (
-            <button onClick={() => setShowSettings(true)} className="md:hidden fixed top-4 right-4 z-50 p-3 bg-white/80 dark:bg-[#111]/80 backdrop-blur-md border border-black/10 dark:border-white/10 rounded-full shadow-lg"><IconSettings c="w-5 h-5 text-apple-text" /></button>
+            <button onClick={() => setShowSettings(true)} className="md:hidden fixed top-4 right-4 z-50 p-3 bg-black/60 backdrop-blur-md border border-white/20 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.5)]"><IconSettings c="w-5 h-5 text-white" /></button>
           )}
 
           {role === 'founder' && (
-            <nav className="fixed bottom-0 md:top-0 md:bottom-auto left-0 right-0 z-50 apple-nav pb-safe border-t md:border-b md:border-t-0 border-black/5 dark:border-white/5 md:pb-0">
+            <nav className="fixed bottom-0 md:top-0 md:bottom-auto left-0 right-0 z-50 apple-nav pb-safe border-t md:border-b md:border-t-0 border-white/10 md:pb-0 shadow-2xl">
               <div className="max-w-7xl mx-auto px-2 md:px-6 flex md:justify-between items-center h-[64px] md:h-auto">
-                <div className="hidden md:flex items-center gap-2 mr-6 py-4 shrink-0"><IconZap c="w-6 h-6 text-apple-text"/><span className="font-black text-apple-text tracking-tight text-xl">LifeOS</span></div>
+                <div className="hidden md:flex items-center gap-3 mr-6 py-4 shrink-0">
+                  <LuxeIcon c="w-8 h-8" />
+                  <span className="font-black text-white tracking-widest uppercase text-xl">LuxeOS</span>
+                </div>
                 <div className="flex items-center justify-between md:justify-start space-x-1 md:space-x-2 overflow-x-auto hide-scrollbar w-full h-full md:py-4 px-2 md:px-0">
                   {TABS.map(tab => (
-                    <button key={tab} onClick={() => setActiveTab(tab)} className={`relative flex flex-col md:flex-row items-center justify-center px-1 py-1 md:px-4 md:py-2 min-w-[60px] md:min-w-0 h-full md:h-auto rounded-none md:rounded-full whitespace-nowrap ${activeTab === tab ? 'text-apple-blue md:text-white' : 'text-apple-gray dark:text-gray-400'}`}>
+                    <button key={tab} onClick={() => setActiveTab(tab)} className={`relative flex flex-col md:flex-row items-center justify-center px-1 py-1 md:px-4 md:py-2 min-w-[60px] md:min-w-0 h-full md:h-auto rounded-none md:rounded-full whitespace-nowrap transition-colors ${activeTab === tab ? 'text-white' : 'text-gray-400 hover:text-white'}`}>
                       <div className="md:hidden mb-1 flex items-center justify-center transition-transform hover:scale-110">{getTabIcon(tab, activeTab === tab)}</div>
-                      {activeTab === tab && <motion.div layoutId="nav-pill" className="hidden md:block absolute inset-0 bg-[#1d1d1f] dark:bg-white rounded-full" transition={{type:'spring'}} />}
-                      <span className={`relative z-10 text-[9px] md:text-sm font-bold tracking-tight ${activeTab === tab ? 'dark:md:text-black' : ''}`}>{tab}</span>
+                      {activeTab === tab && <motion.div layoutId="nav-pill" className="hidden md:block absolute inset-0 bg-white/20 rounded-full border border-white/20 shadow-[0_0_10px_rgba(255,255,255,0.2)]" transition={{type:'spring'}} />}
+                      <span className={`relative z-10 text-[9px] md:text-sm font-bold tracking-tight`}>{tab}</span>
                     </button>
                   ))}
                 </div>
-                <button onClick={() => setShowSettings(true)} className="hidden md:flex ml-4 p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 shrink-0"><IconSettings c="w-6 h-6 text-apple-text" /></button>
+                <button onClick={() => setShowSettings(true)} className="hidden md:flex ml-4 p-2 rounded-full hover:bg-white/10 shrink-0 transition-colors"><IconSettings c="w-6 h-6 text-white" /></button>
               </div>
             </nav>
           )}
@@ -920,13 +965,13 @@
           <main className={`max-w-7xl mx-auto px-4 md:px-6 py-6 ${role === 'founder' ? 'pt-6 md:pt-32 pb-24 md:pb-16' : 'pt-8 md:pt-12 pb-12'}`}>
             <div className="flex justify-between items-start mb-10 md:mb-16 mt-2 md:mt-0">
               <div>
-                <h1 className="text-3xl md:text-6xl font-black text-apple-text mb-1 md:mb-4 tracking-tight">{getGreeting()}, {role === 'founder' ? 'Hamas' : 'Misbah'}.</h1>
-                <p className="text-apple-gray text-sm md:text-2xl font-bold tracking-tight">{role === 'founder' ? 'Your intelligent cloud engine is ready.' : 'Associate Ledger Access Active.'}</p>
+                <h1 className="heading-clamp text-white mb-1 md:mb-4 tracking-tight drop-shadow-md">{getGreeting()}, {role === 'founder' ? 'Hamas' : 'Misbah'}.</h1>
+                <p className="text-gray-300 text-sm md:text-2xl font-bold tracking-tight">{role === 'founder' ? 'Your premium cloud engine is active.' : 'Associate Ledger Access Active.'}</p>
               </div>
-              <button onClick={handleLogout} className="px-4 py-2 bg-white dark:bg-[#111] border border-black/5 dark:border-white/5 rounded-full text-[10px] md:text-xs font-bold text-apple-gray shadow-sm hover:scale-105 transition-transform">Logout</button>
+              <button onClick={handleLogout} className="px-4 py-2 bg-white/10 border border-white/20 rounded-full text-[10px] md:text-xs font-bold text-white shadow-sm hover:scale-105 hover:bg-apple-red transition-all">Logout</button>
             </div>
             <AnimatePresence mode="wait">
-              <motion.div key={activeTab} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-10}} transition={{type:'spring'}}>
+              <motion.div key={activeTab} initial={{opacity:0,y:20, scale:0.98}} animate={{opacity:1,y:0, scale:1}} exit={{opacity:0,y:-20, scale:0.98}} transition={{type:'spring', stiffness:300, damping:25}}>
                 {activeTab === 'Daily Routine' && <DailyRoutine />} 
                 {activeTab === 'Fitness' && <Fitness />} 
                 {activeTab === 'Diet' && <Diet />} 
@@ -951,17 +996,6 @@
         const saved = localStorage.getItem('lifeos_session');
         return saved ? JSON.parse(saved) : null;
       });
-
-      const [systemDark, setSystemDark] = useState(window.matchMedia('(prefers-color-scheme: dark)').matches);
-
-      useEffect(() => {
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        const handleChange = (e) => setSystemDark(e.matches);
-        mediaQuery.addEventListener('change', handleChange);
-        if (systemDark && !session) document.documentElement.classList.add('dark');
-        else if (!session) document.documentElement.classList.remove('dark');
-        return () => mediaQuery.removeEventListener('change', handleChange);
-      }, [systemDark, session]);
 
       const handleLogin = (role, dbId) => {
         const newSession = { role, dbId };
