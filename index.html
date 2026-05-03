@@ -20,7 +20,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   
   <script>
     tailwind.config = {
@@ -28,13 +28,13 @@
       theme: {
         extend: {
           colors: { apple: { bg: '#f5f5f7', card: '#ffffff', text: '#1d1d1f', gray: '#86868b', lightGray: '#e5e5ea', blue: '#0066cc', green: '#34c759', red: '#ff3b30', orange: '#ff9500' } },
-          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] }
+          fontFamily: { sans: ['Nunito', 'sans-serif'] }
         }
       }
     }
   </script>
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f5f5f7; color: #1d1d1f; margin: 0; padding: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; transition: background-color 0.5s ease, color 0.5s ease; }
+    body { font-family: 'Nunito', sans-serif; background-color: #f5f5f7; color: #1d1d1f; margin: 0; padding: 0; overflow-x: hidden; -webkit-font-smoothing: antialiased; transition: background-color 0.5s ease, color 0.5s ease; }
     
     /* Pure Black Dark Mode */
     .dark body { background-color: #000000; color: #ffffff; }
@@ -85,7 +85,8 @@
     @keyframes shieldFlame { 0% { filter: drop-shadow(0 0 10px #ff9500); } 100% { filter: drop-shadow(0 0 25px #ff3b30); transform: translateY(-5px); } }
 
     /* Markdown Styling */
-    .markdown-content p { margin-bottom: 1em; line-height: 1.6; }
+    .markdown-content p { margin-bottom: 1em; line-height: 1.6; font-size: 0.95rem; }
+    @media(min-width: 768px) { .markdown-content p { font-size: 1.125rem; } }
     .markdown-content h1, .markdown-content h2, .markdown-content h3 { font-weight: 800; margin-bottom: 0.5em; margin-top: 1.5em; }
     .markdown-content strong { color: #fff; font-weight: 800; }
     .markdown-content ul { list-style-type: disc; padding-left: 1.5em; margin-bottom: 1em; }
@@ -106,6 +107,10 @@
     const AppStateContext = createContext();
     const ToastContext = createContext();
 
+    // The entire application will read/write to hamas_ist to keep the ledger and history shared.
+    // The role will simply restrict the UI visibility.
+    const DB_IDENTIFIER = 'hamas_ist';
+
     const AppStateProvider = ({ children }) => {
       const [loading, setLoading] = useState(true);
       const [appData, setAppData] = useState({
@@ -117,7 +122,7 @@
       useEffect(() => {
         const fetchCloudData = async () => {
           try {
-            const { data, error } = await supabase.from('lifeos_data').select('*').eq('id', 'hamas_ist').single();
+            const { data, error } = await supabase.from('lifeos_data').select('*').eq('id', DB_IDENTIFIER).single();
             if (data && data.payload) {
               setAppData(prev => ({ ...prev, ...data.payload }));
               console.log('[Supabase] Initial Pull Success:', data.payload);
@@ -133,7 +138,7 @@
         // Realtime Subscription (The Heartbeat)
         const channel = supabase.channel('room1')
           .on('postgres_changes', { event: '*', schema: 'public', table: 'lifeos_data' }, (payload) => {
-            if (payload.new && payload.new.id === 'hamas_ist' && payload.new.payload) {
+            if (payload.new && payload.new.id === DB_IDENTIFIER && payload.new.payload) {
               console.log('[Supabase] Realtime Heartbeat Received:', payload.new.payload);
               setAppData(prev => ({ ...prev, ...payload.new.payload }));
             }
@@ -151,7 +156,7 @@
           clearTimeout(window.syncTimeout);
           window.syncTimeout = setTimeout(async () => {
             try {
-              await supabase.from('lifeos_data').upsert({ id: 'hamas_ist', payload: newState });
+              await supabase.from('lifeos_data').upsert({ id: DB_IDENTIFIER, payload: newState });
               console.log('[Supabase] Sync Push Success', new Date().toLocaleTimeString());
             } catch(e) { console.error('[Supabase] Sync Push Failed', e); }
           }, 1500); // 1.5s debounce for Omni-Sync
@@ -221,8 +226,8 @@
             <AnimatePresence>
               {toasts.map(t => (
                 <motion.div key={t.id} initial={{ opacity: 0, y: -40, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -20, scale: 0.95 }} className="bg-white/95 dark:bg-[#111]/95 backdrop-blur-2xl border border-black/5 shadow-[0_16px_40px_rgba(0,0,0,0.12)] dark:shadow-[0_16px_40px_rgba(0,0,0,0.6)] rounded-3xl p-5 w-full text-center">
-                  <h4 className="font-semibold text-apple-text text-lg tracking-tight">{t.title}</h4>
-                  <p className="text-apple-gray text-base mt-1 font-medium leading-tight">{t.message}</p>
+                  <h4 className="font-bold text-apple-text text-sm md:text-lg tracking-tight">{t.title}</h4>
+                  <p className="text-apple-gray text-xs md:text-sm mt-1 font-semibold leading-tight">{t.message}</p>
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -232,7 +237,7 @@
     };
 
     // --- Aggressive Notifier Engine ---
-    const RoutineNotifier = () => {
+    const RoutineNotifier = ({ role }) => {
       const { showToast } = useToast();
       const { appData } = useAppState();
       const tasksRef = useRef(appData.todo);
@@ -241,6 +246,7 @@
       const [triggered, setTriggered] = useState({});
 
       useEffect(() => {
+        if (role !== 'founder') return; // Associates do not get notifications
         const checkTime = () => {
           const now = new Date(); const h = now.getHours(); const m = now.getMinutes();
           const isWeekend = now.getDay() === 0 || now.getDay() === 6;
@@ -288,7 +294,7 @@
           });
         };
         const int = setInterval(checkTime, 30000); checkTime(); return () => clearInterval(int);
-      }, [triggered, showToast]);
+      }, [triggered, showToast, role]);
       return null;
     };
 
@@ -297,21 +303,21 @@
       if (!slot) return null;
       return (
         <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/60 backdrop-blur-md p-4">
-          <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} className="apple-card p-8 w-full max-w-md relative overflow-hidden shadow-[0_0_60px_rgba(52,199,89,0.2)] dark:shadow-[0_0_60px_rgba(52,199,89,0.3)] border border-apple-green/30">
+          <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} className="apple-card p-6 md:p-8 w-full max-w-md relative overflow-hidden shadow-[0_0_60px_rgba(52,199,89,0.2)] dark:shadow-[0_0_60px_rgba(52,199,89,0.3)] border border-apple-green/30">
             <div className="absolute top-0 left-0 w-full h-2 bg-apple-green"></div>
-            <button onClick={close} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-[#f5f5f7] rounded-full text-apple-text font-bold">X</button>
+            <button onClick={close} className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center bg-[#f5f5f7] dark:bg-[#111] dark:text-white rounded-full text-apple-text font-bold">X</button>
             <div className="flex items-center gap-4 mb-6">
               <div className="p-3 bg-apple-green/10 rounded-2xl">{slot.icon}</div>
               <div>
-                <h3 className="text-2xl font-bold text-apple-text leading-tight">{slot.label}</h3>
-                <p className="text-apple-green font-bold text-sm tracking-widest uppercase">{slot.time}</p>
+                <h3 className="text-xl md:text-2xl font-bold text-apple-text leading-tight">{slot.label}</h3>
+                <p className="text-apple-green font-bold text-xs md:text-sm tracking-widest uppercase">{slot.time}</p>
               </div>
             </div>
             <div className="space-y-4 mb-6">
-               <div className="p-4 bg-[#f5f5f7] rounded-2xl flex items-center gap-3"><IconTarget c="w-5 h-5 text-apple-gray"/> <span className="font-semibold text-apple-text">Focus on the objective.</span></div>
-               <div className="p-4 bg-[#f5f5f7] rounded-2xl flex items-center gap-3"><IconBrain c="w-5 h-5 text-apple-gray"/> <span className="font-semibold text-apple-text">Zero distractions.</span></div>
+               <div className="p-4 bg-[#f5f5f7] rounded-2xl flex items-center gap-3"><IconTarget c="w-5 h-5 text-apple-gray"/> <span className="font-bold text-sm text-apple-text">Focus on the objective.</span></div>
+               <div className="p-4 bg-[#f5f5f7] rounded-2xl flex items-center gap-3"><IconBrain c="w-5 h-5 text-apple-gray"/> <span className="font-bold text-sm text-apple-text">Zero distractions.</span></div>
             </div>
-            <button onClick={close} className="w-full py-4 bg-[#1d1d1f] dark:bg-apple-green text-white dark:text-black rounded-2xl font-bold text-lg hover:scale-[1.02] transition-transform shadow-xl">Engage Mission</button>
+            <button onClick={close} className="w-full py-4 bg-[#1d1d1f] dark:bg-apple-green text-white dark:text-black rounded-2xl font-bold text-sm md:text-lg hover:scale-[1.02] transition-transform shadow-xl">Engage Mission</button>
           </motion.div>
         </div>
       );
@@ -322,24 +328,24 @@
       const [selectedSlot, setSelectedSlot] = useState(null);
       useEffect(() => { const int = setInterval(() => setCurrentMins(new Date().getHours() * 60 + new Date().getMinutes()), 60000); return () => clearInterval(int); }, []);
       return (
-        <div className="apple-card p-8 md:p-12 h-full max-w-3xl mx-auto relative">
-          <h3 className="text-3xl font-semibold tracking-tight mb-10 flex items-center gap-4 text-apple-text">
-            {title === 'Weekday' ? <IconBriefcase c="w-8 h-8 text-apple-blue" /> : <IconCoffee c="w-8 h-8 text-apple-blue" />} {title}
+        <div className="apple-card p-6 md:p-12 h-full max-w-3xl mx-auto relative">
+          <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-8 md:mb-10 flex items-center gap-3 md:gap-4 text-apple-text">
+            {title === 'Weekday' ? <IconBriefcase c="w-6 h-6 md:w-8 md:h-8 text-apple-blue" /> : <IconCoffee c="w-6 h-6 md:w-8 md:h-8 text-apple-blue" />} {title}
           </h3>
-          <div className="relative border-l-2 border-apple-lightGray dark:border-white/10 pl-8 space-y-10">
+          <div className="relative border-l-2 border-apple-lightGray dark:border-white/10 pl-6 md:pl-8 space-y-8 md:space-y-10">
             {schedule.map((item, idx) => {
               let itemMins = item.h * 60 + item.m;
               let nextItemMins = schedule[idx + 1] ? schedule[idx + 1].h * 60 + schedule[idx + 1].m : 24 * 60;
               let isCurrent = nextItemMins > itemMins ? (currentMins >= itemMins && currentMins < nextItemMins) : (currentMins >= itemMins || currentMins < nextItemMins);
               return (
                 <div key={idx} className="relative cursor-pointer group" onClick={() => setSelectedSlot(item)}>
-                  <div className={`absolute -left-[41px] top-2 w-4 h-4 rounded-full border-2 transition-all group-hover:scale-150 ${isCurrent ? 'bg-apple-blue border-white dark:border-black shadow-[0_0_0_4px_rgba(0,102,204,0.2)] scale-125' : 'bg-white dark:bg-[#111] border-apple-lightGray dark:border-gray-600'}`} />
+                  <div className={`absolute -left-[33px] md:-left-[41px] top-1.5 md:top-2 w-4 h-4 rounded-full border-2 transition-all group-hover:scale-150 ${isCurrent ? 'bg-apple-blue border-white dark:border-black shadow-[0_0_0_4px_rgba(0,102,204,0.2)] scale-125' : 'bg-white dark:bg-[#111] border-apple-lightGray dark:border-gray-600'}`} />
                   <div className={`transition-all duration-300 ${isCurrent ? 'translate-x-2' : 'group-hover:translate-x-2 opacity-70 group-hover:opacity-100'}`}>
-                    <div className="flex items-center gap-4 mb-1">
-                      <span className={`text-sm font-semibold tracking-tight ${isCurrent ? 'text-apple-blue' : 'text-apple-gray'}`}>{item.time}</span>
+                    <div className="flex items-center gap-3 md:gap-4 mb-1">
+                      <span className={`text-xs md:text-sm font-bold tracking-tight ${isCurrent ? 'text-apple-blue' : 'text-apple-gray'}`}>{item.time}</span>
                       <div className={`${isCurrent ? 'text-apple-blue' : 'text-apple-gray'}`}>{item.icon}</div>
                     </div>
-                    <h4 className={`text-xl font-semibold tracking-tight ${isCurrent ? 'text-apple-text' : 'text-apple-gray'}`}>{item.label}</h4>
+                    <h4 className={`text-sm md:text-xl font-bold tracking-tight ${isCurrent ? 'text-apple-text' : 'text-apple-gray'}`}>{item.label}</h4>
                   </div>
                 </div>
               );
@@ -357,20 +363,21 @@
       return <div className="w-full">{isWeekend ? <RoutineTimeline title="Weekend" schedule={WEEKEND_SCHEDULE} /> : <RoutineTimeline title="Weekday" schedule={WEEKDAY_SCHEDULE} />}</div>;
     };
 
-    const Finance = () => {
+    const Finance = ({ role }) => {
       const { showToast } = useToast();
       const { appData, updateAppData } = useAppState();
       const txs = appData.finance;
       const setTxs = (updater) => updateAppData('finance', updater);
       
-      const [newTx, setNewTx] = useState({ desc: '', amount: '', paidBy: 'hamas', splitType: 'combine' });
+      const loggedUser = role === 'founder' ? 'hamas' : 'misbah';
+      const [newTx, setNewTx] = useState({ desc: '', amount: '', paidBy: loggedUser, splitType: 'combine' });
 
       const logTx = (e) => {
         e.preventDefault();
         if (!newTx.desc || !newTx.amount) return;
         const tx = { id: Date.now(), date: new Date().toLocaleDateString(), ...newTx, amount: Number(newTx.amount) };
         setTxs(p => [tx, ...p]);
-        setNewTx({ desc: '', amount: '', paidBy: 'hamas', splitType: 'combine' });
+        setNewTx({ desc: '', amount: '', paidBy: loggedUser, splitType: 'combine' });
         showToast(`Logged ${tx.desc} for Rs ${tx.amount}`, "Finance Ledger");
       };
 
@@ -397,68 +404,74 @@
       });
 
       return (
-        <div className="space-y-8 max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className={`apple-card p-8 md:col-span-3 flex items-center justify-between border-l-8 ${balance > 0 ? 'border-apple-green' : balance < 0 ? 'border-apple-red' : 'border-apple-gray'}`}>
+        <div className="space-y-6 md:space-y-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+            <div className={`apple-card p-6 md:p-8 md:col-span-3 flex items-center justify-between border-l-8 ${balance > 0 ? 'border-apple-green' : balance < 0 ? 'border-apple-red' : 'border-apple-gray'}`}>
               <div>
-                <h3 className="text-3xl font-bold text-apple-text mb-2">Net Settlement</h3>
-                <p className="text-apple-gray font-medium text-xl">
-                  {balance === 0 ? "You are fully settled." : balance > 0 ? `Misbah owes you:` : `You owe Misbah:`}
+                <h3 className="text-xl md:text-3xl font-bold text-apple-text mb-1 md:mb-2">Net Settlement</h3>
+                <p className="text-apple-gray font-bold text-xs md:text-xl">
+                  {balance === 0 ? "Fully settled." : balance > 0 ? `Misbah owes Hamas:` : `Hamas owes Misbah:`}
                 </p>
               </div>
-              <div className={`text-6xl font-black ${balance > 0 ? 'text-apple-green' : balance < 0 ? 'text-apple-red' : 'text-apple-gray'}`}>
+              <div className={`text-3xl md:text-6xl font-black ${balance > 0 ? 'text-apple-green' : balance < 0 ? 'text-apple-red' : 'text-apple-gray'}`}>
                 Rs {Math.abs(balance)}
               </div>
             </div>
             
-            <div className="apple-card p-8 text-center"><div className="text-4xl font-bold text-apple-text mb-2">Rs {hamasSpent}</div><p className="text-apple-gray font-bold uppercase text-sm">Hamas Total Spent</p></div>
-            <div className="apple-card p-8 text-center"><div className="text-4xl font-bold text-apple-text mb-2">Rs {misbahSpent}</div><p className="text-apple-gray font-bold uppercase text-sm">Misbah Total Spent</p></div>
-            <div onClick={settleDebt} className="apple-card p-8 text-center bg-[#1d1d1f] dark:bg-white text-white dark:text-black shadow-xl flex flex-col justify-center items-center cursor-pointer hover:scale-[1.02] transition-transform"><span className="font-bold text-2xl">Settle Debt</span><span className="text-sm mt-2 font-medium opacity-70">Clear the ledger</span></div>
+            <div className="apple-card p-6 md:p-8 text-center"><div className="text-2xl md:text-4xl font-bold text-apple-text mb-1 md:mb-2">Rs {hamasSpent}</div><p className="text-apple-gray font-bold uppercase text-xs">Hamas Total Spent</p></div>
+            <div className="apple-card p-6 md:p-8 text-center"><div className="text-2xl md:text-4xl font-bold text-apple-text mb-1 md:mb-2">Rs {misbahSpent}</div><p className="text-apple-gray font-bold uppercase text-xs">Misbah Total Spent</p></div>
+            {role === 'founder' && (
+              <div onClick={settleDebt} className="apple-card p-6 md:p-8 text-center bg-[#1d1d1f] dark:bg-white text-white dark:text-black shadow-xl flex flex-col justify-center items-center cursor-pointer hover:scale-[1.02] transition-transform"><span className="font-bold text-lg md:text-2xl">Settle Debt</span><span className="text-xs mt-1 font-bold opacity-70">Clear the ledger</span></div>
+            )}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-             <div className="apple-card p-8 lg:col-span-1 h-fit">
-                <h3 className="text-2xl font-bold text-apple-text mb-6">Log Expense</h3>
-                <form onSubmit={logTx} className="space-y-5">
-                  <input type="text" placeholder="What did you buy?" className="w-full p-4 bg-[#f5f5f7] rounded-2xl font-medium" value={newTx.desc} onChange={e=>setNewTx({...newTx, desc:e.target.value})} />
-                  <input type="number" placeholder="Amount (Rs)" className="w-full p-4 bg-[#f5f5f7] rounded-2xl font-bold" value={newTx.amount} onChange={e=>setNewTx({...newTx, amount:e.target.value})} />
-                  <div className="space-y-3">
-                    <label className="text-xs font-bold text-apple-gray uppercase">Who Paid?</label>
-                    <div className="flex gap-2">
-                      <button type="button" onClick={()=>setNewTx({...newTx, paidBy:'hamas'})} className={`flex-1 py-3 rounded-xl font-bold transition-all ${newTx.paidBy==='hamas'?'bg-apple-blue text-white shadow-md':'bg-[#f5f5f7] text-apple-gray'}`}>Hamas</button>
-                      <button type="button" onClick={()=>setNewTx({...newTx, paidBy:'misbah'})} className={`flex-1 py-3 rounded-xl font-bold transition-all ${newTx.paidBy==='misbah'?'bg-apple-blue text-white shadow-md':'bg-[#f5f5f7] text-apple-gray'}`}>Misbah</button>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+             <div className="apple-card p-6 md:p-8 lg:col-span-1 h-fit">
+                <h3 className="text-xl md:text-2xl font-bold text-apple-text mb-4 md:mb-6">Log Expense</h3>
+                <form onSubmit={logTx} className="space-y-4 md:space-y-5">
+                  <input type="text" placeholder="What did you buy?" className="w-full p-3 md:p-4 bg-[#f5f5f7] rounded-xl font-bold text-sm md:text-base" value={newTx.desc} onChange={e=>setNewTx({...newTx, desc:e.target.value})} />
+                  <input type="number" placeholder="Amount (Rs)" className="w-full p-3 md:p-4 bg-[#f5f5f7] rounded-xl font-bold text-sm md:text-base" value={newTx.amount} onChange={e=>setNewTx({...newTx, amount:e.target.value})} />
+                  
+                  {role === 'founder' && (
+                    <div className="space-y-2 md:space-y-3">
+                      <label className="text-[10px] md:text-xs font-bold text-apple-gray uppercase">Who Paid?</label>
+                      <div className="flex gap-2">
+                        <button type="button" onClick={()=>setNewTx({...newTx, paidBy:'hamas'})} className={`flex-1 py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.paidBy==='hamas'?'bg-apple-blue text-white shadow-md':'bg-[#f5f5f7] text-apple-gray'}`}>Hamas</button>
+                        <button type="button" onClick={()=>setNewTx({...newTx, paidBy:'misbah'})} className={`flex-1 py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.paidBy==='misbah'?'bg-apple-blue text-white shadow-md':'bg-[#f5f5f7] text-apple-gray'}`}>Misbah</button>
+                      </div>
                     </div>
-                  </div>
-                  <div className="space-y-3">
-                    <label className="text-xs font-bold text-apple-gray uppercase">How to Split?</label>
+                  )}
+
+                  <div className="space-y-2 md:space-y-3">
+                    <label className="text-[10px] md:text-xs font-bold text-apple-gray uppercase">How to Split?</label>
                     <div className="flex flex-col gap-2">
-                      <button type="button" onClick={()=>setNewTx({...newTx, splitType:'combine'})} className={`w-full py-3 rounded-xl font-bold transition-all ${newTx.splitType==='combine'?'bg-apple-text text-white dark:bg-white dark:text-black':'bg-[#f5f5f7] text-apple-gray'}`}>Combine (50/50)</button>
-                      <button type="button" onClick={()=>setNewTx({...newTx, splitType:'misbah'})} className={`w-full py-3 rounded-xl font-bold transition-all ${newTx.splitType==='misbah'?'bg-apple-text text-white dark:bg-white dark:text-black':'bg-[#f5f5f7] text-apple-gray'}`}>100% For Misbah</button>
-                      <button type="button" onClick={()=>setNewTx({...newTx, splitType:'hamas'})} className={`w-full py-3 rounded-xl font-bold transition-all ${newTx.splitType==='hamas'?'bg-apple-text text-white dark:bg-white dark:text-black':'bg-[#f5f5f7] text-apple-gray'}`}>100% For Hamas</button>
+                      <button type="button" onClick={()=>setNewTx({...newTx, splitType:'combine'})} className={`w-full py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.splitType==='combine'?'bg-apple-text text-white dark:bg-white dark:text-black':'bg-[#f5f5f7] text-apple-gray'}`}>Combine (50/50)</button>
+                      <button type="button" onClick={()=>setNewTx({...newTx, splitType:'misbah'})} className={`w-full py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.splitType==='misbah'?'bg-apple-text text-white dark:bg-white dark:text-black':'bg-[#f5f5f7] text-apple-gray'}`}>100% For Misbah</button>
+                      <button type="button" onClick={()=>setNewTx({...newTx, splitType:'hamas'})} className={`w-full py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm transition-all ${newTx.splitType==='hamas'?'bg-apple-text text-white dark:bg-white dark:text-black':'bg-[#f5f5f7] text-apple-gray'}`}>100% For Hamas</button>
                     </div>
                   </div>
-                  <button type="submit" className="w-full py-4 mt-2 bg-apple-green text-white font-bold rounded-2xl shadow-md hover:scale-[1.02] transition-transform">Log Transaction</button>
+                  <button type="submit" className="w-full py-3 md:py-4 mt-2 bg-apple-green text-white font-bold rounded-xl shadow-md hover:scale-[1.02] transition-transform text-sm md:text-base">Log Transaction</button>
                 </form>
              </div>
 
-             <div className="apple-card p-8 lg:col-span-2">
-                <h3 className="text-2xl font-bold text-apple-text mb-6">Transaction History</h3>
+             <div className="apple-card p-6 md:p-8 lg:col-span-2">
+                <h3 className="text-xl md:text-2xl font-bold text-apple-text mb-4 md:mb-6">Transaction History</h3>
                 <div className="space-y-3 max-h-[600px] overflow-y-auto pr-2">
-                   {txs.length === 0 && <p className="text-apple-gray font-medium text-lg text-center py-10">No expenses logged yet.</p>}
+                   {txs.length === 0 && <p className="text-apple-gray font-bold text-sm text-center py-10">No expenses logged yet.</p>}
                    {txs.map(t => (
-                     <div key={t.id} className="flex flex-col md:flex-row items-start md:items-center justify-between p-5 bg-[#f5f5f7] rounded-2xl gap-4">
-                       <div className="flex items-center gap-4">
-                         <div className={`w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg shrink-0 shadow-sm ${t.paidBy==='hamas'?'bg-apple-blue':'bg-apple-orange'}`}>{t.paidBy==='hamas'?'H':'M'}</div>
+                     <div key={t.id} className="flex flex-col md:flex-row items-start md:items-center justify-between p-4 bg-[#f5f5f7] rounded-xl gap-3">
+                       <div className="flex items-center gap-3">
+                         <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm ${t.paidBy==='hamas'?'bg-apple-blue':'bg-apple-orange'}`}>{t.paidBy==='hamas'?'H':'M'}</div>
                          <div>
-                           <h5 className="font-bold text-apple-text text-xl leading-tight mb-1">{t.desc}</h5>
-                           <div className="text-sm font-semibold text-apple-gray">
+                           <h5 className="font-bold text-apple-text text-sm md:text-lg leading-tight mb-0.5">{t.desc}</h5>
+                           <div className="text-xs font-bold text-apple-gray">
                              {t.date} • <span className="uppercase text-apple-blue">{t.splitType === 'combine' ? '50/50 Split' : t.splitType === 'misbah' ? 'For Misbah' : 'For Hamas'}</span>
                            </div>
                          </div>
                        </div>
-                       <div className="flex items-center gap-6 self-end md:self-auto">
-                         <span className="font-black text-apple-text text-2xl">Rs {t.amount}</span>
-                         <button onClick={()=>removeTx(t.id)} className="w-10 h-10 flex items-center justify-center bg-white text-apple-red font-bold rounded-full shadow-sm hover:scale-110 transition-transform">X</button>
+                       <div className="flex items-center gap-4 self-end md:self-auto">
+                         <span className="font-black text-apple-text text-lg md:text-xl">Rs {t.amount}</span>
+                         <button onClick={()=>removeTx(t.id)} className="w-8 h-8 flex items-center justify-center bg-white text-apple-red font-bold rounded-full shadow-sm hover:scale-110 transition-transform text-xs">X</button>
                        </div>
                      </div>
                    ))}
@@ -473,9 +486,9 @@
       const [phase, setPhase] = useState('Foundation'); const phases = ['Foundation', 'Progression', 'Performance'];
       const workouts = { Foundation: { A: ['Push-ups (3x8-12)', 'Bodyweight Squats (3x15)', 'Plank (3x30s)'], B: ['Inverted Rows / Pull-ups (3x5-8)', 'Lunges (3x12/leg)', 'Glute Bridges (3x15)'] }, Progression: { A: ['Diamond Push-ups (3x8-12)', 'Jump Squats (3x12)', 'Side Planks (3x30s/side)'], B: ['Pull-ups (3x8-10)', 'Bulgarian Split Squats (3x10/leg)', 'Single-leg Bridges (3x12/leg)'] }, Performance: { A: ['Archer Push-ups (3x6/side)', 'Pistol Squats (3x5/side)', 'L-Sit progression (3x15s)'], B: ['Muscle-up progression (3x5)', 'Shrimp Squats (3x8/leg)', 'Dragon Flags (3x8)'] } };
       return (
-        <div className="space-y-10">
-          <div className="flex justify-center"><div className="bg-white/80 dark:bg-black/80 backdrop-blur-md shadow-sm flex items-center p-1.5 rounded-full border border-black/5">{phases.map(p => (<button key={p} onClick={() => setPhase(p)} className={`relative px-8 py-3 rounded-full text-sm font-semibold transition-colors ${phase === p ? 'text-white dark:text-black' : 'text-apple-gray hover:text-apple-text'}`}>{phase === p && <motion.div layoutId="fitness-pill" className="absolute inset-0 bg-[#1d1d1f] dark:bg-white rounded-full shadow-md" transition={{ type: 'spring' }} />}<span className="relative z-10">{p}</span></button>))}</div></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">{['A', 'B'].map(type => (<div key={type} className="apple-card p-10"><div className="flex items-center gap-5 mb-10"><div className="w-16 h-16 rounded-2xl bg-[#f5f5f7] flex items-center justify-center"><span className="text-3xl font-bold text-apple-text">{type}</span></div><h3 className="text-3xl font-semibold tracking-tight text-apple-text">Workout {type}</h3></div><ul className="space-y-5">{workouts[phase][type].map((ex, i) => (<li key={i} className="flex items-center gap-4 p-5 rounded-2xl bg-[#f5f5f7]/50 border border-black/5"><div className="w-8 h-8 rounded-full bg-apple-blue/10 flex items-center justify-center shrink-0"><IconCheck c="w-5 h-5 text-apple-blue" /></div><span className="text-apple-text font-medium text-lg tracking-tight">{ex}</span></li>))}</ul></div>))}</div>
+        <div className="space-y-6 md:space-y-10">
+          <div className="flex justify-center"><div className="bg-white/80 dark:bg-black/80 backdrop-blur-md shadow-sm flex items-center p-1.5 rounded-full border border-black/5 overflow-x-auto hide-scrollbar max-w-full">{phases.map(p => (<button key={p} onClick={() => setPhase(p)} className={`relative px-4 py-2 md:px-8 md:py-3 rounded-full text-xs md:text-sm font-bold transition-colors whitespace-nowrap ${phase === p ? 'text-white dark:text-black' : 'text-apple-gray hover:text-apple-text'}`}>{phase === p && <motion.div layoutId="fitness-pill" className="absolute inset-0 bg-[#1d1d1f] dark:bg-white rounded-full shadow-md" transition={{ type: 'spring' }} />}<span className="relative z-10">{p}</span></button>))}</div></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">{['A', 'B'].map(type => (<div key={type} className="apple-card p-6 md:p-10"><div className="flex items-center gap-4 mb-6 md:mb-10"><div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-[#f5f5f7] flex items-center justify-center"><span className="text-2xl md:text-3xl font-bold text-apple-text">{type}</span></div><h3 className="text-2xl md:text-3xl font-bold tracking-tight text-apple-text">Workout {type}</h3></div><ul className="space-y-4">{workouts[phase][type].map((ex, i) => (<li key={i} className="flex items-center gap-3 md:gap-4 p-4 rounded-xl bg-[#f5f5f7]/50 border border-black/5"><div className="w-8 h-8 rounded-full bg-apple-blue/10 flex items-center justify-center shrink-0"><IconCheck c="w-4 h-4 text-apple-blue" /></div><span className="text-apple-text font-bold text-sm md:text-lg tracking-tight">{ex}</span></li>))}</ul></div>))}</div>
         </div>
       );
     };
@@ -483,10 +496,10 @@
     const AutoDietPlan = ({ targetCal }) => {
       const bC = Math.round(targetCal * 0.25), lC = Math.round(targetCal * 0.35), dC = Math.round(targetCal * 0.30);
       return (
-        <div className="space-y-4">
-          <div className="p-5 bg-[#f5f5f7] rounded-[20px]"><div className="flex justify-between items-center mb-2"><h4 className="font-semibold text-apple-text text-lg">Breakfast</h4><span className="text-apple-blue font-bold text-sm">~{bC} kcal</span></div><p className="text-apple-gray font-medium leading-relaxed">3-4 Whole Eggs, 2 slices whole wheat bread, Black Coffee.</p></div>
-          <div className="p-5 bg-[#f5f5f7] rounded-[20px]"><div className="flex justify-between items-center mb-2"><h4 className="font-semibold text-apple-text text-lg">Lunch</h4><span className="text-apple-blue font-bold text-sm">~{lC} kcal</span></div><p className="text-apple-gray font-medium leading-relaxed">2 Roti, 1.5 cups Daal / Chana, Large Salad.</p></div>
-          <div className="p-5 bg-[#f5f5f7] rounded-[20px]"><div className="flex justify-between items-center mb-2"><h4 className="font-semibold text-apple-text text-lg">Dinner</h4><span className="text-apple-blue font-bold text-sm">~{dC} kcal</span></div><p className="text-apple-gray font-medium leading-relaxed">200g Chicken Tikka/Boti, 1 Roti, 1/2 cup Dahi.</p></div>
+        <div className="space-y-3 md:space-y-4">
+          <div className="p-4 bg-[#f5f5f7] rounded-xl"><div className="flex justify-between items-center mb-1"><h4 className="font-bold text-apple-text text-sm md:text-lg">Breakfast</h4><span className="text-apple-blue font-bold text-xs">~{bC} kcal</span></div><p className="text-apple-gray font-semibold text-xs md:text-sm">3-4 Whole Eggs, 2 slices whole wheat bread, Black Coffee.</p></div>
+          <div className="p-4 bg-[#f5f5f7] rounded-xl"><div className="flex justify-between items-center mb-1"><h4 className="font-bold text-apple-text text-sm md:text-lg">Lunch</h4><span className="text-apple-blue font-bold text-xs">~{lC} kcal</span></div><p className="text-apple-gray font-semibold text-xs md:text-sm">2 Roti, 1.5 cups Daal / Chana, Large Salad.</p></div>
+          <div className="p-4 bg-[#f5f5f7] rounded-xl"><div className="flex justify-between items-center mb-1"><h4 className="font-bold text-apple-text text-sm md:text-lg">Dinner</h4><span className="text-apple-blue font-bold text-xs">~{dC} kcal</span></div><p className="text-apple-gray font-semibold text-xs md:text-sm">200g Chicken Tikka/Boti, 1 Roti, 1/2 cup Dahi.</p></div>
         </div>
       );
     };
@@ -506,7 +519,6 @@
       let tdee = Math.round(bmr * parseFloat(profile.activity));
       let targetCal = tdee + (profile.goal === 'cut' ? -500 : profile.goal === 'bulk' ? 300 : 0);
       let targetPro = Math.round(profile.weight * 2.2); let targetFat = Math.round((targetCal * 0.25) / 9); let targetCarb = Math.round((targetCal - (targetPro * 4) - (targetFat * 9)) / 4);
-      let bmi = (profile.weight / Math.pow(profile.height / 100, 2)).toFixed(1);
       let eatenCal = todayMeals.reduce((s, m) => s + Number(m.cal||0), 0), eatenPro = todayMeals.reduce((s, m) => s + Number(m.pro||0), 0), eatenCarb = todayMeals.reduce((s, m) => s + Number(m.carb||0), 0), eatenFat = todayMeals.reduce((s, m) => s + Number(m.fat||0), 0);
 
       const [newMeal, setNewMeal] = useState({ name: '', qty: 1, cal: '', pro: '', carb: '', fat: '' });
@@ -551,54 +563,54 @@
       };
 
       if (showSetup) return (
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="apple-card p-8 md:p-12 max-w-2xl mx-auto border-2 border-apple-blue/20">
-          <h3 className="text-3xl font-bold text-apple-text mb-2">Configure Body Engine</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 mt-6">
-            <div className="space-y-2"><label className="text-sm font-bold text-apple-gray">Weight (kg)</label><input type="number" value={profile.weight} onChange={(e)=>setProfile(p=>({...p,weight:Number(e.target.value)}))} className="w-full p-4 bg-[#f5f5f7] rounded-xl font-bold" /></div>
-            <div className="space-y-2"><label className="text-sm font-bold text-apple-gray">Goal</label>
-              <div className="flex gap-2">{['cut', 'maintain', 'bulk'].map(g => (<button key={g} onClick={() => setProfile(p=>({...p, goal: g}))} className={`flex-1 py-3 rounded-xl font-bold text-sm capitalize ${profile.goal === g ? 'bg-apple-blue text-white' : 'bg-[#f5f5f7] text-apple-gray'}`}>{g}</button>))}</div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="apple-card p-6 md:p-12 max-w-2xl mx-auto border-2 border-apple-blue/20">
+          <h3 className="text-xl md:text-3xl font-bold text-apple-text mb-2">Configure Body Engine</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-6 md:mb-8 mt-4 md:mt-6">
+            <div className="space-y-1 md:space-y-2"><label className="text-xs md:text-sm font-bold text-apple-gray">Weight (kg)</label><input type="number" value={profile.weight} onChange={(e)=>setProfile(p=>({...p,weight:Number(e.target.value)}))} className="w-full p-3 md:p-4 bg-[#f5f5f7] rounded-xl font-bold text-sm" /></div>
+            <div className="space-y-1 md:space-y-2"><label className="text-xs md:text-sm font-bold text-apple-gray">Goal</label>
+              <div className="flex gap-2">{['cut', 'maintain', 'bulk'].map(g => (<button key={g} onClick={() => setProfile(p=>({...p, goal: g}))} className={`flex-1 py-2 md:py-3 rounded-xl font-bold text-xs capitalize ${profile.goal === g ? 'bg-apple-blue text-white' : 'bg-[#f5f5f7] text-apple-gray'}`}>{g}</button>))}</div>
             </div>
           </div>
-          <button onClick={() => setShowSetup(false)} className="w-full py-5 bg-[#1d1d1f] dark:bg-white text-white dark:text-black rounded-2xl font-bold text-lg">Activate</button>
+          <button onClick={() => setShowSetup(false)} className="w-full py-4 bg-[#1d1d1f] dark:bg-white text-white dark:text-black rounded-xl font-bold text-sm md:text-lg">Activate</button>
         </motion.div>
       );
 
       return (
-        <div className="space-y-8">
-          <div className="flex justify-between items-center"><h2 className="text-4xl font-bold text-apple-text">Nutrition Engine</h2><button onClick={() => setShowSetup(true)} className="px-5 py-2.5 bg-white border border-black/5 rounded-full text-sm font-bold text-apple-gray shadow-sm">Settings</button></div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="space-y-6 md:space-y-8">
+          <div className="flex justify-between items-center"><h2 className="text-2xl md:text-4xl font-bold text-apple-text">Nutrition Engine</h2><button onClick={() => setShowSetup(true)} className="px-4 py-2 bg-white border border-black/5 rounded-full text-xs md:text-sm font-bold text-apple-gray shadow-sm">Settings</button></div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             {[{ l: 'Cals', c: eatenCal, t: targetCal, u: 'kcal', col: 'bg-apple-blue' }, { l: 'Pro', c: eatenPro, t: targetPro, u: 'g', col: 'bg-apple-green' }, { l: 'Carbs', c: eatenCarb, t: targetCarb, u: 'g', col: 'bg-apple-orange' }, { l: 'Fats', c: eatenFat, t: targetFat, u: 'g', col: 'bg-apple-red' }].map(m => (
-              <div key={m.l} className="apple-card p-6"><div className="flex justify-between items-end mb-4"><span className="font-bold text-apple-text text-lg">{m.l}</span><span className="text-xs font-bold text-apple-gray">{Math.max(m.t-m.c,0)} left</span></div><div className="w-full bg-[#f5f5f7] rounded-full h-3 mb-4 overflow-hidden"><motion.div initial={{width:0}} animate={{width:`${Math.min((m.c/m.t)*100,100)}%`}} className={`${m.col} h-3 rounded-full`} /></div><div className="font-bold text-apple-gray"><span className="text-apple-text text-xl">{m.c}</span> / {m.t}</div></div>
+              <div key={m.l} className="apple-card p-4 md:p-6"><div className="flex justify-between items-end mb-2 md:mb-4"><span className="font-bold text-apple-text text-sm md:text-lg">{m.l}</span><span className="text-[10px] md:text-xs font-bold text-apple-gray">{Math.max(m.t-m.c,0)} left</span></div><div className="w-full bg-[#f5f5f7] rounded-full h-2 md:h-3 mb-2 md:mb-4 overflow-hidden"><motion.div initial={{width:0}} animate={{width:`${Math.min((m.c/m.t)*100,100)}%`}} className={`${m.col} h-full rounded-full`} /></div><div className="font-bold text-apple-gray text-xs md:text-sm"><span className="text-apple-text text-sm md:text-xl">{m.c}</span> / {m.t}</div></div>
             ))}
           </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div className="apple-card p-8">
-              <h3 className="text-2xl font-bold text-apple-text mb-2">Log Smart Meal</h3>
-              <p className="text-sm font-medium text-apple-gray mb-6">Start typing to search global food database...</p>
-              <form onSubmit={logMeal} className="space-y-4">
-                <div className="grid grid-cols-3 gap-4 relative">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+            <div className="apple-card p-6 md:p-8">
+              <h3 className="text-xl md:text-2xl font-bold text-apple-text mb-1 md:mb-2">Log Smart Meal</h3>
+              <p className="text-xs md:text-sm font-bold text-apple-gray mb-4 md:mb-6">Search global food database...</p>
+              <form onSubmit={logMeal} className="space-y-3 md:space-y-4">
+                <div className="grid grid-cols-3 gap-3 md:gap-4 relative">
                   <div className="col-span-2 relative">
-                    <input type="text" placeholder="Meal Name" className="w-full p-4 bg-[#f5f5f7] rounded-[16px] font-medium" value={newMeal.name} onChange={e=>{setNewMeal({...newMeal,name:e.target.value}); setShowSuggestions(true);}} onFocus={()=>setShowSuggestions(true)} onBlur={()=>setTimeout(()=>setShowSuggestions(false), 200)} />
+                    <input type="text" placeholder="Meal Name" className="w-full p-3 md:p-4 bg-[#f5f5f7] rounded-xl font-bold text-sm" value={newMeal.name} onChange={e=>{setNewMeal({...newMeal,name:e.target.value}); setShowSuggestions(true);}} onFocus={()=>setShowSuggestions(true)} onBlur={()=>setTimeout(()=>setShowSuggestions(false), 200)} />
                     <AnimatePresence>
                       {showSuggestions && suggestions.length > 0 && (
-                        <motion.ul initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#1c1c1e] border border-black/5 rounded-2xl shadow-xl z-50 max-h-48 overflow-y-auto">
+                        <motion.ul initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -5 }} className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[#1c1c1e] border border-black/5 rounded-xl shadow-xl z-50 max-h-48 overflow-y-auto">
                           {suggestions.map(s => (
-                            <li key={s} onClick={() => selectFood(s)} className="p-3 hover:bg-apple-blue hover:text-white cursor-pointer font-semibold capitalize text-apple-text">{s} <span className="text-xs opacity-70 ml-2">({FOOD_DB[s].cal} kcal)</span></li>
+                            <li key={s} onClick={() => selectFood(s)} className="p-3 hover:bg-apple-blue hover:text-white cursor-pointer font-bold capitalize text-sm text-apple-text">{s} <span className="text-[10px] opacity-70 ml-1">({FOOD_DB[s].cal} kcal)</span></li>
                           ))}
                         </motion.ul>
                       )}
                     </AnimatePresence>
                   </div>
-                  <input type="number" placeholder="Qty" className="p-4 bg-[#f5f5f7] rounded-[16px] font-medium text-center" value={newMeal.qty} onChange={handleQtyChange} min="1" step="0.5" />
+                  <input type="number" placeholder="Qty" className="p-3 md:p-4 bg-[#f5f5f7] rounded-xl font-bold text-center text-sm" value={newMeal.qty} onChange={handleQtyChange} min="1" step="0.5" />
                 </div>
-                <div className="grid grid-cols-4 gap-4"><input type="number" placeholder="Kcal" className="p-4 bg-[#f5f5f7] rounded-[16px] text-center" value={newMeal.cal} onChange={e=>setNewMeal({...newMeal,cal:e.target.value})} /><input type="number" placeholder="Pro" className="p-4 bg-[#f5f5f7] rounded-[16px] text-center" value={newMeal.pro} onChange={e=>setNewMeal({...newMeal,pro:e.target.value})} /><input type="number" placeholder="Carb" className="p-4 bg-[#f5f5f7] rounded-[16px] text-center" value={newMeal.carb} onChange={e=>setNewMeal({...newMeal,carb:e.target.value})} /><input type="number" placeholder="Fat" className="p-4 bg-[#f5f5f7] rounded-[16px] text-center" value={newMeal.fat} onChange={e=>setNewMeal({...newMeal,fat:e.target.value})} /></div>
-                <button type="submit" className="w-full py-4 bg-[#1d1d1f] dark:bg-apple-blue text-white rounded-[16px] font-bold">Log</button>
+                <div className="grid grid-cols-4 gap-3 md:gap-4"><input type="number" placeholder="Kcal" className="p-3 md:p-4 bg-[#f5f5f7] rounded-xl text-center text-sm font-bold" value={newMeal.cal} onChange={e=>setNewMeal({...newMeal,cal:e.target.value})} /><input type="number" placeholder="Pro" className="p-3 md:p-4 bg-[#f5f5f7] rounded-xl text-center text-sm font-bold" value={newMeal.pro} onChange={e=>setNewMeal({...newMeal,pro:e.target.value})} /><input type="number" placeholder="Carb" className="p-3 md:p-4 bg-[#f5f5f7] rounded-xl text-center text-sm font-bold" value={newMeal.carb} onChange={e=>setNewMeal({...newMeal,carb:e.target.value})} /><input type="number" placeholder="Fat" className="p-3 md:p-4 bg-[#f5f5f7] rounded-xl text-center text-sm font-bold" value={newMeal.fat} onChange={e=>setNewMeal({...newMeal,fat:e.target.value})} /></div>
+                <button type="submit" className="w-full py-3 md:py-4 bg-[#1d1d1f] dark:bg-apple-blue text-white rounded-xl font-bold text-sm md:text-base">Log</button>
               </form>
-              <div className="mt-8 space-y-3">
-                {todayMeals.map(m => (<div key={m.id} className="flex justify-between items-center p-4 bg-[#f5f5f7] rounded-[16px]"><div><h5 className="font-bold text-apple-text">{m.name} <span className="text-apple-gray text-xs">x{m.qty}</span></h5><div className="text-sm font-semibold text-apple-gray space-x-3 mt-1"><span>{m.cal} kcal</span><span className="text-apple-green">{m.pro}g P</span></div></div><button onClick={() => setDailyMeals(p => ({ ...p, [todayDate]: p[todayDate].filter(x => x.id !== m.id) }))} className="w-8 h-8 rounded-full bg-white text-apple-red font-bold">X</button></div>))}
+              <div className="mt-6 md:mt-8 space-y-2 md:space-y-3">
+                {todayMeals.map(m => (<div key={m.id} className="flex justify-between items-center p-3 md:p-4 bg-[#f5f5f7] rounded-xl"><div><h5 className="font-bold text-apple-text text-sm">{m.name} <span className="text-apple-gray text-[10px]">x{m.qty}</span></h5><div className="text-xs font-bold text-apple-gray space-x-2 mt-0.5"><span>{m.cal} kcal</span><span className="text-apple-green">{m.pro}g P</span></div></div><button onClick={() => setDailyMeals(p => ({ ...p, [todayDate]: p[todayDate].filter(x => x.id !== m.id) }))} className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-white text-apple-red font-bold text-xs">X</button></div>))}
               </div>
             </div>
-            <div className="apple-card p-8"><h3 className="text-2xl font-bold text-apple-text mb-6">Auto Plan</h3><AutoDietPlan targetCal={targetCal} /></div>
+            <div className="apple-card p-6 md:p-8"><h3 className="text-xl md:text-2xl font-bold text-apple-text mb-4 md:mb-6">Auto Plan</h3><AutoDietPlan targetCal={targetCal} /></div>
           </div>
         </div>
       );
@@ -622,28 +634,28 @@
       const remove = (id) => setTasks(p => p.filter(t => t.id !== id));
 
       return (
-        <div className="apple-card p-8 md:p-12 max-w-4xl mx-auto">
-          <div className="flex items-center gap-4 mb-10"><IconList c="w-10 h-10 text-apple-blue" /><h2 className="text-4xl font-bold text-apple-text">Mission Control</h2></div>
-          <form onSubmit={addTask} className="flex flex-col md:flex-row gap-4 mb-12">
-            <input type="text" placeholder="E.g. Database Quiz" className="flex-1 p-4 bg-[#f5f5f7] rounded-2xl font-bold" value={newTask.title} onChange={e=>setNewTask({...newTask, title: e.target.value})} />
-            <input type="date" className="p-4 bg-[#f5f5f7] rounded-2xl font-bold font-sans" value={newTask.dueDate} onChange={e=>setNewTask({...newTask, dueDate: e.target.value})} />
-            <input type="time" className="p-4 bg-[#f5f5f7] rounded-2xl font-bold font-sans" value={newTask.dueTime} onChange={e=>setNewTask({...newTask, dueTime: e.target.value})} />
-            <button type="submit" className="px-8 py-4 bg-apple-blue text-white font-bold rounded-2xl">Schedule</button>
+        <div className="apple-card p-6 md:p-12 max-w-4xl mx-auto">
+          <div className="flex items-center gap-3 md:gap-4 mb-8 md:mb-10"><IconList c="w-8 h-8 md:w-10 md:h-10 text-apple-blue" /><h2 className="text-2xl md:text-4xl font-bold text-apple-text">Mission Control</h2></div>
+          <form onSubmit={addTask} className="flex flex-col md:flex-row gap-3 md:gap-4 mb-8 md:mb-12">
+            <input type="text" placeholder="E.g. Database Quiz" className="flex-1 p-3 md:p-4 bg-[#f5f5f7] rounded-xl font-bold text-sm md:text-base" value={newTask.title} onChange={e=>setNewTask({...newTask, title: e.target.value})} />
+            <input type="date" className="p-3 md:p-4 bg-[#f5f5f7] rounded-xl font-bold font-sans text-sm md:text-base" value={newTask.dueDate} onChange={e=>setNewTask({...newTask, dueDate: e.target.value})} />
+            <input type="time" className="p-3 md:p-4 bg-[#f5f5f7] rounded-xl font-bold font-sans text-sm md:text-base" value={newTask.dueTime} onChange={e=>setNewTask({...newTask, dueTime: e.target.value})} />
+            <button type="submit" className="px-6 py-3 md:px-8 md:py-4 bg-apple-blue text-white font-bold rounded-xl text-sm md:text-base">Schedule</button>
           </form>
-          <div className="space-y-4">
+          <div className="space-y-3 md:space-y-4">
             {tasks.sort((a,b)=>a.completed-b.completed).map(t => (
-              <motion.div key={t.id} layout className={`flex items-center justify-between p-5 rounded-2xl border ${t.completed ? 'bg-white dark:bg-[#111] opacity-50 border-black/5' : 'bg-[#f5f5f7] border-black/5'}`}>
-                <div className="flex items-center gap-4 cursor-pointer" onClick={() => toggle(t.id)}>
-                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${t.completed ? 'bg-apple-blue border-apple-blue' : 'border-apple-gray'}`}>{t.completed && <IconCheck c="w-4 h-4 text-white" />}</div>
-                  <div className={t.completed ? 'line-through text-apple-gray' : 'text-apple-text font-bold text-lg'}>{t.title}</div>
+              <motion.div key={t.id} layout className={`flex items-center justify-between p-4 md:p-5 rounded-xl border ${t.completed ? 'bg-white dark:bg-[#111] opacity-50 border-black/5' : 'bg-[#f5f5f7] border-black/5'}`}>
+                <div className="flex items-center gap-3 md:gap-4 cursor-pointer" onClick={() => toggle(t.id)}>
+                  <div className={`w-5 h-5 md:w-6 md:h-6 rounded-full border-2 flex items-center justify-center transition-colors ${t.completed ? 'bg-apple-blue border-apple-blue' : 'border-apple-gray'}`}>{t.completed && <IconCheck c="w-3 h-3 md:w-4 md:h-4 text-white" />}</div>
+                  <div className={t.completed ? 'line-through text-apple-gray text-sm md:text-lg font-bold' : 'text-apple-text font-bold text-sm md:text-lg'}>{t.title}</div>
                 </div>
-                <div className="flex items-center gap-4">
-                  {t.dueDate && <span className="text-sm font-bold text-apple-orange bg-apple-orange/10 px-3 py-1 rounded-full">{t.dueDate} {t.dueTime}</span>}
-                  <button onClick={() => remove(t.id)} className="text-apple-red font-bold text-sm px-2">Delete</button>
+                <div className="flex items-center gap-2 md:gap-4">
+                  {t.dueDate && <span className="text-[10px] md:text-sm font-bold text-apple-orange bg-apple-orange/10 px-2 py-1 md:px-3 rounded-full">{t.dueDate} {t.dueTime}</span>}
+                  <button onClick={() => remove(t.id)} className="text-apple-red font-bold text-xs md:text-sm px-2">Delete</button>
                 </div>
               </motion.div>
             ))}
-            {tasks.length === 0 && <p className="text-apple-gray font-medium text-center py-10">No upcoming missions. You are clear.</p>}
+            {tasks.length === 0 && <p className="text-apple-gray font-bold text-sm md:text-base text-center py-10">No upcoming missions. You are clear.</p>}
           </div>
         </div>
       );
@@ -675,15 +687,15 @@
       };
 
       return (
-        <div className="apple-card p-12 overflow-x-auto"><h2 className="text-4xl font-bold text-apple-text mb-8">Weekly Tracker</h2><div className="min-w-[900px]">
-          <div className="grid grid-cols-[220px_repeat(7,1fr)] gap-4 mb-4"><div className="font-bold text-apple-gray">Habit</div>{DAYS.map(d => <div key={d} className="text-center font-bold text-apple-gray">{d}</div>)}</div>
-          <div className="space-y-3">{HABITS.map(h => (<div key={h} className="grid grid-cols-[220px_repeat(7,1fr)] gap-4 items-center group"><div className="font-bold px-4 py-3 rounded-2xl text-lg text-apple-text bg-[#f5f5f7]">{h}</div>{DAYS.map(d => { const c = data[`${d}-${h}`]; return (<div key={`${d}-${h}`} className="flex justify-center"><motion.button whileTap={{ scale: 0.8 }} onClick={() => toggle(d, h)} className={`w-12 h-12 rounded-full flex items-center justify-center transition-all ${c ? 'bg-apple-green text-white scale-105' : 'bg-[#f5f5f7]'}`}>{c && <IconCheck c="w-6 h-6" />}</motion.button></div>) })}</div>))}</div>
+        <div className="apple-card p-6 md:p-12 overflow-x-auto"><h2 className="text-2xl md:text-4xl font-bold text-apple-text mb-6 md:mb-8">Weekly Tracker</h2><div className="min-w-[800px] md:min-w-[900px]">
+          <div className="grid grid-cols-[180px_repeat(7,1fr)] md:grid-cols-[220px_repeat(7,1fr)] gap-2 md:gap-4 mb-4"><div className="font-bold text-apple-gray text-sm md:text-base">Habit</div>{DAYS.map(d => <div key={d} className="text-center font-bold text-apple-gray text-sm md:text-base">{d}</div>)}</div>
+          <div className="space-y-2 md:space-y-3">{HABITS.map(h => (<div key={h} className="grid grid-cols-[180px_repeat(7,1fr)] md:grid-cols-[220px_repeat(7,1fr)] gap-2 md:gap-4 items-center group"><div className="font-bold px-3 py-2 md:px-4 md:py-3 rounded-xl text-sm md:text-lg text-apple-text bg-[#f5f5f7]">{h}</div>{DAYS.map(d => { const c = data[`${d}-${h}`]; return (<div key={`${d}-${h}`} className="flex justify-center"><motion.button whileTap={{ scale: 0.8 }} onClick={() => toggle(d, h)} className={`w-8 h-8 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all ${c ? 'bg-apple-green text-white scale-105' : 'bg-[#f5f5f7]'}`}>{c && <IconCheck c="w-4 h-4 md:w-6 md:h-6" />}</motion.button></div>) })}</div>))}</div>
         </div></div>
       );
     };
 
-    const Income = () => (<div className="apple-card p-16 text-center"><IconTarget c="w-20 h-20 mx-auto text-apple-blue mb-4"/><h2 className="text-4xl font-bold text-apple-text">Fiverr Roadmap</h2></div>);
-    const English = () => (<div className="apple-card p-16 text-center"><IconBookOpen c="w-20 h-20 mx-auto text-apple-blue mb-4"/><h2 className="text-4xl font-bold text-apple-text">English Mastery</h2></div>);
+    const Income = () => (<div className="apple-card p-12 md:p-16 text-center"><IconTarget c="w-16 h-16 md:w-20 md:h-20 mx-auto text-apple-blue mb-4"/><h2 className="text-2xl md:text-4xl font-bold text-apple-text">Fiverr Roadmap</h2></div>);
+    const English = () => (<div className="apple-card p-12 md:p-16 text-center"><IconBookOpen c="w-16 h-16 md:w-20 md:h-20 mx-auto text-apple-blue mb-4"/><h2 className="text-2xl md:text-4xl font-bold text-apple-text">English Mastery</h2></div>);
     
     // CEO Briefing Tab (Gemini API Integration)
     const CEOBriefing = () => {
@@ -744,12 +756,9 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
           });
-          
-          console.log('API Status Code:', res.status);
 
           if (!res.ok) {
             const errorData = await res.json();
-            console.log('Exact API Error Message:', errorData);
             throw new Error(`API Error: ${res.status} - ${errorData.error?.message || 'Unknown Error'}`);
           }
           
@@ -768,16 +777,16 @@
       };
 
       return (
-        <div className="apple-card p-12 md:p-16 text-left bg-gradient-to-br from-[#111] to-[#333] text-white shadow-xl max-w-4xl mx-auto border border-black/10 dark:border-white/10">
-          <div className="flex flex-col items-center mb-10 text-center">
-            <IconBrain c="w-16 h-16 text-apple-blue mb-4" />
-            <h2 className="text-4xl font-bold tracking-tight mb-2">Morning CEO Briefing</h2>
-            <p className="text-gray-400 font-medium">Powered by Gemini AI Engine</p>
+        <div className="apple-card p-8 md:p-16 text-left bg-gradient-to-br from-[#111] to-[#333] text-white shadow-xl max-w-4xl mx-auto border border-black/10 dark:border-white/10">
+          <div className="flex flex-col items-center mb-8 md:mb-10 text-center">
+            <IconBrain c="w-12 h-12 md:w-16 md:h-16 text-apple-blue mb-3 md:mb-4" />
+            <h2 className="text-2xl md:text-4xl font-bold tracking-tight mb-2">Morning CEO Briefing</h2>
+            <p className="text-gray-400 font-bold text-xs md:text-sm">Powered by Gemini AI Engine</p>
           </div>
           
           {!briefing && !loading && (
             <div className="flex justify-center">
-              <button onClick={generateBriefing} className="px-10 py-5 bg-white text-black font-bold text-xl rounded-full shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:scale-105 transition-all">
+              <button onClick={generateBriefing} className="px-8 py-4 md:px-10 md:py-5 bg-white text-black font-bold text-sm md:text-xl rounded-full shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:scale-105 transition-all">
                 Request Briefing
               </button>
             </div>
@@ -785,17 +794,17 @@
 
           {loading && (
             <div className="text-center py-10 space-y-4">
-              <div className="w-10 h-10 border-4 border-apple-blue border-t-transparent rounded-full animate-spin mx-auto"></div>
-              <p className="text-apple-blue font-bold tracking-widest uppercase animate-pulse">CEO is reviewing your files...</p>
+              <div className="w-8 h-8 md:w-10 md:h-10 border-4 border-apple-blue border-t-transparent rounded-full animate-spin mx-auto"></div>
+              <p className="text-apple-blue font-bold tracking-widest text-xs md:text-sm uppercase animate-pulse">CEO is reviewing your files...</p>
             </div>
           )}
 
           <AnimatePresence>
             {briefing && !loading && (
-              <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} className="mt-8 bg-black/40 backdrop-blur-md p-8 md:p-10 rounded-3xl border border-white/10">
-                <div className="markdown-content text-lg" dangerouslySetInnerHTML={{ __html: window.marked ? window.marked.parse(displayedBriefing + (displayedBriefing.length < briefing.length ? '...' : '')) : displayedBriefing }}></div>
+              <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} className="mt-6 md:mt-8 bg-black/40 backdrop-blur-md p-6 md:p-10 rounded-3xl border border-white/10">
+                <div className="markdown-content text-sm md:text-lg" dangerouslySetInnerHTML={{ __html: window.marked ? window.marked.parse(displayedBriefing + (displayedBriefing.length < briefing.length ? '...' : '')) : displayedBriefing }}></div>
                 {displayedBriefing.length >= briefing.length && (
-                  <motion.button initial={{opacity:0}} animate={{opacity:1}} onClick={generateBriefing} className="mt-8 text-sm font-bold text-apple-gray hover:text-white uppercase tracking-widest transition-colors">Request Updated Briefing</motion.button>
+                  <motion.button initial={{opacity:0}} animate={{opacity:1}} onClick={generateBriefing} className="mt-6 md:mt-8 text-xs md:text-sm font-bold text-apple-gray hover:text-white uppercase tracking-widest transition-colors">Request Updated Briefing</motion.button>
                 )}
               </motion.div>
             )}
@@ -812,7 +821,7 @@
         DAYS.forEach(d => HABITS.forEach(h => { if (tData[`${d}-${h}`]) c++; })); 
         setScore(Math.round((c / 77) * 100)); 
       }, [appData.tracker]);
-      return (<div className="apple-card p-12 text-center"><div className="text-9xl font-black text-apple-text mb-4">{score}%</div><p className="text-apple-gray text-2xl font-bold">Weekly Consistency</p></div>);
+      return (<div className="apple-card p-12 text-center"><div className="text-6xl md:text-9xl font-black text-apple-text mb-2 md:mb-4">{score}%</div><p className="text-apple-gray text-lg md:text-2xl font-bold">Weekly Consistency</p></div>);
     };
 
     const SettingsModal = ({ close }) => {
@@ -821,23 +830,23 @@
       const setSettings = (updater) => updateAppData('settings', updater);
       return (
         <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="apple-card p-8 w-full max-w-md bg-white">
+          <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="apple-card p-6 md:p-8 w-full max-w-md bg-white">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-bold text-apple-text">God Mode Settings</h3>
-              <button onClick={close} className="text-apple-red font-bold">Close</button>
+              <h3 className="text-xl md:text-2xl font-bold text-apple-text">God Mode Settings</h3>
+              <button onClick={close} className="text-apple-red font-bold text-sm">Close</button>
             </div>
             
             <div className="mb-6 p-4 bg-[#f5f5f7] rounded-xl border border-black/5">
-              <label className="block text-sm font-bold text-apple-text mb-2 uppercase tracking-tight">Gemini API Key</label>
-              <input type="password" placeholder="Paste key here..." className="w-full p-3 rounded-lg bg-white border border-black/10 font-mono text-sm focus:outline-apple-blue" value={settings.geminiKey || ''} onChange={(e) => setSettings({...settings, geminiKey: e.target.value})} />
-              <p className="text-xs text-apple-gray mt-2 font-medium">Stored securely in your cloud engine.</p>
+              <label className="block text-xs md:text-sm font-bold text-apple-text mb-2 uppercase tracking-tight">Gemini API Key</label>
+              <input type="password" placeholder="Paste key here..." className="w-full p-3 rounded-lg bg-white border border-black/10 font-mono text-xs md:text-sm focus:outline-apple-blue" value={settings.geminiKey || ''} onChange={(e) => setSettings({...settings, geminiKey: e.target.value})} />
+              <p className="text-[10px] md:text-xs text-apple-gray mt-2 font-bold">Stored securely in your cloud engine.</p>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               {['aura', 'autoStealth', 'darkMode', 'dopamineRain', 'shield'].map(k => (
-                <div key={k} className="flex justify-between items-center p-4 bg-[#f5f5f7] rounded-xl">
-                  <span className="font-bold capitalize text-apple-text">{k.replace(/([A-Z])/g, ' $1').trim()}</span>
-                  <input type="checkbox" checked={settings[k]} onChange={(e)=>setSettings({...settings, [k]: e.target.checked})} className="w-6 h-6 cursor-pointer accent-apple-blue" />
+                <div key={k} className="flex justify-between items-center p-3 md:p-4 bg-[#f5f5f7] rounded-xl">
+                  <span className="font-bold capitalize text-apple-text text-sm">{k.replace(/([A-Z])/g, ' $1').trim()}</span>
+                  <input type="checkbox" checked={settings[k]} onChange={(e)=>setSettings({...settings, [k]: e.target.checked})} className="w-5 h-5 md:w-6 md:h-6 cursor-pointer accent-apple-blue" />
                 </div>
               ))}
             </div>
@@ -846,10 +855,35 @@
       );
     };
 
-    const App = () => {
+    const LoginScreen = ({ onLogin }) => {
+      const [passcode, setPasscode] = useState('');
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        const code = passcode.toLowerCase().trim();
+        if (code === 'hamas') onLogin('founder');
+        else if (code === 'misbah') onLogin('associate');
+        else alert('Access Denied');
+      };
+      
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-[#f5f5f7] dark:bg-[#000000] p-6">
+          <motion.div initial={{opacity:0, scale:0.95}} animate={{opacity:1, scale:1}} className="apple-card p-8 md:p-10 max-w-sm w-full text-center shadow-2xl dark:shadow-[0_0_50px_rgba(255,255,255,0.05)] border border-black/5 dark:border-white/5">
+            <IconZap c="w-10 h-10 md:w-12 md:h-12 text-apple-text mx-auto mb-4 md:mb-6" />
+            <h1 className="text-2xl md:text-3xl font-black text-apple-text mb-2 tracking-tight">LifeOS</h1>
+            <p className="text-apple-gray text-xs md:text-sm font-bold mb-6 md:mb-8">Authenticate Identity</p>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <input type="password" placeholder="Enter ID" className="w-full p-4 rounded-xl bg-[#f5f5f7] dark:bg-[#1c1c1e] font-mono text-center text-apple-text focus:outline-apple-blue font-bold tracking-[0.3em] text-sm md:text-base" value={passcode} onChange={e=>setPasscode(e.target.value)} />
+              <button type="submit" className="w-full py-4 bg-[#1d1d1f] dark:bg-white text-white dark:text-black rounded-xl font-bold hover:scale-[1.02] transition-transform text-sm md:text-base">Initialize</button>
+            </form>
+          </motion.div>
+        </div>
+      );
+    };
+
+    const App = ({ role }) => {
       const { appData } = useAppState();
       const settings = appData.settings;
-      const [activeTab, setActiveTab] = useState('Daily Routine');
+      const [activeTab, setActiveTab] = useState(role === 'associate' ? 'Finance' : 'Daily Routine');
       const [showSettings, setShowSettings] = useState(false);
       const [timeMode, setTimeMode] = useState('normal'); const [aura, setAura] = useState('none'); const [shieldLevel, setShieldLevel] = useState('iron');
 
@@ -871,7 +905,7 @@
       const getGreeting = () => { const h = new Date().getHours(); if (h < 12) return 'Good Morning'; if (h < 18) return 'Good Afternoon'; if (h >= 21) return 'Get rest'; return 'Good Evening'; };
 
       const getTabIcon = (tab, active) => {
-        const c = `w-6 h-6 ${active ? 'text-apple-blue md:text-white dark:md:text-black' : 'text-apple-gray dark:text-gray-400'}`;
+        const c = `w-5 h-5 md:w-6 md:h-6 ${active ? 'text-apple-blue md:text-white dark:md:text-black' : 'text-apple-gray dark:text-gray-400'}`;
         switch(tab) {
           case 'Daily Routine': return <IconCalendar c={c}/>;
           case 'Fitness': return <IconActivity c={c}/>;
@@ -889,51 +923,84 @@
 
       return (
         <div id="app-container" className={`min-h-screen ${timeMode === 'stealth' ? 'stealth-mode' : timeMode === 'deepwork' ? 'deepwork-mode' : ''}`}>
-          <RoutineNotifier />
-          {aura === 'red' && <div className="aura-red"></div>} {aura === 'gold' && <div className="aura-gold"></div>} {timeMode === 'deepwork' && <div className="focus-sphere"></div>}
+          <RoutineNotifier role={role} />
+          {aura === 'red' && role === 'founder' && <div className="aura-red"></div>} 
+          {aura === 'gold' && role === 'founder' && <div className="aura-gold"></div>} 
+          {timeMode === 'deepwork' && role === 'founder' && <div className="focus-sphere"></div>}
           
-          <button onClick={() => setShowSettings(true)} className="md:hidden fixed top-4 right-4 z-50 p-3 bg-white/80 dark:bg-[#111]/80 backdrop-blur-md border border-black/10 dark:border-white/10 rounded-full shadow-lg"><IconSettings c="w-6 h-6 text-apple-text" /></button>
+          {role === 'founder' && (
+            <button onClick={() => setShowSettings(true)} className="md:hidden fixed top-4 right-4 z-50 p-3 bg-white/80 dark:bg-[#111]/80 backdrop-blur-md border border-black/10 dark:border-white/10 rounded-full shadow-lg"><IconSettings c="w-5 h-5 text-apple-text" /></button>
+          )}
 
-          <nav className="fixed bottom-0 md:top-0 md:bottom-auto left-0 right-0 z-50 apple-nav pb-safe border-t md:border-b md:border-t-0 border-black/5 dark:border-white/5 md:pb-0">
-            <div className="max-w-7xl mx-auto px-2 md:px-6 flex md:justify-between items-center h-[72px] md:h-auto">
-              <div className="hidden md:flex items-center gap-2 mr-6 py-4 shrink-0"><IconZap c="w-6 h-6 text-apple-text"/><span className="font-black text-apple-text tracking-tight text-xl">LifeOS</span></div>
-              <div className="flex items-center justify-between md:justify-start space-x-1 md:space-x-2 overflow-x-auto hide-scrollbar w-full h-full md:py-4 px-2 md:px-0">
-                {TABS.map(tab => (
-                  <button key={tab} onClick={() => setActiveTab(tab)} className={`relative flex flex-col md:flex-row items-center justify-center px-2 py-1 md:px-4 md:py-2 min-w-[64px] md:min-w-0 h-full md:h-auto rounded-none md:rounded-full whitespace-nowrap ${activeTab === tab ? 'text-apple-blue md:text-white' : 'text-apple-gray dark:text-gray-400'}`}>
-                    <div className="md:hidden mb-1 flex items-center justify-center transition-transform hover:scale-110">{getTabIcon(tab, activeTab === tab)}</div>
-                    {activeTab === tab && <motion.div layoutId="nav-pill" className="hidden md:block absolute inset-0 bg-[#1d1d1f] dark:bg-white rounded-full" transition={{type:'spring'}} />}
-                    <span className={`relative z-10 text-[10px] md:text-sm font-bold tracking-tight ${activeTab === tab ? 'dark:md:text-black' : ''}`}>{tab}</span>
-                  </button>
-                ))}
+          {role === 'founder' && (
+            <nav className="fixed bottom-0 md:top-0 md:bottom-auto left-0 right-0 z-50 apple-nav pb-safe border-t md:border-b md:border-t-0 border-black/5 dark:border-white/5 md:pb-0">
+              <div className="max-w-7xl mx-auto px-2 md:px-6 flex md:justify-between items-center h-[64px] md:h-auto">
+                <div className="hidden md:flex items-center gap-2 mr-6 py-4 shrink-0"><IconZap c="w-6 h-6 text-apple-text"/><span className="font-black text-apple-text tracking-tight text-xl">LifeOS</span></div>
+                <div className="flex items-center justify-between md:justify-start space-x-1 md:space-x-2 overflow-x-auto hide-scrollbar w-full h-full md:py-4 px-2 md:px-0">
+                  {TABS.map(tab => (
+                    <button key={tab} onClick={() => setActiveTab(tab)} className={`relative flex flex-col md:flex-row items-center justify-center px-1 py-1 md:px-4 md:py-2 min-w-[60px] md:min-w-0 h-full md:h-auto rounded-none md:rounded-full whitespace-nowrap ${activeTab === tab ? 'text-apple-blue md:text-white' : 'text-apple-gray dark:text-gray-400'}`}>
+                      <div className="md:hidden mb-1 flex items-center justify-center transition-transform hover:scale-110">{getTabIcon(tab, activeTab === tab)}</div>
+                      {activeTab === tab && <motion.div layoutId="nav-pill" className="hidden md:block absolute inset-0 bg-[#1d1d1f] dark:bg-white rounded-full" transition={{type:'spring'}} />}
+                      <span className={`relative z-10 text-[9px] md:text-sm font-bold tracking-tight ${activeTab === tab ? 'dark:md:text-black' : ''}`}>{tab}</span>
+                    </button>
+                  ))}
+                </div>
+                <button onClick={() => setShowSettings(true)} className="hidden md:flex ml-4 p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 shrink-0"><IconSettings c="w-6 h-6 text-apple-text" /></button>
               </div>
-              <button onClick={() => setShowSettings(true)} className="hidden md:flex ml-4 p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5 shrink-0"><IconSettings c="w-6 h-6 text-apple-text" /></button>
-            </div>
-          </nav>
+            </nav>
+          )}
           
-          <main className="max-w-7xl mx-auto px-4 md:px-6 py-8 pt-8 md:pt-32 pb-28 md:pb-16">
-            <div className="mb-12 md:mb-16 mt-4 md:mt-0">
-              <h1 className="text-4xl md:text-6xl font-bold text-apple-text mb-2 md:mb-4 tracking-tight">{getGreeting()}, Hamas.</h1>
-              <p className="text-apple-gray text-lg md:text-2xl font-medium tracking-tight">Your intelligent cloud engine is ready.</p>
+          <main className={`max-w-7xl mx-auto px-4 md:px-6 py-6 ${role === 'founder' ? 'pt-6 md:pt-32 pb-24 md:pb-16' : 'pt-8 md:pt-12 pb-12'}`}>
+            <div className="mb-10 md:mb-16 mt-2 md:mt-0">
+              <h1 className="text-3xl md:text-6xl font-black text-apple-text mb-1 md:mb-4 tracking-tight">{getGreeting()}, {role === 'founder' ? 'Hamas' : 'Misbah'}.</h1>
+              <p className="text-apple-gray text-sm md:text-2xl font-bold tracking-tight">{role === 'founder' ? 'Your intelligent cloud engine is ready.' : 'Associate Ledger Access Active.'}</p>
             </div>
             <AnimatePresence mode="wait">
               <motion.div key={activeTab} initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-10}} transition={{type:'spring'}}>
-                {activeTab === 'Daily Routine' && <DailyRoutine />} {activeTab === 'Fitness' && <Fitness />} {activeTab === 'Diet' && <Diet />} {activeTab === 'Finance' && <Finance />} {activeTab === 'Income' && <Income />} {activeTab === 'English' && <English />} {activeTab === 'CEO Briefing' && <CEOBriefing />} {activeTab === 'Tracker' && <Tracker />} {activeTab === 'To-Do' && <ToDo />} {activeTab === 'Analytics' && <Analytics />}
+                {activeTab === 'Daily Routine' && <DailyRoutine />} 
+                {activeTab === 'Fitness' && <Fitness />} 
+                {activeTab === 'Diet' && <Diet />} 
+                {activeTab === 'Finance' && <Finance role={role} />} 
+                {activeTab === 'Income' && <Income />} 
+                {activeTab === 'English' && <English />} 
+                {activeTab === 'CEO Briefing' && <CEOBriefing />} 
+                {activeTab === 'Tracker' && <Tracker />} 
+                {activeTab === 'To-Do' && <ToDo />} 
+                {activeTab === 'Analytics' && <Analytics />}
               </motion.div>
             </AnimatePresence>
           </main>
-          {settings.shield && <div className="shield-container"><div className={`shield shield-${shieldLevel}`}></div></div>}
+          {settings.shield && role === 'founder' && <div className="shield-container"><div className={`shield shield-${shieldLevel}`}></div></div>}
           {showSettings && <SettingsModal close={() => setShowSettings(false)} />}
         </div>
       );
     };
 
-    const RootApp = () => (
-      <AppStateProvider>
-        <ToastProvider>
-          <App />
-        </ToastProvider>
-      </AppStateProvider>
-    );
+    const RootApp = () => {
+      const [role, setRole] = useState(null); // 'founder' | 'associate'
+      const [systemDark, setSystemDark] = useState(window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+      useEffect(() => {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const handleChange = (e) => setSystemDark(e.matches);
+        mediaQuery.addEventListener('change', handleChange);
+        if (systemDark && !role) document.documentElement.classList.add('dark');
+        else if (!role) document.documentElement.classList.remove('dark');
+        return () => mediaQuery.removeEventListener('change', handleChange);
+      }, [systemDark, role]);
+
+      if (!role) {
+        return <LoginScreen onLogin={setRole} />;
+      }
+
+      return (
+        <AppStateProvider>
+          <ToastProvider>
+            <App role={role} />
+          </ToastProvider>
+        </AppStateProvider>
+      );
+    };
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<RootApp />);
